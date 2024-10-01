@@ -1030,11 +1030,18 @@ class PrliLinksController extends PrliBaseController {
     if ( ! $is_pl_query ) {
       return $where;
     }
-    if( $typenow == PrliLink::$cpt && !empty($wp_query->query_vars['s']) ) {
-      $search = '%' . $wpdb->esc_like($wp_query->query_vars['s']) . '%';
-      $where = $wpdb->prepare(" AND ({$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s OR {$wpdb->posts}.post_content LIKE %s OR li.url LIKE %s OR li.slug LIKE %s) ", $search, $search, $search, $search, $search);
-    }
+    if( $typenow == PrliLink::$cpt && ! empty( $wp_query->query_vars['s'] ) ){
+      $search_terms = explode( ' ', $wp_query->query_vars['s'] );
+      $search_clauses = array();
 
+      foreach( $search_terms as $search_term ){
+        $search_term      = '%' . $wpdb->esc_like( $search_term ) . '%';
+        $search_clauses[] = " ({$wpdb->posts}.post_title LIKE '$search_term' OR {$wpdb->posts}.post_excerpt LIKE '$search_term' OR {$wpdb->posts}.post_content LIKE '$search_term' ) ";
+      }
+      $where             .= ' AND ' . implode( ' AND ', $search_clauses );
+      $exact_search_terms = '%' . $wpdb->esc_like( $wp_query->query_vars['s'] ) . '%';
+      $where             .= " OR li.url LIKE '$exact_search_terms' OR li.slug LIKE '$exact_search_terms'";
+    }
     return $where;
   }
 

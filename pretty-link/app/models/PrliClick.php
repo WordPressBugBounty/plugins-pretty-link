@@ -94,7 +94,7 @@ class PrliClick {
   public function getOne($id) {
     global $wpdb, $prli_link, $prli_utils;
 
-    $query = 'SELECT cl.*, (SELECT count(*) FROM '. $this->table_name .' cl2 WHERE cl2.ip = cl.ip) as ip_count, (SELECT count(*) FROM '. $this->table_name .' cl3 WHERE cl3.vuid = cl.vuid) as vuid_count, li.name as link_name FROM ' . $this->table_name . ' cl, ' . $prli_link->table_name . ' li WHERE li.id = cl.link_id AND id=' . $id . $prli_utils->prepend_and_or_where(' AND',$this->get_exclude_where_clause());
+    $query = 'SELECT cl.*, (SELECT count(*) FROM '. $this->table_name .' cl2 WHERE cl2.ip = cl.ip) as ip_count, (SELECT count(*) FROM '. $this->table_name .' cl3 WHERE cl3.vuid = cl.vuid) as vuid_count, li.name as link_name FROM ' . $this->table_name . ' cl, ' . $prli_link->table_name . ' li WHERE li.id = cl.link_id AND cl.id=' . $id . $prli_utils->prepend_and_or_where(' AND',$this->get_exclude_where_clause());
 
     return $wpdb->get_row($query);
   }

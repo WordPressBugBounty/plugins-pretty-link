@@ -201,8 +201,8 @@ class PrliAppController extends PrliBaseController {
       );
       add_submenu_page(
         "edit.php?post_type={$pl_link_cpt}",
-        esc_html__('Product Display', 'pretty-link'),
-        esc_html__('Product Display', 'pretty-link'),
+        esc_html__('Product Displays', 'pretty-link'),
+        esc_html__('Product Displays', 'pretty-link'),
         $role,
         "pretty-link-upgrade-products",
         array( $plp_update, 'upgrade_products' )
@@ -417,7 +417,8 @@ class PrliAppController extends PrliBaseController {
       );
 
       wp_localize_script('pretty-link-richtext-format', 'plEditor', array(
-        'homeUrl' => trailingslashit(get_home_url())
+        'homeUrl' => trailingslashit(get_home_url()),
+        'prli_create_link_nonce' => wp_create_nonce('prli_create_link_nonce')
       ));
 
       do_action('prli_enqueue_block_scripts', $asset['dependencies']);

@@ -138,7 +138,8 @@ class PrliPostsController extends PrliBaseController {
       'default_sponsored' => $default_sponsored,
       'default_tracking' => $default_tracking,
       'ajaxurl' => admin_url('admin-ajax.php'),
-      'nonce' => wp_create_nonce('prli_tinymce_nonce')
+      'nonce' => wp_create_nonce('prli_tinymce_nonce'),
+      'prli_create_link_nonce' => wp_create_nonce('prli_create_link_nonce')
     ));
 
     require(PRLI_VIEWS_PATH.'/shared/tinymce_form_popup.php');
@@ -170,7 +171,7 @@ class PrliPostsController extends PrliBaseController {
 
   //AJAX
   public function create_pretty_link() {
-    if( ! check_ajax_referer( 'prli_tinymce_nonce', false, false ) ) {
+    if( ! check_ajax_referer( 'prli_create_link_nonce', false, false ) ) {
       wp_send_json_error( esc_html__('Security check failed.', 'pretty-link'), 403 );
     }
 

@@ -58,7 +58,7 @@ var PrliPopUpHandler = {
         nofollow: nofollow,
         sponsored: sponsored,
         tracking: tracking,
-        _ajax_nonce: prliTinymceL10n.nonce,
+        _ajax_nonce: prliTinymceL10n.prli_create_link_nonce,
       };
 
       jQuery("#insert").hide();

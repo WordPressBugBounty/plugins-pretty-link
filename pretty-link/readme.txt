@@ -4,8 +4,8 @@ Donate link: https://prettylinks.com
 Tags: affiliate links, link tracking, link shortener, payment links, url shortener
 Requires at least: 5.1
 Requires PHP: 7.4
-Tested up to: 6.5
-Stable tag: 3.6.8
+Tested up to: 6.6
+Stable Tag: 3.6.10
 
 🌠 The best WordPress link management, branding, tracking & sharing plugin. Easily make pretty & trackable shortlinks. 🔗
 
@@ -137,6 +137,10 @@ Yes! PrettyLinks is ready for translation. See our [Translating PrettyLinks](htt
 4. Click Tracking
 
 == Changelog ==
+= 3.6.9 =
+* Fixed Gutenberblock for Link Creation.
+* Updated Pretty Link post table Search.
+
 = 3.6.8 =
 * Updated getting started URL
 * Bug fixes
