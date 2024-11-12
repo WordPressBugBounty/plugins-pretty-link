@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the PrettyLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrettyLinks 3.6.10\n"
+"Project-Id-Version: PrettyLinks 3.6.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-01T14:28:44+00:00\n"
+"POT-Creation-Date: 2024-11-12T19:34:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: pretty-link\n"
@@ -247,7 +247,7 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:222
 #: app/controllers/PrliLinksController.php:542
-#: app/models/PrliClick.php:256
+#: app/models/PrliClick.php:258
 #: app/views/admin/popups/prettypay.php:71
 #: app/views/admin/popups/prettypay.php:385
 #: app/views/clicks/list.php:4
@@ -603,7 +603,7 @@ msgid "Target"
 msgstr ""
 
 #: app/controllers/PrliLinksController.php:543
-#: app/models/PrliClick.php:256
+#: app/models/PrliClick.php:258
 #: app/views/admin/popups/prettypay.php:76
 #: app/views/admin/popups/prettypay.php:386
 #: app/views/admin/upgrade/groups.php:13
@@ -1527,33 +1527,33 @@ msgstr ""
 msgid "Dismiss All"
 msgstr ""
 
-#: app/models/PrliClick.php:237
+#: app/models/PrliClick.php:239
 msgid "all links"
 msgstr ""
 
-#: app/models/PrliClick.php:244
+#: app/models/PrliClick.php:246
 msgid "All clicks"
 msgstr ""
 
-#: app/models/PrliClick.php:247
+#: app/models/PrliClick.php:249
 msgid "Unique hits"
 msgstr ""
 
-#: app/models/PrliClick.php:251
+#: app/models/PrliClick.php:253
 #: pro/app/views/metaboxes/post-sidebar.php:38
 msgid "Pretty Link:"
 msgstr ""
 
-#: app/models/PrliClick.php:251
+#: app/models/PrliClick.php:253
 msgid "on"
 msgstr ""
 
-#: app/models/PrliClick.php:251
+#: app/models/PrliClick.php:253
 #: pro/app/models/PlpReport.php:400
 msgid "between"
 msgstr ""
 
-#: app/models/PrliClick.php:251
+#: app/models/PrliClick.php:253
 #: pro/app/models/PlpReport.php:259
 #: pro/app/models/PlpReport.php:400
 msgid "and"

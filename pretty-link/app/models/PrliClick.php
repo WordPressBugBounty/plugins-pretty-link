@@ -3,6 +3,8 @@ if(!defined('ABSPATH'))
   die('You are not allowed to call this page directly.');
 
 class PrliClick {
+  public $browser;
+  public $btype;
   var $table_name;
 
   public function __construct() {
