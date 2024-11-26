@@ -228,6 +228,13 @@ img.prli_loader {
   height: 36px;
 }
 
+#wpcontent #pl-admin-header .pl-admin-header-actions {
+  align-items: center;
+  display: flex;
+  float: right;
+  gap: 10px;
+}
+
 .mfp-bg.mfp-prli {
   z-index: 100002;
 }

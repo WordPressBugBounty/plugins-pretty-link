@@ -111,7 +111,13 @@ class PrliAppController extends PrliBaseController {
           });
         </script>
       <?php endif; ?>
-      <div id="pl-admin-header"><img class="pl-logo" src="<?php echo PRLI_IMAGES_URL . '/pretty-links-logo-color-white.svg'; ?>" /></div>
+      <div id="pl-admin-header">
+          <img class="pl-logo" src="<?php echo PRLI_IMAGES_URL . '/pretty-links-logo-color-white.svg'; ?>" />
+          <div class="pl-admin-header-actions">
+              <?php do_action('prli_admin_header_actions'); ?>
+          </div>
+          <?php do_action('prli_admin_header'); ?>
+      </div>
       <?php
     }
   }
