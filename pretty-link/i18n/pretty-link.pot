@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the PrettyLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrettyLinks 3.6.12\n"
+"Project-Id-Version: PrettyLinks 3.6.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-26T22:52:00+00:00\n"
+"POT-Creation-Date: 2024-12-03T15:04:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: pretty-link\n"
@@ -182,7 +182,7 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:178
 #: app/controllers/PrliLinksController.php:176
-#: app/controllers/PrliUpdateController.php:738
+#: app/controllers/PrliUpdateController.php:739
 msgid "Link Categories"
 msgstr ""
 
@@ -196,7 +196,7 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:186
 #: app/controllers/PrliLinksController.php:177
-#: app/controllers/PrliUpdateController.php:744
+#: app/controllers/PrliUpdateController.php:745
 msgid "Link Tags"
 msgstr ""
 
@@ -209,7 +209,7 @@ msgid "Tags"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:194
-#: app/controllers/PrliUpdateController.php:750
+#: app/controllers/PrliUpdateController.php:751
 #: pro/app/views/reports/list.php:4
 #: pro/app/views/reports/reports.php:7
 msgid "Link Reports"
@@ -223,7 +223,7 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:202
 #: app/controllers/PrliAppController.php:203
-#: app/controllers/PrliUpdateController.php:756
+#: app/controllers/PrliUpdateController.php:757
 msgid "Display Groups"
 msgstr ""
 
@@ -236,7 +236,7 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:218
 #: app/controllers/PrliAppController.php:219
-#: app/controllers/PrliUpdateController.php:762
+#: app/controllers/PrliUpdateController.php:763
 #: pro/app/controllers/PlpImportExportController.php:15
 msgid "Import / Export"
 msgstr ""
@@ -1124,64 +1124,64 @@ msgstr ""
 msgid "License key deactivated"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:546
+#: app/controllers/PrliUpdateController.php:547
 msgid "Check for Update"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:615
+#: app/controllers/PrliUpdateController.php:616
 msgid "You had an HTTP error connecting to Caseproof's Mothership API"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:627
+#: app/controllers/PrliUpdateController.php:628
 msgid "Your License Key was invalid"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:644
+#: app/controllers/PrliUpdateController.php:645
 #: app/views/admin/update/active_license.php:19
 #: app/views/admin/update/edge_updates.php:4
 #: app/views/widgets/widget.php:22
 msgid "Loading..."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:645
+#: app/controllers/PrliUpdateController.php:646
 msgid "An error occurred during activation: %s"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:646
+#: app/controllers/PrliUpdateController.php:647
 msgid "Invalid response."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:647
+#: app/controllers/PrliUpdateController.php:648
 msgid "Ajax error."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:648
+#: app/controllers/PrliUpdateController.php:649
 msgid "Are you sure? Pretty Links will not be functional on %s if this License Key is deactivated."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:650
+#: app/controllers/PrliUpdateController.php:651
 msgid "An error occurred during deactivation: %s"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:652
+#: app/controllers/PrliUpdateController.php:653
 msgid "An error occurred while installing the correct edition."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:666
+#: app/controllers/PrliUpdateController.php:667
 msgid "You do not have access."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:670
+#: app/controllers/PrliUpdateController.php:671
 msgid "Edge updates couldn't be updated."
 msgstr ""
 
 #. translators: %1$s: open link tag, %2$s: close link tag
-#: app/controllers/PrliUpdateController.php:771
+#: app/controllers/PrliUpdateController.php:772
 #: app/lib/PrliAddonUpdates.php:216
 msgid "To restore automatic updates, %1$sinstall the correct edition%2$s of Pretty Links."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:804
+#: app/controllers/PrliUpdateController.php:805
 msgid "Products Display"
 msgstr ""
 

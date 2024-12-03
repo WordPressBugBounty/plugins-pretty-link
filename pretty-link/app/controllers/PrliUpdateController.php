@@ -522,6 +522,7 @@ class PrliUpdateController {
     if(($this->is_activated() && !$this->is_installed()) || (isset($curr_version) && version_compare($curr_version, PRLI_VERSION, '>'))) {
       $transient->response[PRLI_PLUGIN_SLUG] = (object)array(
         'id'          => $curr_version,
+        'plugin'      => PRLI_PLUGIN_SLUG,
         'slug'        => 'pretty-link',
         'new_version' => $curr_version,
         'url'         => 'https://prettylinks.com/pl/update/url',
