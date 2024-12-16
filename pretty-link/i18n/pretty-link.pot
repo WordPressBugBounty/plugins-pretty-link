@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the PrettyLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrettyLinks 3.6.14\n"
+"Project-Id-Version: PrettyLinks 3.6.15\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-03T15:04:21+00:00\n"
+"POT-Creation-Date: 2024-12-16T18:59:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: pretty-link\n"
@@ -293,7 +293,7 @@ msgstr ""
 #: app/controllers/PrliAppController.php:390
 #: app/controllers/PrliAppController.php:396
 #: app/controllers/PrliAppController.php:401
-#: app/controllers/PrliAppController.php:902
+#: app/controllers/PrliAppController.php:906
 msgid "Docs"
 msgstr ""
 
@@ -358,48 +358,48 @@ msgid "This field is required"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s: open link tag, %3$s: close link tag
-#: app/controllers/PrliAppController.php:668
+#: app/controllers/PrliAppController.php:672
 msgid "You're almost done!%1$s%2$sFinish your Re-Install of Pretty Links Pro%3$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:683
+#: app/controllers/PrliAppController.php:687
 msgid "Pretty Links Pro Successfully Uninstalled."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:737
+#: app/controllers/PrliAppController.php:741
 msgid "Invalid server response"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:738
+#: app/controllers/PrliAppController.php:742
 msgid "Ajax error"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:755
+#: app/controllers/PrliAppController.php:759
 msgid "Pretty Link Quick Add"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:794
+#: app/controllers/PrliAppController.php:798
 msgid "Your Pretty Links Pro installation isn't quite complete yet. %1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:815
+#: app/controllers/PrliAppController.php:819
 msgid "Your Pretty Links Pro installation isn't quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
 #. translators: $1$s - Pretty Links plugin name; $2$s - WP.org review link; $3$s - WP.org review link.
-#: app/controllers/PrliAppController.php:863
+#: app/controllers/PrliAppController.php:867
 msgid "Enjoying %1$s? Please rate <a href=\"%2$s\" target=\"_blank\" rel=\"noopener noreferrer\">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href=\"%3$s\" target=\"_blank\" rel=\"noopener\">WordPress.org</a> to help us spread the word. Thanks from the Pretty Links team!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:897
+#: app/controllers/PrliAppController.php:901
 msgid "Support"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:907
+#: app/controllers/PrliAppController.php:911
 msgid "Made with ♥ by the Pretty Links Team"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:955
+#: app/controllers/PrliAppController.php:959
 #: app/views/admin/payments/options.php:111
 #: app/views/admin/payments/options.php:113
 msgid "PrettyPay™ Thank You Page"

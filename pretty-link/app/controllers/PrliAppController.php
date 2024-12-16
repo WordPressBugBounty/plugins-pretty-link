@@ -643,7 +643,11 @@ class PrliAppController extends PrliBaseController {
       }
 
       @ignore_user_abort(true);
-      @set_time_limit(0);
+
+      if(function_exists('set_time_limit')) {
+        @set_time_limit(0);
+      }
+
       $prli_db->prli_install();
 
       delete_transient('prli_installing');

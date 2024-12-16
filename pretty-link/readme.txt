@@ -5,7 +5,7 @@ Tags: affiliate links, link tracking, link shortener, payment links, url shorten
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.7
-Stable Tag: 3.6.14
+Stable Tag: 3.6.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,11 @@ Yes! PrettyLinks is ready for translation. See our [Translating PrettyLinks](htt
 4. Click Tracking
 
 == Changelog ==
+= 3.6.15 =
+* Add Growth Tools menu
+* Fix error with new notifications inbox
+* Fix error when set_time_limit() function doesn't exist
+
 = 3.6.14 =
 * Fix translations error w/WP 6.7
 * Fix PHP 8.2 notice

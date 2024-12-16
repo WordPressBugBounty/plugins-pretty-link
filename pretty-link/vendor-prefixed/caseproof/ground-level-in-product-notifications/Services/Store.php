@@ -86,7 +86,8 @@ class Store extends Service
     public function fetch(bool $force = false): self
     {
         if (empty($this->data) || $force) {
-            $this->data = get_option($this->key, []);
+            $data       = get_option($this->key, []);
+            $this->data = is_array($data) ? $data : [];
         }
         return $this;
     }
