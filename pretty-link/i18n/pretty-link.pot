@@ -1,32 +1,36 @@
-# Copyright (C) 2024 Pretty Links
+# Copyright (C) 2025 Pretty Links
 # This file is distributed under the same license as the PrettyLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrettyLinks 3.6.15\n"
+"Project-Id-Version: PrettyLinks 3.6.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-16T18:59:55+00:00\n"
+"POT-Creation-Date: 2025-05-09T18:11:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
 
 #. Plugin Name of the plugin
+#: pretty-link.php
 msgid "PrettyLinks"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: pretty-link.php
 msgid "https://prettylinks.com/pl/plugin-uri"
 msgstr ""
 
 #. Description of the plugin
+#: pretty-link.php
 msgid "Shrink, track and share any URL using your website and brand!"
 msgstr ""
 
 #. Author of the plugin
+#: pretty-link.php
 #: app/controllers/PrliAppController.php:363
 #: app/controllers/PrliLinksController.php:67
 #: app/controllers/PrliLinksController.php:544
@@ -39,17 +43,23 @@ msgid "Pretty Links"
 msgstr ""
 
 #. Author URI of the plugin
+#: pretty-link.php
 msgid "http://prettylinks.com"
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:28
 #: app/views/admin/addons/addon-page-pro.php:37
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:357
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:40
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:102
 msgid "Active"
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:29
 #: app/views/admin/addons/addon-page-lite.php:27
 #: app/views/admin/addons/addon-page-pro.php:43
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:358
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:46
 msgid "Inactive"
 msgstr ""
 
@@ -59,16 +69,23 @@ msgstr ""
 #: app/views/admin/addons/addon-page-lite.php:32
 #: app/views/admin/addons/addon-page-pro.php:90
 #: app/views/admin/onboarding/license.php:17
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:359
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:100
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:103
 msgid "Activate"
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:31
 #: app/views/admin/addons/addon-page-pro.php:86
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:360
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:92
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:104
 msgid "Deactivate"
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:32
 #: app/controllers/PrliAddonsController.php:140
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:218
 msgid "Could not install add-on."
 msgstr ""
 
@@ -96,6 +113,9 @@ msgstr ""
 #: app/controllers/PrliUpdateController.php:66
 #: app/controllers/PrliUpdateController.php:80
 #: app/controllers/PrliUpdateController.php:161
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:125
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:172
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:199
 msgid "Bad request."
 msgstr ""
 
@@ -114,6 +134,9 @@ msgstr ""
 #: app/controllers/PrliUpdateController.php:70
 #: app/controllers/PrliUpdateController.php:165
 #: app/controllers/PrliUpdateController.php:204
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:129
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:175
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:203
 msgid "Sorry, you don't have permission to do this."
 msgstr ""
 
@@ -127,46 +150,60 @@ msgstr ""
 #: app/controllers/PrliUpdateController.php:74
 #: app/controllers/PrliUpdateController.php:169
 #: app/controllers/PrliUpdateController.php:208
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:133
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:178
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:207
 msgid "Security check failed."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:74
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:142
 msgid "Could not activate plugin. Please activate from the Plugins page manually."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:76
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:149
 msgid "Could not activate add-on. Please activate from the Plugins page manually."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:81
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:158
 msgid "Plugin activated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:83
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:160
 msgid "Add-on activated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:116
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:185
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:70
 msgid "Plugin deactivated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:118
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:187
 msgid "Add-on deactivated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:191
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:265
 msgid "Plugin installed & activated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:191
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:266
 msgid "Add-on installed & activated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:199
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:275
 msgid "Plugin installed."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:199
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:276
 msgid "Add-on installed."
 msgstr ""
 
@@ -702,6 +739,8 @@ msgid "Bad request"
 msgstr ""
 
 #: app/controllers/PrliLinksController.php:859
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:203
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:260
 msgid "Insufficient permissions"
 msgstr ""
 
@@ -781,6 +820,7 @@ msgstr ""
 
 #: app/controllers/PrliOnboardingController.php:46
 #: app/views/admin/onboarding/license.php:14
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:149
 msgid "Activate License"
 msgstr ""
 
@@ -1556,11 +1596,13 @@ msgstr ""
 
 #: app/views/admin/addons/addon-page-lite.php:5
 #: app/views/admin/addons/addon-page-pro.php:5
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:14
 msgid "Refresh Add-ons"
 msgstr ""
 
 #: app/views/admin/addons/addon-page-lite.php:5
 #: app/views/admin/addons/addon-page-pro.php:5
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:18
 msgid "Search add-ons"
 msgstr ""
 
@@ -1570,6 +1612,7 @@ msgstr ""
 
 #: app/views/admin/addons/addon-page-lite.php:15
 #: app/views/admin/addons/addon-page-pro.php:18
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:10
 msgid "Available Add-ons"
 msgstr ""
 
@@ -1587,15 +1630,20 @@ msgid "Improve your links with our premium add-ons. Missing an add-on that you t
 msgstr ""
 
 #: app/views/admin/addons/addon-page-pro.php:40
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:43
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:100
 msgid "Not Installed"
 msgstr ""
 
 #. translators: %s: add-on status label
+#. Translators: %s: add-on status label.
 #: app/views/admin/addons/addon-page-pro.php:66
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:73
 msgid "Status: %s"
 msgstr ""
 
 #: app/views/admin/addons/addon-page-pro.php:94
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:109
 msgid "Install Add-on"
 msgstr ""
 
@@ -1642,6 +1690,7 @@ msgid "Manage activations"
 msgstr ""
 
 #: app/views/admin/onboarding/active_license.php:66
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:185
 msgid "Deactivate License"
 msgstr ""
 
@@ -3190,7 +3239,7 @@ msgid "Daily"
 msgstr ""
 
 #: app/views/links/prettypay_link_stripe.php:67
-#: pro/app/controllers/PlpLinksController.php:1267
+#: pro/app/controllers/PlpLinksController.php:1276
 msgid "Weekly"
 msgstr ""
 
@@ -5433,39 +5482,39 @@ msgstr ""
 msgid "Time Period Redirects have been setup for this link but the current time is not within any of them currently."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1206
+#: pro/app/controllers/PlpLinksController.php:1215
 msgid "[Pretty Links] Broken Links Weekly Report"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1261
+#: pro/app/controllers/PlpLinksController.php:1270
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1286
+#: pro/app/controllers/PlpLinksController.php:1295
 msgid "Status"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1374
+#: pro/app/controllers/PlpLinksController.php:1383
 msgid "Not yet checked."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1377
+#: pro/app/controllers/PlpLinksController.php:1386
 msgid "Last checked on %s."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1381
+#: pro/app/controllers/PlpLinksController.php:1390
 msgid "Last checked unknown."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1385
+#: pro/app/controllers/PlpLinksController.php:1394
 msgid "Waiting"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1386
+#: pro/app/controllers/PlpLinksController.php:1395
 msgid "Okay"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1387
+#: pro/app/controllers/PlpLinksController.php:1396
 msgid "Broken"
 msgstr ""
 
@@ -6872,4 +6921,119 @@ msgstr ""
 
 #: pro/app/widgets/PlpPublicLinksWidget.php:80
 msgid "Tracking Enabled:"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:84
+msgid "Invalid nonce."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:88
+msgid "You must log in to perform this action."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:92
+msgid "You are not allowed to perform this action."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:96
+msgid "Missing required parameter: id."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:100
+msgid "Unknown error."
+msgstr ""
+
+#. Translators: %s The name of the property that does not exist on the response object.
+#: vendor-prefixed/caseproof/ground-level-mothership/Api/Response.php:108
+msgid "Property %s does not exist on the response object."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Credentials.php:75
+msgid "Cannot store credentials in database; found in environment variables or constants."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:213
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:365
+msgid "Could not install plugin. Please download and install manually."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:320
+msgid "Please enter your license key to access add-ons."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:332
+msgid "There was an issue connecting with the API."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:361
+msgid "Could not install add-on. Please download and install manually."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:82
+msgid "License activated successfully"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:95
+msgid "License deactivated successfully"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:132
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:171
+msgid "License Key: "
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:208
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:265
+msgid "Invalid nonce"
+msgstr ""
+
+#. Translators: %s is the response error message.
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:212
+msgid "License activation failed: %s"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:274
+msgid "License deactivation failed, you are using a license key from an environment variable or constant."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:120
+msgid "There were no Add-ons found for your License Key."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:58
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:59
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:205
+msgid "Growth Tools"
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:101
+msgid "Installed"
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:105
+msgid "Install"
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:22
+msgid "Could not activate addon. Please check user permissions."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:31
+msgid "Addon activated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:36
+msgid "Could not activate addon. Please activate from the Plugins page."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:41
+msgid "Could not activate addon. Please refresh page and try again."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:62
+msgid "Could not deactivate the theme. Please deactivate from the theme page."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:72
+msgid "Could not deactivate the addon. Please deactivate from the Plugins page."
 msgstr ""

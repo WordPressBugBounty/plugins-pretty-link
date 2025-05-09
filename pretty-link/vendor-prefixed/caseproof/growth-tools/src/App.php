@@ -1,9 +1,6 @@
 <?php
-/**
- * @license GPL-3.0
- *
- * Modified by Team Caseproof using {@see https://github.com/BrianHenryIE/strauss}.
- */
+
+declare(strict_types=1);
 
 namespace Prli\Caseproof\GrowthTools;
 
@@ -25,6 +22,13 @@ class App
     protected Config $config;
 
     /**
+     * Ajax Action prefix.
+     *
+     * @var string
+     */
+    private const AJAX_ACTION_PREFIX = 'caseproof_growth_tool_addon_action_';
+
+    /**
      * Constructor.
      *
      * @param Config $config Config object.
@@ -41,7 +45,7 @@ class App
     public function addHooks(): void
     {
         add_action('admin_menu', [$this, 'addMenu'], 9999);
-        add_action('wp_ajax_caseproof_growth_tool_plugin_action_' . $this->config->instanceId, [$this, 'pluginAction']);
+        add_action('wp_ajax_' . self::AJAX_ACTION_PREFIX . $this->config->instanceId, [$this, 'addonAction']);
     }
 
     /**
@@ -51,9 +55,9 @@ class App
     {
         add_submenu_page(
             $this->config->parentMenuSlug ?? 'tools.php',
-            __('Growth Tools', 'cspf-growth-tools'),
-            __('Growth Tools', 'cspf-growth-tools'),
-            'install_plugins',
+            __('Growth Tools', 'pretty-link'),
+            __('Growth Tools', 'pretty-link'),
+            'activate_plugins',
             $this->config->menuSlug ?? 'growth-tools',
             [$this, 'renderPage']
         );
@@ -80,88 +84,124 @@ class App
         wp_enqueue_style('caseproof_grtl-growth-tools-style', $this->config->assetsUrl . '/main.min.css', []);
         $inlineCSS = $this->config->customInlineCSS;
         $this->addInlineCSS(is_callable($inlineCSS) ? $inlineCSS() : $inlineCSS);
-        $growthToolsData = $this->config->getPluginsConfig();
-        $pluginsStatus = $this->config->getPluginsStatus();
+        $growthToolsData   = $this->config->getAddonsConfig();
+        $addonsPluginsData = is_array($growthToolsData['plugins'] ?? false) ?
+                $growthToolsData['plugins'] : [];
+        $addonsThemesData  = is_array($growthToolsData['themes'] ?? false) ?
+                $growthToolsData['themes'] : [];
+        $addons            = array_merge($addonsPluginsData, $addonsThemesData);
+        $addonsStatusData  = $this->config->getAddonsStatus();
+        $addonsStatus      = array_merge(
+            $addonsStatusData['plugins'] ?? [],
+            $addonsStatusData['themes'] ?? []
+        );
 
-        $labels = [
-            'notinstalled' => esc_html(__('Not Installed', 'cspf-growth-tools')),
-            'installed' => esc_html(__('Installed', 'cspf-growth-tools')),
-            'activated' => esc_html(__('Active', 'cspf-growth-tools')),
-            'active' => esc_html(__('Activate', 'cspf-growth-tools')),
-            'deactive' => esc_html(__('Deactivate', 'cspf-growth-tools')),
-            'install' => esc_html(__('Install', 'cspf-growth-tools')),
+        $labels      = [
+            'notinstalled' => esc_html(__('Not Installed', 'pretty-link')),
+            'installed'    => esc_html(__('Installed', 'pretty-link')),
+            'activated'    => esc_html(__('Active', 'pretty-link')),
+            'active'       => esc_html(__('Activate', 'pretty-link')),
+            'deactive'     => esc_html(__('Deactivate', 'pretty-link')),
+            'install'      => esc_html(__('Install', 'pretty-link')),
         ];
-        $ajaxAction = 'caseproof_growth_tool_plugin_action_' . $this->config->instanceId;
+        $ajaxAction  = self::AJAX_ACTION_PREFIX . $this->config->instanceId;
         $baseLogoUrl = $this->config->imageBaseUrl;
-        $buttonCSS = $this->config->buttonCSSClasses;
-        $headerHTML = $this->config->headerHtmlCallback;
+        $buttonCSS   = $this->config->buttonCSSClasses;
+        $headerHTML  = $this->config->headerHtmlCallback;
 
-        require "views/list.phtml";
+        require 'views/list.phtml';
     }
 
     /**
-     * Ajax handler for install/activate plugin
+     * Ajax handler for install/activate plugin.
+     *
+     * Deprecated function.
      */
     public function pluginAction()
     {
-        $growth_tools_data = $this->config->getPluginsConfig();
-        if (empty($growth_tools_data)) {
+        _deprecated_function(__METHOD__, '1.4.0', 'App::addonAction'); // Send a deprecation warning.
+        $this->addonAction();
+    }
+
+    /**
+     * Ajax handler for install/activate addon.
+     */
+    public function addonAction()
+    {
+        $growthToolsData   = $this->config->getAddonsConfig();
+        $addonsPluginsData = is_array($growthToolsData['plugins'] ?? false) ?
+                $growthToolsData['plugins'] : [];
+        $addonsThemesData  = is_array($growthToolsData['themes'] ?? false) ?
+                $growthToolsData['themes'] : [];
+        $addons            = array_merge($addonsPluginsData, $addonsThemesData);
+        if (empty($addons)) {
             return;
         }
 
-        $type = sanitize_text_field($_REQUEST['type']);
-        $pluginMain = sanitize_text_field($_REQUEST['plugin']);
+        $type      = sanitize_text_field($_REQUEST['type']);
+        $addonMain = sanitize_text_field($_REQUEST['addon']);
 
         if ($type === 'install') {
-            foreach ($growth_tools_data['plugins'] as $plugin) {
-                if ($plugin['main']['free'] === $pluginMain) {
-                    $this->installAddon($plugin['download_url']);
+            foreach ($addons as $addon) {
+                if (($addon['main']['free'] ?? null) === $addonMain) {
+                    $this->installAddon($addon['download_url'], $addon['addon_type']);
                 }
             }
         } elseif ($type === 'activate') {
-            $this->activateAddon($pluginMain);
+            foreach ($addons as $addon) {
+                if (in_array($addonMain, $addon['main'], true)) {
+                    $this->activateAddon($addonMain, $addon['addon_type']);
+                }
+            }
         } elseif ($type === 'deactivate') {
-            $this->deactivateAddon($pluginMain);
+            foreach ($addons as $addon) {
+                if (in_array($addonMain, $addon['main'], true)) {
+                    $this->deactivateAddon($addonMain, $addon['addon_type']);
+                }
+            }
         }
     }
 
     /**
      * Install plugin.
      *
-     * @param string $link Download link.
+     * @param string $link      Download link.
+     * @param string $addonType Type of addon.
      */
-    protected function installAddon(string $link)
+    protected function installAddon(string $link, string $addonType = 'plugin')
     {
-        AddonHelper::installAddon($link);
+        AddonHelper::installAddon($link, $addonType);
     }
 
     /**
      * Activate plugin.
      *
-     * @param string $file Name of the plugin.
+     * @param string $file      Name of the plugin.
+     * @param string $addonType Type of addon.
      */
-    protected function activateAddon(string $file)
+    protected function activateAddon(string $file, string $addonType = 'plugin')
     {
-        AddonHelper::activateAddon($file);
+        AddonHelper::activateAddon($file, $addonType);
     }
 
     /**
      * Deactivate plugin.
      *
-     * @param string $file Name of the plugin.
+     * @param string $file      Name of the plugin.
+     * @param string $addonType Type of addon.
      */
-    protected function deactivateAddon(string $file)
+    protected function deactivateAddon(string $file, string $addonType = 'plugin')
     {
-        AddonHelper::deactivateAddon($file);
+        AddonHelper::deactivateAddon($file, $addonType);
     }
 
-  /**
-   * Render header contents.
-   *
-   * @return string
-   */
+    /**
+     * Render header contents.
+     *
+     * @return string
+     */
     public static function getHeaderHtml(): string
     {
-        return '<h1 class="wp-heading-inline">' . esc_html__('Growth Tools', 'cspf-growth-tools') . '</h1>';
+        return '<h1 class="wp-heading-inline">' . esc_html__('Growth Tools', 'pretty-link') . '</h1>';
     }
 }

@@ -215,6 +215,11 @@ class PrliPostsController extends PrliBaseController {
 
     if(!isset($_GET['term']) || empty($_GET['term'])) { die(''); }
 
+    // Don't allow non-admin users to search for links
+    if(!current_user_can('manage_options')) {
+      die('You don\'t have permission to search for links.');
+    }
+
     $return = array();
     $term = '%' . $wpdb->esc_like(sanitize_text_field(stripslashes($_GET['term']))) . '%';
     $q = "SELECT * FROM {$prli_link->table_name} WHERE link_status='enabled' AND (slug LIKE %s OR name LIKE %s OR url LIKE %s) LIMIT 20";

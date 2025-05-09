@@ -1,15 +1,15 @@
-=== PrettyLinks - Affiliate Links, Link Branding, Link Tracking & Marketing Plugin ===
+=== PrettyLinks - Affiliate Links, Link Branding, Link Tracking, Marketing and Stripe Payments Plugin ===
 Contributors: supercleanse, cartpauj
 Donate link: https://prettylinks.com
-Tags: affiliate links, link tracking, link shortener, payment links, url shortener
+Tags: affiliate links, link tracking, ecommerce, payments, stripe
 Requires at least: 6.0
 Requires PHP: 7.4
-Tested up to: 6.7
-Stable Tag: 3.6.15
+Tested up to: 6.8
+Stable Tag: 3.6.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-🌠 The best WordPress link management, branding, tracking & sharing plugin. Easily make pretty & trackable shortlinks. 🔗
+🌠 The best WordPress link management, branding, tracking, sharing and payments plugin. Easily make pretty & trackable shortlinks. 🔗
 
 == Description ==
 
@@ -18,6 +18,10 @@ PrettyLinks helps you shrink, beautify, track, manage and share any URL on or of
 ## PrettyLinks 🌠
 
 PrettyLinks enables you to shorten links using your own domain name (as opposed to using tinyurl.com, bit.ly, or any other link shrinking service)! In addition to creating clean links, PrettyLinks tracks each hit on your URL and provides a full, detailed report of where the hit came from, the browser, OS, and host. PrettyLinks is a killer plugin for people who want to clean up their affiliate links, track clicks from emails, their links on Twitter to come from their own domain, or generally increase the reach of their website by spreading these links on forums or comments on other blogs.
+
+## PrettyPay™ Links 💵
+
+PrettyLinks now comes with PrettyPay™. PrettyPay™ enables you to make one-click payments with Stripe to sell e-books, courses, downloads, subscriptions and really, anything -- all from your domain name and brand. Share your PrettyPay™ links and start selling anywhere—instantly!
 
 ## Examples 👇
 
@@ -139,6 +143,11 @@ Yes! PrettyLinks is ready for translation. See our [Translating PrettyLinks](htt
 4. Click Tracking
 
 == Changelog ==
+= 3.6.16 =
+* Fix admin menu style on mobile view
+* Minor bugfixes and security hardening
+* Pro: Fix keyword replacements with new line chars in html attributes
+
 = 3.6.15 =
 * Add Growth Tools menu
 * Fix error with new notifications inbox

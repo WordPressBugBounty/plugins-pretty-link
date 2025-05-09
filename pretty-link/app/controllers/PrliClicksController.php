@@ -5,7 +5,7 @@ class PrliClicksController extends PrliBaseController {
   public $max_rows_per_file;
 
   public function __construct() {
-    $this->max_rows_per_file = 5000;
+    $this->max_rows_per_file = apply_filters('prli_clicks_max_rows_per_file', 5000);
   }
 
   public function load_hooks() {

@@ -224,6 +224,14 @@ img.prli_loader {
   min-height: 36px;
   /* border-bottom: 2px solid #00cee6; */
 }
+
+@media screen and (max-width: 600px) {
+  #wpcontent #pl-admin-header {
+    position: relative;
+    top: 46px;
+  }
+}
+
 #wpcontent #pl-admin-header img.pl-logo {
   height: 36px;
 }
