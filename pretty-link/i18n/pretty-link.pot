@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the PrettyLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrettyLinks 3.6.16\n"
+"Project-Id-Version: PrettyLinks 3.6.17\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-09T18:11:20+00:00\n"
+"POT-Creation-Date: 2025-06-18T04:04:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -31,9 +31,9 @@ msgstr ""
 
 #. Author of the plugin
 #: pretty-link.php
-#: app/controllers/PrliAppController.php:363
+#: app/controllers/PrliAppController.php:383
 #: app/controllers/PrliLinksController.php:67
-#: app/controllers/PrliLinksController.php:544
+#: app/controllers/PrliLinksController.php:548
 #: app/controllers/PrliPostsController.php:59
 #: app/helpers/PrliOnboardingHelper.php:169
 #: app/views/admin/popups/prettypay.php:81
@@ -49,43 +49,43 @@ msgstr ""
 
 #: app/controllers/PrliAddonsController.php:28
 #: app/views/admin/addons/addon-page-pro.php:37
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:357
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:386
 #: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:40
-#: vendor-prefixed/caseproof/growth-tools/src/App.php:102
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:105
 msgid "Active"
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:29
 #: app/views/admin/addons/addon-page-lite.php:27
 #: app/views/admin/addons/addon-page-pro.php:43
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:358
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:387
 #: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:46
 msgid "Inactive"
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:30
-#: app/controllers/PrliAppController.php:239
-#: app/controllers/PrliAppController.php:242
+#: app/controllers/PrliAppController.php:259
+#: app/controllers/PrliAppController.php:262
 #: app/views/admin/addons/addon-page-lite.php:32
 #: app/views/admin/addons/addon-page-pro.php:90
 #: app/views/admin/onboarding/license.php:17
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:359
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:388
 #: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:100
-#: vendor-prefixed/caseproof/growth-tools/src/App.php:103
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:106
 msgid "Activate"
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:31
 #: app/views/admin/addons/addon-page-pro.php:86
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:360
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:389
 #: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:92
-#: vendor-prefixed/caseproof/growth-tools/src/App.php:104
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:107
 msgid "Deactivate"
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:32
 #: app/controllers/PrliAddonsController.php:140
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:218
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:247
 msgid "Could not install add-on."
 msgstr ""
 
@@ -95,7 +95,7 @@ msgid "Could not install plugin."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:49
-#: app/controllers/PrliAppController.php:252
+#: app/controllers/PrliAppController.php:272
 msgid "Add-ons"
 msgstr ""
 
@@ -113,9 +113,9 @@ msgstr ""
 #: app/controllers/PrliUpdateController.php:66
 #: app/controllers/PrliUpdateController.php:80
 #: app/controllers/PrliUpdateController.php:161
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:125
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:172
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:199
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:154
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:201
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:228
 msgid "Bad request."
 msgstr ""
 
@@ -134,156 +134,168 @@ msgstr ""
 #: app/controllers/PrliUpdateController.php:70
 #: app/controllers/PrliUpdateController.php:165
 #: app/controllers/PrliUpdateController.php:204
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:129
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:175
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:203
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:158
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:204
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:232
 msgid "Sorry, you don't have permission to do this."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:66
 #: app/controllers/PrliAddonsController.php:109
 #: app/controllers/PrliAddonsController.php:132
-#: app/controllers/PrliLinksController.php:711
+#: app/controllers/PrliLinksController.php:715
 #: app/controllers/PrliOnboardingController.php:204
-#: app/controllers/PrliPostsController.php:152
-#: app/controllers/PrliPostsController.php:175
+#: app/controllers/PrliPostsController.php:157
+#: app/controllers/PrliPostsController.php:185
 #: app/controllers/PrliUpdateController.php:74
 #: app/controllers/PrliUpdateController.php:169
 #: app/controllers/PrliUpdateController.php:208
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:133
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:178
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:162
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:207
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:236
 msgid "Security check failed."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:74
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:142
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:171
 msgid "Could not activate plugin. Please activate from the Plugins page manually."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:76
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:149
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:178
 msgid "Could not activate add-on. Please activate from the Plugins page manually."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:81
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:158
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:187
 msgid "Plugin activated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:83
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:160
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:189
 msgid "Add-on activated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:116
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:185
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:214
 #: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:70
 msgid "Plugin deactivated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:118
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:187
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:216
 msgid "Add-on deactivated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:191
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:265
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:294
 msgid "Plugin installed & activated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:191
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:266
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:295
 msgid "Add-on installed & activated."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:199
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:275
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:304
 msgid "Plugin installed."
 msgstr ""
 
 #: app/controllers/PrliAddonsController.php:199
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:276
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:305
 msgid "Add-on installed."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:86
+#: app/controllers/PrliAppController.php:74
+#: app/controllers/PrliAppController.php:133
+#: app/controllers/PrliAppController.php:147
+#: app/controllers/PrliAppController.php:161
+#: app/controllers/PrliLinksController.php:474
+#: app/controllers/PrliLinksController.php:849
+#: app/controllers/PrliLinksController.php:867
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:203
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:260
+msgid "Insufficient permissions"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:91
 msgid "You're using Pretty Links Lite. To unlock more features, consider <a href=\"https://prettylinks.com/pl/main-menu/upgrade?plugin-upgrade-header\">upgrading to Pro.</a>"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:168
-#: app/controllers/PrliAppController.php:169
-#: app/controllers/PrliLinksController.php:1234
+#: app/controllers/PrliAppController.php:188
+#: app/controllers/PrliAppController.php:189
+#: app/controllers/PrliLinksController.php:1242
 msgid "PrettyPay™ Links"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:178
+#: app/controllers/PrliAppController.php:198
 #: app/controllers/PrliLinksController.php:176
 #: app/controllers/PrliUpdateController.php:739
 msgid "Link Categories"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:179
-#: app/controllers/PrliLinksController.php:503
+#: app/controllers/PrliAppController.php:199
+#: app/controllers/PrliLinksController.php:507
 #: app/views/admin/popups/prettypay.php:56
 #: app/views/admin/popups/prettypay.php:382
-#: pro/app/controllers/PlpLinkCategoriesController.php:25
+#: pro/app/controllers/PlpLinkCategoriesController.php:26
 msgid "Categories"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:186
+#: app/controllers/PrliAppController.php:206
 #: app/controllers/PrliLinksController.php:177
 #: app/controllers/PrliUpdateController.php:745
 msgid "Link Tags"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:187
-#: app/controllers/PrliLinksController.php:504
+#: app/controllers/PrliAppController.php:207
+#: app/controllers/PrliLinksController.php:508
 #: app/views/admin/popups/prettypay.php:61
 #: app/views/admin/popups/prettypay.php:383
-#: pro/app/controllers/PlpLinkTagsController.php:29
+#: pro/app/controllers/PlpLinkTagsController.php:30
 msgid "Tags"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:194
+#: app/controllers/PrliAppController.php:214
 #: app/controllers/PrliUpdateController.php:751
 #: pro/app/views/reports/list.php:4
 #: pro/app/views/reports/reports.php:7
 msgid "Link Reports"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:195
+#: app/controllers/PrliAppController.php:215
 #: pro/app/controllers/PlpReportsController.php:15
 #: pro/app/views/reports/reports.php:4
 msgid "Reports"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:202
-#: app/controllers/PrliAppController.php:203
+#: app/controllers/PrliAppController.php:222
+#: app/controllers/PrliAppController.php:223
 #: app/controllers/PrliUpdateController.php:757
 msgid "Display Groups"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:210
-#: app/controllers/PrliAppController.php:211
+#: app/controllers/PrliAppController.php:230
+#: app/controllers/PrliAppController.php:231
 #: app/views/admin/addons/addon-page-lite.php:22
 #: app/views/admin/onboarding/features.php:89
 msgid "Product Displays"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:218
-#: app/controllers/PrliAppController.php:219
+#: app/controllers/PrliAppController.php:238
+#: app/controllers/PrliAppController.php:239
 #: app/controllers/PrliUpdateController.php:763
 #: pro/app/controllers/PlpImportExportController.php:15
 msgid "Import / Export"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:228
+#: app/controllers/PrliAppController.php:248
 msgid "Pretty Links | Clicks"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:228
-#: app/controllers/PrliLinksController.php:542
+#: app/controllers/PrliAppController.php:248
+#: app/controllers/PrliLinksController.php:546
 #: app/models/PrliClick.php:258
 #: app/views/admin/popups/prettypay.php:71
 #: app/views/admin/popups/prettypay.php:385
@@ -299,144 +311,144 @@ msgstr ""
 msgid "Clicks"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:232
+#: app/controllers/PrliAppController.php:252
 msgid "Pretty Links | Tools"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:232
+#: app/controllers/PrliAppController.php:252
 #: app/views/tools/form.php:3
 msgid "Tools"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:235
+#: app/controllers/PrliAppController.php:255
 msgid "Pretty Links | Options"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:235
+#: app/controllers/PrliAppController.php:255
 #: app/views/links/prettypay_link_stripe.php:107
 #: app/views/options/form.php:3
 msgid "Options"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:245
+#: app/controllers/PrliAppController.php:265
 #: app/views/prettypay/fee_notice.php:7
 msgid "Upgrade"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:249
+#: app/controllers/PrliAppController.php:269
 msgid "Welcome"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:390
-#: app/controllers/PrliAppController.php:396
-#: app/controllers/PrliAppController.php:401
-#: app/controllers/PrliAppController.php:906
+#: app/controllers/PrliAppController.php:410
+#: app/controllers/PrliAppController.php:416
+#: app/controllers/PrliAppController.php:421
+#: app/controllers/PrliAppController.php:926
 msgid "Docs"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:391
+#: app/controllers/PrliAppController.php:411
 #: app/views/admin/update/ui.php:3
 msgid "Manage License"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:394
-#: app/controllers/PrliAppController.php:400
+#: app/controllers/PrliAppController.php:414
+#: app/controllers/PrliAppController.php:420
 msgid "Activate Pro License"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:395
+#: app/controllers/PrliAppController.php:415
 msgid "Buy"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:399
+#: app/controllers/PrliAppController.php:419
 #: app/helpers/PrliOnboardingHelper.php:243
 #: app/views/admin/update/inactive_license.php:28
 #: app/views/shared/nav.php:9
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:497
+#: app/controllers/PrliAppController.php:517
 #: app/views/groups/edit.php:72
 #: app/views/options/form.php:1221
 #: pro/app/views/reports/edit.php:66
 msgid "Update"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:499
+#: app/controllers/PrliAppController.php:519
 msgid "Copy to Clipboard"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:500
+#: app/controllers/PrliAppController.php:520
 msgid "Copied!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:501
+#: app/controllers/PrliAppController.php:521
 msgid "Oops, Copy Failed!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:525
+#: app/controllers/PrliAppController.php:545
 msgid "Are you sure you want to reset your Pretty Link? This will delete all of the statistical data about this Pretty Link in your database."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:528
+#: app/controllers/PrliAppController.php:548
 msgid "To access Link Health, upgrade to <a href=\"%s\" class=\"prli-link-health-upgrade\">Pretty Links Pro.</a>"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:544
+#: app/controllers/PrliAppController.php:564
 msgid "Find or add a product..."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:546
+#: app/controllers/PrliAppController.php:566
 msgid "Select shipping countries"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:548
+#: app/controllers/PrliAppController.php:568
 msgid "This field is required"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s: open link tag, %3$s: close link tag
-#: app/controllers/PrliAppController.php:672
+#: app/controllers/PrliAppController.php:692
 msgid "You're almost done!%1$s%2$sFinish your Re-Install of Pretty Links Pro%3$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:687
+#: app/controllers/PrliAppController.php:707
 msgid "Pretty Links Pro Successfully Uninstalled."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:741
+#: app/controllers/PrliAppController.php:761
 msgid "Invalid server response"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:742
+#: app/controllers/PrliAppController.php:762
 msgid "Ajax error"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:759
+#: app/controllers/PrliAppController.php:779
 msgid "Pretty Link Quick Add"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:798
+#: app/controllers/PrliAppController.php:818
 msgid "Your Pretty Links Pro installation isn't quite complete yet. %1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:819
+#: app/controllers/PrliAppController.php:839
 msgid "Your Pretty Links Pro installation isn't quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
 #. translators: $1$s - Pretty Links plugin name; $2$s - WP.org review link; $3$s - WP.org review link.
-#: app/controllers/PrliAppController.php:867
+#: app/controllers/PrliAppController.php:887
 msgid "Enjoying %1$s? Please rate <a href=\"%2$s\" target=\"_blank\" rel=\"noopener noreferrer\">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href=\"%3$s\" target=\"_blank\" rel=\"noopener\">WordPress.org</a> to help us spread the word. Thanks from the Pretty Links team!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:901
+#: app/controllers/PrliAppController.php:921
 msgid "Support"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:911
+#: app/controllers/PrliAppController.php:931
 msgid "Made with ♥ by the Pretty Links Team"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:959
+#: app/controllers/PrliAppController.php:979
 #: app/views/admin/payments/options.php:111
 #: app/views/admin/payments/options.php:113
 msgid "PrettyPay™ Thank You Page"
@@ -575,20 +587,20 @@ msgid "Pretty Link Cleanup Visitor Locks"
 msgstr ""
 
 #: app/controllers/PrliLinksController.php:470
-#: app/controllers/PrliLinksController.php:841
+#: app/controllers/PrliLinksController.php:845
 #: app/controllers/PrliPopupController.php:95
 msgid "Forbidden"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:479
+#: app/controllers/PrliLinksController.php:483
 msgid "Success!"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:481
+#: app/controllers/PrliLinksController.php:485
 msgid "Fix the following errors:"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:505
+#: app/controllers/PrliLinksController.php:509
 #: app/views/admin/popups/prettypay.php:66
 #: app/views/admin/popups/prettypay.php:384
 #: app/views/links/form_pro.php:32
@@ -597,45 +609,45 @@ msgstr ""
 msgid "Keywords"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:515
+#: app/controllers/PrliLinksController.php:519
 msgid "Upgrade to a Pretty Links premium plan to get Link Categories"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:517
-#: app/controllers/PrliLinksController.php:523
-#: app/controllers/PrliLinksController.php:529
+#: app/controllers/PrliLinksController.php:521
+#: app/controllers/PrliLinksController.php:527
+#: app/controllers/PrliLinksController.php:533
 #: app/helpers/PrliAppHelper.php:19
 #: app/helpers/PrliOnboardingHelper.php:241
 #: app/views/links/form.php:37
 msgid "Pro"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:521
+#: app/controllers/PrliLinksController.php:525
 msgid "Upgrade to a Pretty Links premium plan to get Link Tags"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:527
+#: app/controllers/PrliLinksController.php:531
 msgid "Upgrade to a Pretty Links premium plan to get Keyword Replacements"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:535
+#: app/controllers/PrliLinksController.php:539
 #: app/views/admin/popups/prettypay.php:46
 #: app/views/admin/popups/prettypay.php:380
 #: app/views/links/prettypay_link_stripe.php:251
 msgid "Settings"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:536
+#: app/controllers/PrliLinksController.php:540
 #: app/views/admin/popups/prettypay.php:51
 #: app/views/admin/popups/prettypay.php:381
 msgid "Link Title"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:538
+#: app/controllers/PrliLinksController.php:542
 msgid "Target"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:543
+#: app/controllers/PrliLinksController.php:547
 #: app/models/PrliClick.php:258
 #: app/views/admin/popups/prettypay.php:76
 #: app/views/admin/popups/prettypay.php:386
@@ -648,88 +660,88 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:647
+#: app/controllers/PrliLinksController.php:651
 #: app/views/admin/onboarding/features.php:23
 #: app/views/links/form_advanced.php:6
 msgid "No Follow"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:649
-#: app/controllers/PrliLinksController.php:656
-#: app/controllers/PrliLinksController.php:663
+#: app/controllers/PrliLinksController.php:653
+#: app/controllers/PrliLinksController.php:660
+#: app/controllers/PrliLinksController.php:667
 msgid "No Change"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:650
-#: app/controllers/PrliLinksController.php:657
-#: app/controllers/PrliLinksController.php:664
+#: app/controllers/PrliLinksController.php:654
+#: app/controllers/PrliLinksController.php:661
+#: app/controllers/PrliLinksController.php:668
 #: app/views/shared/tinymce_form_popup.php:49
 #: app/views/shared/tinymce_form_popup.php:57
 #: app/views/shared/tinymce_form_popup.php:65
 msgid "Enabled"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:651
-#: app/controllers/PrliLinksController.php:658
-#: app/controllers/PrliLinksController.php:665
+#: app/controllers/PrliLinksController.php:655
+#: app/controllers/PrliLinksController.php:662
+#: app/controllers/PrliLinksController.php:669
 #: app/views/shared/tinymce_form_popup.php:50
 #: app/views/shared/tinymce_form_popup.php:58
 #: app/views/shared/tinymce_form_popup.php:66
 msgid "Disabled"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:654
+#: app/controllers/PrliLinksController.php:658
 #: app/views/admin/onboarding/features.php:34
 #: app/views/links/form_advanced.php:19
 #: app/views/shared/tinymce_form_popup.php:54
 msgid "Sponsored"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:661
+#: app/controllers/PrliLinksController.php:665
 #: app/views/links/form_advanced.php:60
 #: app/views/links/form_advanced.php:63
 #: app/views/shared/tinymce_form_popup.php:62
 msgid "Tracking"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:771
+#: app/controllers/PrliLinksController.php:775
 #: app/views/clicks/list.php:64
 #: app/views/groups/list.php:24
 #: pro/app/views/reports/list.php:20
 msgid "Reset"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:774
+#: app/controllers/PrliLinksController.php:778
 msgid "Tweet"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:775
+#: app/controllers/PrliLinksController.php:779
 #: pro/app/models/PlpOptions.php:185
 msgid "Email"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:778
+#: app/controllers/PrliLinksController.php:782
 msgid "Target &raquo;"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:781
+#: app/controllers/PrliLinksController.php:785
 msgid "PrettyPay™ Link &raquo;"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:781
+#: app/controllers/PrliLinksController.php:785
 msgid "Pretty Link &raquo;"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:804
-#: app/controllers/PrliLinksController.php:805
+#: app/controllers/PrliLinksController.php:808
+#: app/controllers/PrliLinksController.php:809
 msgid "View Split Test Report"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:847
+#: app/controllers/PrliLinksController.php:855
 msgid "Your Pretty Link was Successfully Reset"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:855
+#: app/controllers/PrliLinksController.php:863
 #: app/controllers/PrliStripeController.php:604
 #: app/controllers/PrliStripeController.php:741
 #: app/controllers/PrliStripeController.php:747
@@ -738,74 +750,68 @@ msgstr ""
 msgid "Bad request"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:859
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:203
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:260
-msgid "Insufficient permissions"
-msgstr ""
-
-#: app/controllers/PrliLinksController.php:863
+#: app/controllers/PrliLinksController.php:871
 #: pro/app/controllers/PlpPublicLinksController.php:37
 msgid "Security check failed"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:892
+#: app/controllers/PrliLinksController.php:900
 msgid "An error occurred creating the link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:929
+#: app/controllers/PrliLinksController.php:937
 msgid "All Groups (Legacy)"
 msgstr ""
 
 #. translators: %s: number of links
-#: app/controllers/PrliLinksController.php:1080
+#: app/controllers/PrliLinksController.php:1088
 msgid "All %s"
 msgstr ""
 
 #. translators: %s: number of links in the trash
-#: app/controllers/PrliLinksController.php:1089
+#: app/controllers/PrliLinksController.php:1097
 msgid "Trash %s"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1129
+#: app/controllers/PrliLinksController.php:1137
 #: pro/app/controllers/PlpLinksController.php:1094
 msgid "Find Broken Links"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1235
+#: app/controllers/PrliLinksController.php:1243
 #: app/helpers/PrliLinksHelper.php:26
 msgid "PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1236
+#: app/controllers/PrliLinksController.php:1244
 msgid "Add New PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1237
+#: app/controllers/PrliLinksController.php:1245
 msgid "Edit PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1238
+#: app/controllers/PrliLinksController.php:1246
 msgid "New PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1239
+#: app/controllers/PrliLinksController.php:1247
 msgid "View PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1240
+#: app/controllers/PrliLinksController.php:1248
 msgid "Search PrettyPay™ Links"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1241
+#: app/controllers/PrliLinksController.php:1249
 msgid "No PrettyPay™ Links found"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1242
+#: app/controllers/PrliLinksController.php:1250
 msgid "No PrettyPay™ Links found in Trash"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1243
+#: app/controllers/PrliLinksController.php:1251
 msgid "Parent PrettyPay™ Link:"
 msgstr ""
 
@@ -983,36 +989,45 @@ msgstr ""
 msgid "Upgrade to Pretty Links Pro now!"
 msgstr ""
 
-#: app/controllers/PrliReviewNoticeController.php:74
+#: app/controllers/PrliPostsController.php:86
+#: app/controllers/PrliPostsController.php:161
+msgid "You don't have permission to access this feature."
+msgstr ""
+
+#: app/controllers/PrliReviewNoticeController.php:20
+msgid "You do not have permission to perform this action"
+msgstr ""
+
+#: app/controllers/PrliReviewNoticeController.php:79
 #: app/views/admin/popups/rating.php:8
 msgid "Are you enjoying using Pretty Links?"
 msgstr ""
 
-#: app/controllers/PrliReviewNoticeController.php:78
+#: app/controllers/PrliReviewNoticeController.php:83
 msgid "That's awesome! Could you please do me a BIG favor and give it a 5-star rating on WordPress to help us spread the word and boost our motivation?"
 msgstr ""
 
-#: app/controllers/PrliReviewNoticeController.php:81
+#: app/controllers/PrliReviewNoticeController.php:86
 msgid "Okay, you deserve it"
 msgstr ""
 
-#: app/controllers/PrliReviewNoticeController.php:82
+#: app/controllers/PrliReviewNoticeController.php:87
 msgid "Nope, maybe later"
 msgstr ""
 
-#: app/controllers/PrliReviewNoticeController.php:83
+#: app/controllers/PrliReviewNoticeController.php:88
 msgid "I already did"
 msgstr ""
 
-#: app/controllers/PrliReviewNoticeController.php:87
+#: app/controllers/PrliReviewNoticeController.php:92
 msgid "We're sorry to hear you aren't enjoying Pretty Links. We would love a chance to improve. Could you take a minute and let us know what we can do better?"
 msgstr ""
 
-#: app/controllers/PrliReviewNoticeController.php:89
+#: app/controllers/PrliReviewNoticeController.php:94
 msgid "Give Feedback"
 msgstr ""
 
-#: app/controllers/PrliReviewNoticeController.php:90
+#: app/controllers/PrliReviewNoticeController.php:95
 #: app/views/admin/payments/customer_portal_notice.php:16
 msgid "No thanks"
 msgstr ""
@@ -1312,6 +1327,8 @@ msgid "Edit"
 msgstr ""
 
 #: app/helpers/PrliAppHelper.php:49
+#: pro/app/controllers/PlpLinkCategoriesController.php:69
+#: pro/app/controllers/PlpLinkTagsController.php:75
 #: pro/app/views/reports/list.php:73
 msgid "View"
 msgstr ""
@@ -1581,11 +1598,11 @@ msgid "This Pretty Link Slug is already taken. There's already another pretty li
 msgstr ""
 
 #. translators: %1$s: open link tag, %2$s: close link tag, %3$s: br tag
-#: app/models/PrliUtils.php:1091
+#: app/models/PrliUtils.php:1095
 msgid "Get started by %1$sadding a URL%2$s that you want to turn into a pretty link.%3$sCome back to see how many times it was clicked."
 msgstr ""
 
-#: app/models/PrliUtils.php:1394
+#: app/models/PrliUtils.php:1398
 msgid "NEW"
 msgstr ""
 
@@ -1631,7 +1648,7 @@ msgstr ""
 
 #: app/views/admin/addons/addon-page-pro.php:40
 #: vendor-prefixed/caseproof/ground-level-mothership/Views/products.php:43
-#: vendor-prefixed/caseproof/growth-tools/src/App.php:100
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:103
 msgid "Not Installed"
 msgstr ""
 
@@ -5283,46 +5300,51 @@ msgstr ""
 msgid "Pretty Link Post Build Keyword Index"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:15
+#: pro/app/controllers/PlpLinkCategoriesController.php:16
 msgctxt "taxonomy general name"
 msgid "Link Categories"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:16
+#: pro/app/controllers/PlpLinkCategoriesController.php:17
 msgctxt "taxonomy singular name"
 msgid "Link Category"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:17
+#: pro/app/controllers/PlpLinkCategoriesController.php:18
 msgid "Search Link Categories"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:18
+#: pro/app/controllers/PlpLinkCategoriesController.php:19
 msgid "All Link Categories"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:19
+#: pro/app/controllers/PlpLinkCategoriesController.php:20
 msgid "Parent Link Category"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:20
+#: pro/app/controllers/PlpLinkCategoriesController.php:21
 msgid "Parent Link Category:"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:21
+#: pro/app/controllers/PlpLinkCategoriesController.php:22
 msgid "Edit Link Category"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:22
+#: pro/app/controllers/PlpLinkCategoriesController.php:23
 msgid "Update Link Category"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:23
+#: pro/app/controllers/PlpLinkCategoriesController.php:24
 msgid "Add New Link Category"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkCategoriesController.php:24
+#: pro/app/controllers/PlpLinkCategoriesController.php:25
 msgid "New Link Category Name"
+msgstr ""
+
+#. Translators: %s: Category name.
+#: pro/app/controllers/PlpLinkCategoriesController.php:68
+msgid "View links categorized as &#8220;%s&#8221;"
 msgstr ""
 
 #: pro/app/controllers/PlpLinksController.php:221
@@ -5518,54 +5540,59 @@ msgstr ""
 msgid "Broken"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:15
+#: pro/app/controllers/PlpLinkTagsController.php:16
 msgctxt "taxonomy general name"
 msgid "Link Tags"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:16
+#: pro/app/controllers/PlpLinkTagsController.php:17
 msgctxt "taxonomy singular name"
 msgid "Link Tag"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:17
+#: pro/app/controllers/PlpLinkTagsController.php:18
 msgid "Search Link Tags"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:18
+#: pro/app/controllers/PlpLinkTagsController.php:19
 msgid "All Link Tags"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:21
+#: pro/app/controllers/PlpLinkTagsController.php:22
 msgid "Edit Link Tag"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:22
+#: pro/app/controllers/PlpLinkTagsController.php:23
 msgid "Update Link Tag"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:23
+#: pro/app/controllers/PlpLinkTagsController.php:24
 msgid "Add New Link Tag"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:24
+#: pro/app/controllers/PlpLinkTagsController.php:25
 msgid "New Link Tag Name"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:25
+#: pro/app/controllers/PlpLinkTagsController.php:26
 msgid "Separate Link Tags with commas"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:26
+#: pro/app/controllers/PlpLinkTagsController.php:27
 msgid "Add or remove Link Tags"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:27
+#: pro/app/controllers/PlpLinkTagsController.php:28
 msgid "Choose from the most used Link Tags"
 msgstr ""
 
-#: pro/app/controllers/PlpLinkTagsController.php:28
+#: pro/app/controllers/PlpLinkTagsController.php:29
 msgid "No Link Tags found."
+msgstr ""
+
+#. Translators: %s: Tag name.
+#: pro/app/controllers/PlpLinkTagsController.php:74
+msgid "View links tagged as &#8220;%s&#8221;"
 msgstr ""
 
 #: pro/app/controllers/PlpOptionsController.php:100
@@ -6952,20 +6979,20 @@ msgstr ""
 msgid "Cannot store credentials in database; found in environment variables or constants."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:213
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:365
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:242
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:394
 msgid "Could not install plugin. Please download and install manually."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:320
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:349
 msgid "Please enter your license key to access add-ons."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:332
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:361
 msgid "There was an issue connecting with the API."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:361
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:390
 msgid "Could not install add-on. Please download and install manually."
 msgstr ""
 
@@ -7002,15 +7029,15 @@ msgstr ""
 
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:58
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:59
-#: vendor-prefixed/caseproof/growth-tools/src/App.php:205
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:208
 msgid "Growth Tools"
 msgstr ""
 
-#: vendor-prefixed/caseproof/growth-tools/src/App.php:101
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:104
 msgid "Installed"
 msgstr ""
 
-#: vendor-prefixed/caseproof/growth-tools/src/App.php:105
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:108
 msgid "Install"
 msgstr ""
 

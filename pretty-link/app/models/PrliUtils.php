@@ -1009,6 +1009,10 @@ class PrliUtils {
     return self::current_user_can('subscriber');
   }
 
+  public static function is_editor() {
+    return self::current_user_can('edit_others_posts');
+  }
+
   public static function get_minimum_role() {
     global $plp_options;
 

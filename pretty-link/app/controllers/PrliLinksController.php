@@ -470,6 +470,10 @@ class PrliLinksController extends PrliBaseController {
       PrliUtils::exit_with_status(403,esc_html__('Forbidden', 'pretty-link'));
     }
 
+    if(!PrliUtils::is_authorized()) {
+      PrliUtils::exit_with_status(403,esc_html__('Insufficient permissions', 'pretty-link'));
+    }
+
     $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
     $_POST['url'] = isset($_POST['prli_url']) && is_string($_POST['prli_url']) ? $_POST['prli_url'] : '';
     $errors = $prli_link->validate($_POST, $id);
@@ -839,6 +843,10 @@ class PrliLinksController extends PrliBaseController {
 
     if(!PrliUtils::is_post_request()) {
       PrliUtils::exit_with_status(403,esc_html__('Forbidden', 'pretty-link'));
+    }
+
+    if(!PrliUtils::is_authorized()) {
+      PrliUtils::exit_with_status(403,esc_html__('Insufficient permissions', 'pretty-link'));
     }
 
     $prli_link->reset( $_POST['id'] );

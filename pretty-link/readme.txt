@@ -5,7 +5,7 @@ Tags: affiliate links, link tracking, ecommerce, payments, stripe
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.8
-Stable Tag: 3.6.16
+Stable Tag: 3.6.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -143,6 +143,11 @@ Yes! PrettyLinks is ready for translation. See our [Translating PrettyLinks](htt
 4. Click Tracking
 
 == Changelog ==
+= 3.6.17 =
+* Add capability check to Ajax endpoints
+* Update Growth Tools
+* Fix PL search functionality in Gutenberg broken
+
 = 3.6.16 =
 * Fix admin menu style on mobile view
 * Minor bugfixes and security hardening

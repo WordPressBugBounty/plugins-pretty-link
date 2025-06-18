@@ -16,6 +16,11 @@ class PrliReviewNoticeController {
       die('Failed');
     }
 
+    if ( ! PrliUtils::is_authorized() ) {
+      wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to perform this action', 'pretty-link' ) ) );
+      return;
+    }
+
     if ( ! empty( $_POST['type'] ) ) {
       if ( 'remove' === $_POST['type'] ) {
         update_option( 'pl_review_prompt_removed', true );

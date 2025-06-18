@@ -82,6 +82,11 @@ class PrliPostsController extends PrliBaseController {
   public function display_tinymce_form() {
     global $prli_link, $prli_options, $plp_update;
 
+    if(!PrliUtils::is_authorized()) {
+      wp_send_json_error( esc_html__('You don\'t have permission to access this feature.', 'pretty-link'), 403 );
+      die();
+    }
+
     //Setup some vars for the view
     $home_url = home_url() . '/';
     $random_slug      = $prli_link->generateValidSlug();
@@ -152,6 +157,11 @@ class PrliPostsController extends PrliBaseController {
       wp_send_json_error( esc_html__('Security check failed.', 'pretty-link'), 403 );
     }
 
+    if(!PrliUtils::is_authorized()) {
+      wp_send_json_error( esc_html__('You don\'t have permission to access this feature.', 'pretty-link'), 403 );
+      die();
+    }
+
     if(!isset($_POST['slug']) || empty($_POST['slug'])) {
       echo "false";
       die();
@@ -215,8 +225,8 @@ class PrliPostsController extends PrliBaseController {
 
     if(!isset($_GET['term']) || empty($_GET['term'])) { die(''); }
 
-    // Don't allow non-admin users to search for links
-    if(!current_user_can('manage_options')) {
+    // Don't allow users lower than administrator and editor to search for links.
+    if(!PrliUtils::is_admin() && !PrliUtils::is_editor()) {
       die('You don\'t have permission to search for links.');
     }
 

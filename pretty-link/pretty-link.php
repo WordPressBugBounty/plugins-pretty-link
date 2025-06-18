@@ -3,7 +3,7 @@
 Plugin Name: PrettyLinks
 Plugin URI: https://prettylinks.com/pl/plugin-uri
 Description: Shrink, track and share any URL using your website and brand!
-Version: 3.6.16
+Version: 3.6.17
 Requires PHP: 7.4
 Author: Pretty Links
 Author URI: http://prettylinks.com

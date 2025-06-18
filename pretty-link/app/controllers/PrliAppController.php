@@ -70,6 +70,11 @@ class PrliAppController extends PrliBaseController {
       die();
     }
 
+    if(!PrliUtils::is_authorized()) {
+      wp_send_json_error(esc_html__('Insufficient permissions', 'pretty-link'));
+      return;
+    }
+
     update_option( 'pl_dismiss_upgrade_header', true );
   }
 
@@ -124,6 +129,11 @@ class PrliAppController extends PrliBaseController {
 
   public function dismiss_notice() {
     if(check_ajax_referer('prli_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
+      if(!PrliUtils::is_authorized()) {
+        wp_send_json_error(esc_html__('Insufficient permissions', 'pretty-link'));
+        return;
+      }
+
       $notice = sanitize_key($_POST['notice']);
       update_option("prli_dismiss_notice_$notice", true);
     }
@@ -133,6 +143,11 @@ class PrliAppController extends PrliBaseController {
 
   public function dismiss_daily_notice() {
     if(check_ajax_referer('prli_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
+      if(!PrliUtils::is_authorized()) {
+        wp_send_json_error(esc_html__('Insufficient permissions', 'pretty-link'));
+        return;
+      }
+
       $notice = sanitize_key($_POST['notice']);
       set_transient("prli_dismiss_notice_{$notice}", true, DAY_IN_SECONDS);
     }
@@ -142,6 +157,11 @@ class PrliAppController extends PrliBaseController {
 
   public function dismiss_monthly_notice() {
     if(check_ajax_referer('prli_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
+      if(!PrliUtils::is_authorized()) {
+        wp_send_json_error(esc_html__('Insufficient permissions', 'pretty-link'));
+        return;
+      }
+
       $notice = sanitize_key($_POST['notice']);
       set_transient("prli_dismiss_notice_{$notice}", true, DAY_IN_SECONDS * 30);
     }
