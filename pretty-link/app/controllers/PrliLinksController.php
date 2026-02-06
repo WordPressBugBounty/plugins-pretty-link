@@ -455,7 +455,7 @@ class PrliLinksController extends PrliBaseController {
   public function intervals( $schedules ) {
     $schedules['prli_cleanup_visitor_locks_interval'] = array(
       'interval' => HOUR_IN_SECONDS,
-      'display' => esc_html__('Pretty Link Cleanup Visitor Locks', 'pretty-link'),
+      'display' => 'Pretty Link Cleanup Visitor Locks',
     );
 
     return $schedules;

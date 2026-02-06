@@ -186,7 +186,7 @@ class PrliAppController extends PrliBaseController {
     add_submenu_page(
       "edit.php?post_type={$pl_link_cpt}",
       esc_html__('PrettyPay™ Links', 'pretty-link'),
-      esc_html__('PrettyPay™ Links', 'pretty-link') . PrliUtils::new_badge(),
+      esc_html__('PrettyPay™ Links', 'pretty-link'),
       $role,
       'prettypay-links',
       PrliStripeHelper::is_connection_active() ? '__return_empty_string' : array(PrliLinksController::class, 'show_prettypay_popup')
@@ -519,6 +519,8 @@ class PrliAppController extends PrliBaseController {
           'copy_text' => __('Copy to Clipboard', 'pretty-link'),
           'copied_text' => __('Copied!', 'pretty-link'),
           'copy_error_text' => __('Oops, Copy Failed!', 'pretty-link'),
+          'search_for_link' => __('Search for a link...', 'pretty-link'),
+          'search_links_nonce' => wp_create_nonce('prli_search_links'),
           'blogurl' => $prli_blogurl,
           'permalink_pre_slug_uri' => PrliUtils::get_permalink_pre_slug_uri()
         );

@@ -4,8 +4,8 @@ Donate link: https://prettylinks.com
 Tags: affiliate links, link tracking, ecommerce, payments, stripe
 Requires at least: 6.0
 Requires PHP: 7.4
-Tested up to: 6.8
-Stable Tag: 3.6.17
+Tested up to: 6.9
+Stable Tag: 3.6.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -143,6 +143,20 @@ Yes! PrettyLinks is ready for translation. See our [Translating PrettyLinks](htt
 4. Click Tracking
 
 == Changelog ==
+= 3.6.20 =
+* Pro: Updated QR Codes to support inner image/logo
+* Minor security fix
+
+= 3.6.19 =
+* Pro: Empty link rotations gaps - show warning before save
+
+= 3.6.18 =
+* Add link_cpt_id column to links CSV export file
+* Fix timeout on options page for sites with a large comments database
+* Fix slow loading on add/edit link page when using password manager browser extensions
+* Fix CSV import failures caused by UTF-8 BOM
+* Fix PHP deprecation warnings
+
 = 3.6.17 =
 * Add capability check to Ajax endpoints
 * Update Growth Tools

@@ -1,15 +1,15 @@
-# Copyright (C) 2025 Pretty Links
+# Copyright (C) 2026 Pretty Links
 # This file is distributed under the same license as the PrettyLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrettyLinks 3.6.17\n"
+"Project-Id-Version: PrettyLinks 3.6.20\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-18T04:04:40+00:00\n"
+"POT-Creation-Date: 2026-01-21T20:40:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -178,7 +178,7 @@ msgstr ""
 
 #: app/controllers/PrliAddonsController.php:116
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:214
-#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:70
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:72
 msgid "Plugin deactivated."
 msgstr ""
 
@@ -342,7 +342,7 @@ msgstr ""
 #: app/controllers/PrliAppController.php:410
 #: app/controllers/PrliAppController.php:416
 #: app/controllers/PrliAppController.php:421
-#: app/controllers/PrliAppController.php:926
+#: app/controllers/PrliAppController.php:928
 msgid "Docs"
 msgstr ""
 
@@ -386,72 +386,104 @@ msgstr ""
 msgid "Oops, Copy Failed!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:545
+#: app/controllers/PrliAppController.php:522
+msgid "Search for a link..."
+msgstr ""
+
+#: app/controllers/PrliAppController.php:547
 msgid "Are you sure you want to reset your Pretty Link? This will delete all of the statistical data about this Pretty Link in your database."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:548
+#: app/controllers/PrliAppController.php:550
 msgid "To access Link Health, upgrade to <a href=\"%s\" class=\"prli-link-health-upgrade\">Pretty Links Pro.</a>"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:564
+#: app/controllers/PrliAppController.php:566
 msgid "Find or add a product..."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:566
+#: app/controllers/PrliAppController.php:568
 msgid "Select shipping countries"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:568
+#: app/controllers/PrliAppController.php:570
 msgid "This field is required"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s: open link tag, %3$s: close link tag
-#: app/controllers/PrliAppController.php:692
+#: app/controllers/PrliAppController.php:694
 msgid "You're almost done!%1$s%2$sFinish your Re-Install of Pretty Links Pro%3$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:707
+#: app/controllers/PrliAppController.php:709
 msgid "Pretty Links Pro Successfully Uninstalled."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:761
+#: app/controllers/PrliAppController.php:763
 msgid "Invalid server response"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:762
+#: app/controllers/PrliAppController.php:764
 msgid "Ajax error"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:779
+#: app/controllers/PrliAppController.php:781
 msgid "Pretty Link Quick Add"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:818
+#: app/controllers/PrliAppController.php:820
 msgid "Your Pretty Links Pro installation isn't quite complete yet. %1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:839
+#: app/controllers/PrliAppController.php:841
 msgid "Your Pretty Links Pro installation isn't quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
 #. translators: $1$s - Pretty Links plugin name; $2$s - WP.org review link; $3$s - WP.org review link.
-#: app/controllers/PrliAppController.php:887
+#: app/controllers/PrliAppController.php:889
 msgid "Enjoying %1$s? Please rate <a href=\"%2$s\" target=\"_blank\" rel=\"noopener noreferrer\">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href=\"%3$s\" target=\"_blank\" rel=\"noopener\">WordPress.org</a> to help us spread the word. Thanks from the Pretty Links team!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:921
+#: app/controllers/PrliAppController.php:923
 msgid "Support"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:931
+#: app/controllers/PrliAppController.php:933
 msgid "Made with ♥ by the Pretty Links Team"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:979
+#: app/controllers/PrliAppController.php:981
 #: app/views/admin/payments/options.php:111
 #: app/views/admin/payments/options.php:113
 msgid "PrettyPay™ Thank You Page"
+msgstr ""
+
+#: app/controllers/PrliAuthenticatorController.php:47
+msgid "Clear Connection Data"
+msgstr ""
+
+#: app/controllers/PrliAuthenticatorController.php:48
+msgid "Are you sure you want to clear your Pretty Links connection data? This will remove your site UUID, account email, and secret token."
+msgstr ""
+
+#: app/controllers/PrliAuthenticatorController.php:49
+msgid "Yes, Clear Connection Data"
+msgstr ""
+
+#: app/controllers/PrliAuthenticatorController.php:50
+#: app/views/clicks/list.php:43
+#: app/views/groups/edit.php:72
+#: app/views/groups/new.php:71
+#: app/views/links/prettypay_link_stripe.php:98
+#: pro/app/views/reports/custom-report.php:22
+#: pro/app/views/reports/edit.php:66
+#: pro/app/views/reports/new.php:66
+#: pro/app/views/reports/split-test-report.php:19
+msgid "Cancel"
+msgstr ""
+
+#: app/controllers/PrliAuthenticatorController.php:51
+msgid "Confirm Action"
 msgstr ""
 
 #: app/controllers/PrliClicksController.php:94
@@ -580,10 +612,6 @@ msgstr ""
 
 #: app/controllers/PrliLinksController.php:374
 msgid "Pretty Link created."
-msgstr ""
-
-#: app/controllers/PrliLinksController.php:458
-msgid "Pretty Link Cleanup Visitor Locks"
 msgstr ""
 
 #: app/controllers/PrliLinksController.php:470
@@ -716,7 +744,7 @@ msgid "Tweet"
 msgstr ""
 
 #: app/controllers/PrliLinksController.php:779
-#: pro/app/models/PlpOptions.php:185
+#: pro/app/models/PlpOptions.php:193
 msgid "Email"
 msgstr ""
 
@@ -774,7 +802,7 @@ msgid "Trash %s"
 msgstr ""
 
 #: app/controllers/PrliLinksController.php:1137
-#: pro/app/controllers/PlpLinksController.php:1094
+#: pro/app/controllers/PlpLinksController.php:1183
 msgid "Find Broken Links"
 msgstr ""
 
@@ -1468,7 +1496,7 @@ msgstr ""
 
 #: app/helpers/PrliOnboardingHelper.php:124
 #: app/views/admin/onboarding/features.php:56
-#: pro/app/controllers/PlpLinksController.php:405
+#: pro/app/controllers/PlpLinksController.php:409
 msgid "Link Health"
 msgstr ""
 
@@ -1956,7 +1984,7 @@ msgstr ""
 
 #: app/views/admin/onboarding/parts/link_popup.php:20
 #: app/views/shared/tinymce_form_popup.php:38
-#: pro/app/controllers/PlpLinksController.php:751
+#: pro/app/controllers/PlpLinksController.php:755
 msgid "Cloaked"
 msgstr ""
 
@@ -2770,17 +2798,6 @@ msgstr ""
 msgid "Customize"
 msgstr ""
 
-#: app/views/clicks/list.php:43
-#: app/views/groups/edit.php:72
-#: app/views/groups/new.php:71
-#: app/views/links/prettypay_link_stripe.php:98
-#: pro/app/views/reports/custom-report.php:22
-#: pro/app/views/reports/edit.php:66
-#: pro/app/views/reports/new.php:66
-#: pro/app/views/reports/split-test-report.php:19
-msgid "Cancel"
-msgstr ""
-
 #: app/views/clicks/list.php:62
 msgid "Search Clicks"
 msgstr ""
@@ -3256,7 +3273,6 @@ msgid "Daily"
 msgstr ""
 
 #: app/views/links/prettypay_link_stripe.php:67
-#: pro/app/controllers/PlpLinksController.php:1276
 msgid "Weekly"
 msgstr ""
 
@@ -3434,8 +3450,8 @@ msgstr ""
 
 #: app/views/options/form.php:56
 #: app/views/shared/tinymce_form_popup.php:37
-#: pro/app/controllers/PlpLinksController.php:749
-#: pro/app/controllers/PlpLinksController.php:800
+#: pro/app/controllers/PlpLinksController.php:753
+#: pro/app/controllers/PlpLinksController.php:804
 msgid "Pretty Bar"
 msgstr ""
 
@@ -3547,26 +3563,26 @@ msgstr ""
 
 #: app/views/options/form.php:214
 #: app/views/options/form.php:217
-#: pro/app/views/links/link-options.php:68
-#: pro/app/views/links/link-options.php:70
+#: pro/app/views/links/link-options.php:152
+#: pro/app/views/links/link-options.php:154
 msgid "Enable Link Health"
 msgstr ""
 
 #: app/views/options/form.php:218
-#: pro/app/views/links/link-options.php:71
+#: pro/app/views/links/link-options.php:155
 msgid "Enable this option to be notified when your links are broken."
 msgstr ""
 
 #: app/views/options/form.php:230
 #: app/views/options/form.php:232
-#: pro/app/views/links/link-options.php:123
-#: pro/app/views/links/link-options.php:125
+#: pro/app/views/links/link-options.php:207
+#: pro/app/views/links/link-options.php:209
 msgid "Global Head Scripts"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s: open b tag, %3$s close b tag
 #: app/views/options/form.php:235
-#: pro/app/views/links/link-options.php:128
+#: pro/app/views/links/link-options.php:212
 msgid "Useful for adding Google Analytics tracking, Facebook retargeting pixels, or any other kind of tracking script to the HTML head.%1$s%1$sWhat you enter in this box will be applied to all supported pretty links.%1$s%1$s%2$sNOTE:%3$s This does NOT work with 301, 302 and 307 type redirects."
 msgstr ""
 
@@ -4135,20 +4151,20 @@ msgid "Redirect Type"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:39
-#: pro/app/controllers/PlpLinksController.php:752
-#: pro/app/controllers/PlpLinksController.php:802
+#: pro/app/controllers/PlpLinksController.php:756
+#: pro/app/controllers/PlpLinksController.php:806
 msgid "Pixel"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:40
-#: pro/app/controllers/PlpLinksController.php:753
-#: pro/app/controllers/PlpLinksController.php:803
+#: pro/app/controllers/PlpLinksController.php:757
+#: pro/app/controllers/PlpLinksController.php:807
 msgid "Meta Refresh"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:41
-#: pro/app/controllers/PlpLinksController.php:754
-#: pro/app/controllers/PlpLinksController.php:804
+#: pro/app/controllers/PlpLinksController.php:758
+#: pro/app/controllers/PlpLinksController.php:808
 msgid "Javascript"
 msgstr ""
 
@@ -5276,11 +5292,11 @@ msgstr ""
 msgid "Zimbabwe"
 msgstr ""
 
-#: pro/app/controllers/PlpAppController.php:183
+#: pro/app/controllers/PlpAppController.php:188
 msgid "ERROR: Your Pretty Link was unable to be created"
 msgstr ""
 
-#: pro/app/controllers/PlpAppController.php:187
+#: pro/app/controllers/PlpAppController.php:192
 msgid "Unauthorized"
 msgstr ""
 
@@ -5294,10 +5310,6 @@ msgstr ""
 
 #: pro/app/controllers/PlpImportExportController.php:58
 msgid "Import file could not be opened."
-msgstr ""
-
-#: pro/app/controllers/PlpKeywordsController.php:66
-msgid "Pretty Link Post Build Keyword Index"
 msgstr ""
 
 #: pro/app/controllers/PlpLinkCategoriesController.php:16
@@ -5347,196 +5359,197 @@ msgstr ""
 msgid "View links categorized as &#8220;%s&#8221;"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:221
+#: pro/app/controllers/PlpLinksController.php:225
 msgid "Your URL Replacements must be formatted as a comma separated list of properly formatted URLs (http[s]://example.com/whatever)"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:232
+#: pro/app/controllers/PlpLinksController.php:236
 msgid "Date must be valid and formatted YYYY-MM-DD."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:244
+#: pro/app/controllers/PlpLinksController.php:248
 msgid "Expire Clicks must be a number greater than zero."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:251
+#: pro/app/controllers/PlpLinksController.php:255
 msgid "Expired URL must be a valid URL."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:263
+#: pro/app/controllers/PlpLinksController.php:267
 msgid "Your URL Rotations must all be properly formatted URLs."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:272
+#: pro/app/controllers/PlpLinksController.php:276
 msgid "Your Link Rotation Weights must add up to 100%."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:282
+#: pro/app/controllers/PlpLinksController.php:286
 msgid "Your Geographic Redirect URLs must all be properly formatted."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:286
+#: pro/app/controllers/PlpLinksController.php:290
 msgid "Your Geographic Redirects URLs must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:290
+#: pro/app/controllers/PlpLinksController.php:294
 msgid "Your Geographic Redirect Countries must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:301
+#: pro/app/controllers/PlpLinksController.php:305
 msgid "Your Technology Redirect URLs must all be properly formatted."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:305
+#: pro/app/controllers/PlpLinksController.php:309
 msgid "Your Technology Redirects URLs must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:316
+#: pro/app/controllers/PlpLinksController.php:320
 msgid "Your Time Period Redirect URLs must all be properly formatted."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:320
+#: pro/app/controllers/PlpLinksController.php:324
 msgid "Your Time Period Redirects URLs must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:325
+#: pro/app/controllers/PlpLinksController.php:329
 msgid "Your Time Period Redirect start time must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:328
+#: pro/app/controllers/PlpLinksController.php:332
 msgid "Your Time Period Redirect start time must be a properly formatted date."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:334
+#: pro/app/controllers/PlpLinksController.php:338
 msgid "Your Time Period Redirect end time must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:337
+#: pro/app/controllers/PlpLinksController.php:341
 msgid "Your Time Period Redirect end time must be a properly formatted date."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:345
+#: pro/app/controllers/PlpLinksController.php:349
 msgid "Your Time Period Redirect start time must come before the end time."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:353
+#: pro/app/controllers/PlpLinksController.php:357
 msgid "Delay Redirect must be a number"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:436
+#: pro/app/controllers/PlpLinksController.php:440
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:801
+#: pro/app/controllers/PlpLinksController.php:805
 #: pro/app/widgets/PlpPublicLinksWidget.php:75
 msgid "Cloak"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:847
+#: pro/app/controllers/PlpLinksController.php:851
 msgid "The Link Health Email Addresses field must contain 1 or more valid email addresses."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:891
+#: pro/app/controllers/PlpLinksController.php:895
 msgid "Download QR Code for this link: %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:891
+#: pro/app/controllers/PlpLinksController.php:895
 msgid "QR Code"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:910
+#: pro/app/controllers/PlpLinksController.php:914
 msgid "Check health status for this link: %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:911
-#: pro/app/controllers/PlpLinksController.php:916
+#: pro/app/controllers/PlpLinksController.php:915
+#: pro/app/controllers/PlpLinksController.php:920
 #: pro/app/views/metaboxes/link-health.php:13
 #: pro/app/views/metaboxes/link-health.php:18
 msgid "Check Health"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:912
+#: pro/app/controllers/PlpLinksController.php:916
 #: pro/app/views/metaboxes/link-health.php:14
 msgid "Checking..."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:996
+#: pro/app/controllers/PlpLinksController.php:1036
 msgid "This link expired on %1$s and will now cause a 404 error when visited"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:999
+#: pro/app/controllers/PlpLinksController.php:1039
 msgid "This link expired on %1$s and now redirects to %2$s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1003
+#: pro/app/controllers/PlpLinksController.php:1043
 msgid "This link is set to expire after the date %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1014
+#: pro/app/controllers/PlpLinksController.php:1054
 msgid "This link expired after %d clicks and will now cause a 404 error when visited"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1017
+#: pro/app/controllers/PlpLinksController.php:1057
 msgid "This link expired after %1$d clicks and now redirects to %2$s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1021
+#: pro/app/controllers/PlpLinksController.php:1061
 msgid "This link is set to expire after %d clicks"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1029
+#: pro/app/controllers/PlpLinksController.php:1069
 msgid "This link has additional Target URL rotations"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1032
+#: pro/app/controllers/PlpLinksController.php:1072
 msgid "This link has additional Geographic Target URLs"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1035
+#: pro/app/controllers/PlpLinksController.php:1075
 msgid "This link has additional Technology Dependent Conditional Target URLs"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1040
+#: pro/app/controllers/PlpLinksController.php:1080
 msgid "A Time Period Redirect is currently active for this link. When visited it will currently redirect to %s rather than the Target URL unless the link is expired."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1044
+#: pro/app/controllers/PlpLinksController.php:1084
 msgid "Time Period Redirects have been setup for this link but the current time is not within any of them currently."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1215
+#: pro/app/controllers/PlpLinksController.php:1148
+#: pro/app/views/links/form.php:283
+msgid "id: %1$s | slug: %3$s | name: %2$s"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:1304
 msgid "[Pretty Links] Broken Links Weekly Report"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1270
-msgid "Every 15 Minutes"
-msgstr ""
-
-#: pro/app/controllers/PlpLinksController.php:1295
+#: pro/app/controllers/PlpLinksController.php:1384
 msgid "Status"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1383
+#: pro/app/controllers/PlpLinksController.php:1472
 msgid "Not yet checked."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1386
+#: pro/app/controllers/PlpLinksController.php:1475
 msgid "Last checked on %s."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1390
+#: pro/app/controllers/PlpLinksController.php:1479
 msgid "Last checked unknown."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1394
+#: pro/app/controllers/PlpLinksController.php:1483
 msgid "Waiting"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1395
+#: pro/app/controllers/PlpLinksController.php:1484
 msgid "Okay"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:1396
+#: pro/app/controllers/PlpLinksController.php:1485
 msgid "Broken"
 msgstr ""
 
@@ -5595,24 +5608,36 @@ msgstr ""
 msgid "View links tagged as &#8220;%s&#8221;"
 msgstr ""
 
-#: pro/app/controllers/PlpOptionsController.php:100
+#: pro/app/controllers/PlpOptionsController.php:103
 msgid "Keywords Per Page is required"
 msgstr ""
 
-#: pro/app/controllers/PlpOptionsController.php:104
+#: pro/app/controllers/PlpOptionsController.php:107
 msgid "Keyword Links Per Page is required"
 msgstr ""
 
-#: pro/app/controllers/PlpOptionsController.php:109
+#: pro/app/controllers/PlpOptionsController.php:112
 msgid "You need to enter a valid Pretty Link Base URL now that you have selected \"Use an alternate base url for your Pretty Links\""
 msgstr ""
 
-#: pro/app/controllers/PlpOptionsController.php:114
+#: pro/app/controllers/PlpOptionsController.php:117
 msgid "You need to enter a valid Public Link Display URL now that you have selected \"Use a custom public link display page\""
 msgstr ""
 
-#: pro/app/controllers/PlpOptionsController.php:121
+#: pro/app/controllers/PlpOptionsController.php:124
 msgid "Pretty Bar Attribution URL must be a correctly formatted URL"
+msgstr ""
+
+#: pro/app/controllers/PlpOptionsController.php:131
+msgid "QR Logo must be a valid image file (JPG, PNG, GIF, or WebP)"
+msgstr ""
+
+#: pro/app/controllers/PlpOptionsController.php:138
+msgid "Your server does not support WebP logos for QR overlay. Please contact your host or use PNG/JPG/GIF instead."
+msgstr ""
+
+#: pro/app/controllers/PlpOptionsController.php:146
+msgid "QR Logo Size must be between 10% and 30% for reliable scanning"
 msgstr ""
 
 #: pro/app/controllers/PlpPostsController.php:137
@@ -5701,10 +5726,6 @@ msgstr ""
 msgid "Your Pretty Link Report was Successfully Deleted"
 msgstr ""
 
-#: pro/app/controllers/PlpUrlsController.php:63
-msgid "Pretty Link Post Build URL Index"
-msgstr ""
-
 #: pro/app/helpers/PlpLinksHelper.php:18
 #: pro/app/views/links/form.php:233
 msgid "weight:"
@@ -5718,43 +5739,43 @@ msgstr ""
 msgid "Both"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:129
+#: pro/app/models/PlpOptions.php:137
 msgid "Facebook"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:136
+#: pro/app/models/PlpOptions.php:144
 msgid "Twitter"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:143
+#: pro/app/models/PlpOptions.php:151
 msgid "Google+"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:150
+#: pro/app/models/PlpOptions.php:158
 msgid "Pinterest"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:157
+#: pro/app/models/PlpOptions.php:165
 msgid "LinkedIn"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:164
+#: pro/app/models/PlpOptions.php:172
 msgid "Reddit"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:171
+#: pro/app/models/PlpOptions.php:179
 msgid "StumbleUpon"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:178
+#: pro/app/models/PlpOptions.php:186
 msgid "Digg"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:271
+#: pro/app/models/PlpOptions.php:279
 msgid "Affiliate Link Disclosures"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:280
+#: pro/app/models/PlpOptions.php:288
 msgid "(aff)"
 msgstr ""
 
@@ -6000,41 +6021,37 @@ msgstr ""
 msgid "This is the goal link for your split test."
 msgstr ""
 
-#: pro/app/views/links/form.php:282
-msgid "id: %1$s | slug: %3$s | name: %2$s"
-msgstr ""
-
-#: pro/app/views/links/form.php:300
-#: pro/app/views/links/form.php:303
+#: pro/app/views/links/form.php:301
+#: pro/app/views/links/form.php:304
 msgid "Geographic Redirects"
 msgstr ""
 
-#: pro/app/views/links/form.php:304
+#: pro/app/views/links/form.php:305
 msgid "This will enable you to setup specific target urls that this pretty link will redirect to based on the country of the person visiting the url."
 msgstr ""
 
-#: pro/app/views/links/form.php:309
-#: pro/app/views/links/form.php:323
-#: pro/app/views/links/form.php:343
+#: pro/app/views/links/form.php:310
+#: pro/app/views/links/form.php:324
+#: pro/app/views/links/form.php:344
 msgid "Add"
 msgstr ""
 
-#: pro/app/views/links/form.php:314
-#: pro/app/views/links/form.php:317
+#: pro/app/views/links/form.php:315
+#: pro/app/views/links/form.php:318
 msgid "Technology Redirects"
 msgstr ""
 
-#: pro/app/views/links/form.php:318
+#: pro/app/views/links/form.php:319
 msgid "This will allow you to redirect based on your visitor's device, operating system and/or browser"
 msgstr ""
 
-#: pro/app/views/links/form.php:328
-#: pro/app/views/links/form.php:331
+#: pro/app/views/links/form.php:329
+#: pro/app/views/links/form.php:332
 msgid "Time Period Redirects"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s: open b tag, %3$s close b tag
-#: pro/app/views/links/form.php:334
+#: pro/app/views/links/form.php:335
 msgid "This will allow you to redirect based on the time period in which your visitor visits this link.%1$s%1$s%2$sNote: If your visitor doesn't visit the link during any of the specified time periods set here, they'll simply be redirected to the main target url.%3$s"
 msgstr ""
 
@@ -6077,21 +6094,69 @@ msgstr ""
 msgid "Enable %1sQR Codes%2$s"
 msgstr ""
 
-#: pro/app/views/links/link-options.php:86
+#: pro/app/views/links/link-options.php:74
+msgid "QR Code Logo"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:77
+msgid "QR Code Logo Overlay"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:78
+msgid "Upload or select a logo to display in the center of your QR codes. The logo will be overlaid at 15-30% of the QR code size with high error correction to maintain scannability. Leave empty for no logo."
+msgstr ""
+
 #: pro/app/views/links/link-options.php:88
+msgid "Change Logo"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:88
+msgid "Select Logo"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:92
+msgid "Remove Logo"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:109
+msgid "Logo Size"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:112
+msgid "QR Code Logo Size"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:113
+msgid "Percentage of QR code width for the logo (10-30%). Recommended: 15-20% for best balance between visibility and scannability."
+msgstr ""
+
+#: pro/app/views/links/link-options.php:131
+msgid "White Background"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:134
+msgid "Add White Background Behind Logo"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:135
+msgid "Adds a white rectangular \"safe area\" behind the logo for better contrast and improved scannability. Recommended to keep enabled."
+msgstr ""
+
+#: pro/app/views/links/link-options.php:170
+#: pro/app/views/links/link-options.php:172
 msgid "Enable Link Health Emails"
 msgstr ""
 
-#: pro/app/views/links/link-options.php:89
+#: pro/app/views/links/link-options.php:173
 msgid "Enable this option to be notified of broken links through email."
 msgstr ""
 
-#: pro/app/views/links/link-options.php:105
-#: pro/app/views/links/link-options.php:107
+#: pro/app/views/links/link-options.php:189
+#: pro/app/views/links/link-options.php:191
 msgid "Link Health Email Addresses"
 msgstr ""
 
-#: pro/app/views/links/link-options.php:108
+#: pro/app/views/links/link-options.php:192
 msgid "Comma separated list of email addresses that will receive notifications for broken links. This defaults to your admin email set in \"Settings\" -> \"General\" -> \"Administration Email Address\""
 msgstr ""
 
@@ -7057,10 +7122,18 @@ msgstr ""
 msgid "Could not activate addon. Please refresh page and try again."
 msgstr ""
 
-#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:62
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:59
+msgid "Could not deactivate addon. Please check user permissions."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:64
 msgid "Could not deactivate the theme. Please deactivate from the theme page."
 msgstr ""
 
-#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:72
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:74
 msgid "Could not deactivate the addon. Please deactivate from the Plugins page."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:97
+msgid "Could not install addon. Please check user permissions."
 msgstr ""

@@ -51,7 +51,7 @@ class PrliGrdLvlController extends PrliBaseController implements StaticContainer
          * Later we'll want to move this condition to be only around the {@see self::init_ipn()}
          * load method.
          */
-        if (PrliNotifications::has_access()) {
+        if (PrliNotifications::has_access() || wp_doing_cron()) {
             self::setContainer(new Container());
 
             /**

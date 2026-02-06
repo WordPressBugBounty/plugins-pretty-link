@@ -26,6 +26,34 @@
     $('form#post').submit(function(e) {
       e.preventDefault();
 
+      var dynamicRedirection = $('#plp_dynamic_redirection').val();
+
+      if (dynamicRedirection === 'rotate') {
+        var rotationInputs = $('#prli_link_rotations input[name="url_rotations[]"]');
+        var hasGap = false;
+        var foundEmpty = false;
+
+        rotationInputs.each(function() {
+          var value = $(this).val().trim();
+
+          if (foundEmpty && value !== '') {
+            hasGap = true;
+            return false; // Break the each loop
+          }
+
+          if (value === '') {
+            foundEmpty = true;
+          }
+        });
+
+        if (hasGap) {
+          $('#pretty_link_errors p').html('Please remove gaps between rotation URLs. Move all filled URLs to the top before saving.');
+          $('#pretty_link_errors').show();
+          $('.spinner').css('visibility','hidden'); // Hide spinner if validation fails
+          return false; // Block form submission
+        }
+      }
+
       $('#pretty_link_errors').hide();
       $('.spinner').css('visibility','visible');
 
@@ -128,6 +156,46 @@
           });
         }
       }
+    }
+
+    // Initialize Select2 for Goal Link field with Ajax
+    if ($.fn.select2 && $('#split_test_goal_link').length) {
+      $('#split_test_goal_link').select2({
+        theme: 'prli',
+        placeholder: PrliLinkValidation.search_for_link,
+        allowClear: true,
+        width: '100%',
+        ajax: {
+          url: ajaxurl,
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              action: 'prli_search_links',
+              _ajax_nonce: PrliLinkValidation.search_links_nonce,
+              q: params.term,
+              page: params.page || 1
+            };
+          },
+          processResults: function (response) {
+            if (!response || !response.success) {
+              return {
+                results: [],
+                pagination: { more: false }
+              };
+            }
+
+            return {
+              results: response.data.results,
+              pagination: {
+                more: !!(response.data.pagination && response.data.pagination.more)
+              }
+            };
+          },
+          cache: true
+        },
+        minimumInputLength: 0
+      });
     }
   });
 })(jQuery);

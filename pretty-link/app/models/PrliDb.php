@@ -103,7 +103,7 @@ class PrliDb {
               created_at datetime NOT NULL,
               updated_at datetime default NULL,
               group_id int(11) default NULL,
-              link_cpt_id int(11) default 0,
+              link_cpt_id bigint(20) unsigned default 0,
               prettypay_link tinyint(1) default 0,
               PRIMARY KEY  (id),
               KEY link_cpt_id (link_cpt_id),

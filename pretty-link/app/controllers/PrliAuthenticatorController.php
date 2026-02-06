@@ -25,12 +25,32 @@ class PrliAuthenticatorController extends PrliBaseController {
    * @return void
    */
   public static function delete_connection_data() {
-    if ( isset( $_GET['prli-clear-connection-data'] ) ) {
-      // Admins only
-      if ( current_user_can( 'manage_options' ) ) {
-        self::clear_connection_data();
-      }
+    if ( ! isset( $_GET['prli-clear-connection-data'] ) ) {
+      return;
     }
+
+    // Admins only
+    if ( ! current_user_can( 'manage_options' ) ) {
+      return;
+    }
+
+    // If nonce is present and valid, perform the action.
+    if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'prli-clear-connection-data' ) ) {
+      self::clear_connection_data();
+      wp_safe_redirect( admin_url() );
+      exit;
+    }
+
+    // Show confirmation page.
+    $nonce_url = wp_nonce_url( admin_url( '?prli-clear-connection-data=1' ), 'prli-clear-connection-data' );
+    wp_die(
+      '<h1>' . esc_html__( 'Clear Connection Data', 'pretty-link' ) . '</h1>' .
+      '<p>' . esc_html__( 'Are you sure you want to clear your Pretty Links connection data? This will remove your site UUID, account email, and secret token.', 'pretty-link' ) . '</p>' .
+      '<p><a class="button button-primary" href="' . esc_url( $nonce_url ) . '">' . esc_html__( 'Yes, Clear Connection Data', 'pretty-link' ) . '</a> ' .
+      '<a class="button" href="' . esc_url( admin_url() ) . '">' . esc_html__( 'Cancel', 'pretty-link' ) . '</a></p>',
+      esc_html__( 'Confirm Action', 'pretty-link' ),
+      array( 'back_link' => false )
+    );
   }
 
   /**
