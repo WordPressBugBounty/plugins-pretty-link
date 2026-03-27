@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the PrettyLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrettyLinks 3.6.20\n"
+"Project-Id-Version: PrettyLinks 3.6.21\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-21T20:40:06+00:00\n"
+"POT-Creation-Date: 2026-03-27T22:41:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -225,7 +225,7 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:188
 #: app/controllers/PrliAppController.php:189
-#: app/controllers/PrliLinksController.php:1242
+#: app/controllers/PrliLinksController.php:1248
 msgid "PrettyPay™ Links"
 msgstr ""
 
@@ -792,54 +792,54 @@ msgid "All Groups (Legacy)"
 msgstr ""
 
 #. translators: %s: number of links
-#: app/controllers/PrliLinksController.php:1088
+#: app/controllers/PrliLinksController.php:1094
 msgid "All %s"
 msgstr ""
 
 #. translators: %s: number of links in the trash
-#: app/controllers/PrliLinksController.php:1097
+#: app/controllers/PrliLinksController.php:1103
 msgid "Trash %s"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1137
+#: app/controllers/PrliLinksController.php:1143
 #: pro/app/controllers/PlpLinksController.php:1183
 msgid "Find Broken Links"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1243
+#: app/controllers/PrliLinksController.php:1249
 #: app/helpers/PrliLinksHelper.php:26
 msgid "PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1244
+#: app/controllers/PrliLinksController.php:1250
 msgid "Add New PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1245
+#: app/controllers/PrliLinksController.php:1251
 msgid "Edit PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1246
+#: app/controllers/PrliLinksController.php:1252
 msgid "New PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1247
+#: app/controllers/PrliLinksController.php:1253
 msgid "View PrettyPay™ Link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1248
+#: app/controllers/PrliLinksController.php:1254
 msgid "Search PrettyPay™ Links"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1249
+#: app/controllers/PrliLinksController.php:1255
 msgid "No PrettyPay™ Links found"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1250
+#: app/controllers/PrliLinksController.php:1256
 msgid "No PrettyPay™ Links found in Trash"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:1251
+#: app/controllers/PrliLinksController.php:1257
 msgid "Parent PrettyPay™ Link:"
 msgstr ""
 
@@ -5695,12 +5695,12 @@ msgstr ""
 msgid "PrettyBar Link Character Limit must be a number"
 msgstr ""
 
-#: pro/app/controllers/PlpPublicLinksController.php:110
+#: pro/app/controllers/PlpPublicLinksController.php:117
 #: pro/app/helpers/PlpPublicLinksHelper.php:6
 msgid "Enter a URL:"
 msgstr ""
 
-#: pro/app/controllers/PlpPublicLinksController.php:111
+#: pro/app/controllers/PlpPublicLinksController.php:118
 #: pro/app/helpers/PlpPublicLinksHelper.php:7
 #: pro/app/widgets/PlpPublicLinksWidget.php:61
 msgid "Shrink"
@@ -6844,7 +6844,7 @@ msgstr ""
 msgid "Contributor"
 msgstr ""
 
-#: pro/app/views/public/form.php:28
+#: pro/app/views/public/form.php:29
 msgid "ERROR:"
 msgstr ""
 

@@ -1044,11 +1044,17 @@ class PrliLinksController extends PrliBaseController {
 
       foreach( $search_terms as $search_term ){
         $search_term      = '%' . $wpdb->esc_like( $search_term ) . '%';
-        $search_clauses[] = " ({$wpdb->posts}.post_title LIKE '$search_term' OR {$wpdb->posts}.post_excerpt LIKE '$search_term' OR {$wpdb->posts}.post_content LIKE '$search_term' ) ";
+        $search_clauses[] = $wpdb->prepare(
+          " ({$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s OR {$wpdb->posts}.post_content LIKE %s) ",
+          $search_term, $search_term, $search_term
+        );
       }
       $where             .= ' AND ' . implode( ' AND ', $search_clauses );
       $exact_search_terms = '%' . $wpdb->esc_like( $wp_query->query_vars['s'] ) . '%';
-      $where             .= " OR li.url LIKE '$exact_search_terms' OR li.slug LIKE '$exact_search_terms'";
+      $where             .= $wpdb->prepare(
+        " OR li.url LIKE %s OR li.slug LIKE %s",
+        $exact_search_terms, $exact_search_terms
+      );
     }
     return $where;
   }
