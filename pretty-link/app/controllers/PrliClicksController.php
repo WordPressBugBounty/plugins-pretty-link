@@ -23,7 +23,7 @@ class PrliClicksController extends PrliBaseController {
 
   public function route_scripts() {
     if( ( isset($_GET['action']) && $_GET['action'] == 'prli_download_csv_hit_report' ) ) {
-      if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'prli-csv-nonce' ) ) {
+      if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'prli-csv-nonce' ) || ! PrliUtils::is_authorized() ) {
         status_header( 403, 'Forbidden' );
         wp_die();
       }

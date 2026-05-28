@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the PrettyLinks plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrettyLinks 3.6.21\n"
+"Project-Id-Version: PrettyLinks 3.6.22\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-27T22:41:01+00:00\n"
+"POT-Creation-Date: 2026-05-28T02:27:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -150,6 +150,7 @@ msgstr ""
 #: app/controllers/PrliUpdateController.php:74
 #: app/controllers/PrliUpdateController.php:169
 #: app/controllers/PrliUpdateController.php:208
+#: pro/app/controllers/PlpImportExportController.php:24
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:162
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:207
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:236
@@ -1626,11 +1627,11 @@ msgid "This Pretty Link Slug is already taken. There's already another pretty li
 msgstr ""
 
 #. translators: %1$s: open link tag, %2$s: close link tag, %3$s: br tag
-#: app/models/PrliUtils.php:1095
+#: app/models/PrliUtils.php:1100
 msgid "Get started by %1$sadding a URL%2$s that you want to turn into a pretty link.%3$sCome back to see how many times it was clicked."
 msgstr ""
 
-#: app/models/PrliUtils.php:1398
+#: app/models/PrliUtils.php:1403
 msgid "NEW"
 msgstr ""
 
@@ -5304,11 +5305,11 @@ msgstr ""
 msgid "Pretty Links Pro | Import / Export"
 msgstr ""
 
-#: pro/app/controllers/PlpImportExportController.php:36
+#: pro/app/controllers/PlpImportExportController.php:39
 msgid "Import file not found."
 msgstr ""
 
-#: pro/app/controllers/PlpImportExportController.php:58
+#: pro/app/controllers/PlpImportExportController.php:61
 msgid "Import file could not be opened."
 msgstr ""
 
@@ -5642,7 +5643,7 @@ msgstr ""
 
 #: pro/app/controllers/PlpPostsController.php:137
 #: pro/app/controllers/PlpPostsController.php:153
-#: pro/app/controllers/PlpPostsController.php:235
+#: pro/app/controllers/PlpPostsController.php:240
 msgid "Untitled"
 msgstr ""
 

@@ -853,6 +853,11 @@ class PrliUtils {
   /** Attempt to get a page title from the target url */
   public static function get_page_title($url, $slug='') {
     $title = '';
+
+    if (!wp_http_validate_url($url)) {
+      return apply_filters('prli-get-page-title-return-slug', $slug, $url);
+    }
+
     $result = wp_remote_get($url, array(
       'sslverify' => false,
       'user-agent' => sprintf('PrettyLinks/%s; %s', PRLI_VERSION, home_url('/')),
