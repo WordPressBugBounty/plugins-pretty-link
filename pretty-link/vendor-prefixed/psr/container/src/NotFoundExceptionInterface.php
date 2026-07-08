@@ -1,6 +1,6 @@
 <?php
 
-namespace Prli\Psr\Container;
+namespace PrettyLinks\Psr\Container;
 
 /**
  * No entry was found in the container.

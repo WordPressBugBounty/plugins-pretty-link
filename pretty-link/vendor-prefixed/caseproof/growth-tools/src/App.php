@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace PrettyLinks\Caseproof\GrowthTools;
 
-namespace Prli\Caseproof\GrowthTools;
-
-use Prli\Caseproof\GrowthTools\Helper\AddonHelper;
-
+use PrettyLinks\Caseproof\GrowthTools\Helper\AddonHelper;
 /**
  * Main plugin application.
  *
- * @see \Prli\Caseproof\GrowthTools\instance() Instead of instantiating this class directly,
+ * @see \PrettyLinks\Caseproof\GrowthTools\instance() Instead of instantiating this class directly,
  *                                       retrieve the main instance using this function.
  */
 class App
@@ -20,14 +18,12 @@ class App
      * @var Config
      */
     protected Config $config;
-
     /**
      * Ajax Action prefix.
      *
      * @var string
      */
     private const AJAX_ACTION_PREFIX = 'caseproof_growth_tool_addon_action_';
-
     /**
      * Constructor.
      *
@@ -38,7 +34,6 @@ class App
         $this->config = $config;
         $this->addHooks();
     }
-
     /**
      * Registers WordPress hooks necessary to bootstrap the plugin.
      */
@@ -47,22 +42,13 @@ class App
         add_action('admin_menu', [$this, 'addMenu'], 9999);
         add_action('wp_ajax_' . self::AJAX_ACTION_PREFIX . $this->config->instanceId, [$this, 'addonAction']);
     }
-
     /**
      * Add menu into WordPress admin.
      */
     public function addMenu()
     {
-        add_submenu_page(
-            $this->config->parentMenuSlug ?? 'tools.php',
-            __('Growth Tools', 'pretty-link'),
-            __('Growth Tools', 'pretty-link'),
-            'activate_plugins',
-            $this->config->menuSlug ?? 'growth-tools',
-            [$this, 'renderPage']
-        );
+        add_submenu_page($this->config->parentMenuSlug ?? 'tools.php', __('Growth Tools', 'pretty-link'), __('Growth Tools', 'pretty-link'), 'activate_plugins', $this->config->menuSlug ?? 'growth-tools', [$this, 'renderPage']);
     }
-
     /**
      * Add inline CSS.
      *
@@ -72,7 +58,6 @@ class App
     {
         wp_add_inline_style('caseproof_grtl-growth-tools-style', $inlineCSS);
     }
-
     /**
      * Render html page.
      *
@@ -84,37 +69,21 @@ class App
         wp_enqueue_style('caseproof_grtl-growth-tools-style', $this->config->assetsUrl . '/main.min.css', []);
         $inlineCSS = $this->config->customInlineCSS;
         $this->addInlineCSS(is_callable($inlineCSS) ? $inlineCSS() : $inlineCSS);
-        $growthToolsData   = $this->config->getAddonsConfig();
-        $addonsPluginsData = is_array($growthToolsData['plugins'] ?? false) ?
-                $growthToolsData['plugins'] : [];
-        $addonsThemesData  = is_array($growthToolsData['themes'] ?? false) ?
-                $growthToolsData['themes'] : [];
-        $addons            = array_merge($addonsPluginsData, $addonsThemesData);
-        $addonsStatusData  = $this->config->getAddonsStatus();
-        $addonsStatus      = array_merge(
-            $addonsStatusData['plugins'] ?? [],
-            $addonsStatusData['themes'] ?? []
-        );
-
+        $growthToolsData = $this->config->getAddonsConfig();
+        $addonsPluginsData = is_array($growthToolsData['plugins'] ?? false) ? $growthToolsData['plugins'] : [];
+        $addonsThemesData = is_array($growthToolsData['themes'] ?? false) ? $growthToolsData['themes'] : [];
+        $addons = array_merge($addonsPluginsData, $addonsThemesData);
+        $addonsStatusData = $this->config->getAddonsStatus();
+        $addonsStatus = array_merge($addonsStatusData['plugins'] ?? [], $addonsStatusData['themes'] ?? []);
         // Sort addons.
         $addons = AddonHelper::sortAddons($addons);
-
-        $labels      = [
-            'notinstalled' => esc_html(__('Not Installed', 'pretty-link')),
-            'installed'    => esc_html(__('Installed', 'pretty-link')),
-            'activated'    => esc_html(__('Active', 'pretty-link')),
-            'active'       => esc_html(__('Activate', 'pretty-link')),
-            'deactive'     => esc_html(__('Deactivate', 'pretty-link')),
-            'install'      => esc_html(__('Install', 'pretty-link')),
-        ];
-        $ajaxAction  = self::AJAX_ACTION_PREFIX . $this->config->instanceId;
+        $labels = ['notinstalled' => esc_html(__('Not Installed', 'pretty-link')), 'installed' => esc_html(__('Installed', 'pretty-link')), 'activated' => esc_html(__('Active', 'pretty-link')), 'active' => esc_html(__('Activate', 'pretty-link')), 'deactive' => esc_html(__('Deactivate', 'pretty-link')), 'install' => esc_html(__('Install', 'pretty-link'))];
+        $ajaxAction = self::AJAX_ACTION_PREFIX . $this->config->instanceId;
         $baseLogoUrl = $this->config->imageBaseUrl;
-        $buttonCSS   = $this->config->buttonCSSClasses;
-        $headerHTML  = $this->config->headerHtmlCallback;
-
+        $buttonCSS = $this->config->buttonCSSClasses;
+        $headerHTML = $this->config->headerHtmlCallback;
         require 'views/list.phtml';
     }
-
     /**
      * Ajax handler for install/activate plugin.
      *
@@ -122,28 +91,24 @@ class App
      */
     public function pluginAction()
     {
-        _deprecated_function(__METHOD__, '1.4.0', 'App::addonAction'); // Send a deprecation warning.
+        _deprecated_function(__METHOD__, '1.4.0', 'App::addonAction');
+        // Send a deprecation warning.
         $this->addonAction();
     }
-
     /**
      * Ajax handler for install/activate addon.
      */
     public function addonAction()
     {
-        $growthToolsData   = $this->config->getAddonsConfig();
-        $addonsPluginsData = is_array($growthToolsData['plugins'] ?? false) ?
-                $growthToolsData['plugins'] : [];
-        $addonsThemesData  = is_array($growthToolsData['themes'] ?? false) ?
-                $growthToolsData['themes'] : [];
-        $addons            = array_merge($addonsPluginsData, $addonsThemesData);
+        $growthToolsData = $this->config->getAddonsConfig();
+        $addonsPluginsData = is_array($growthToolsData['plugins'] ?? false) ? $growthToolsData['plugins'] : [];
+        $addonsThemesData = is_array($growthToolsData['themes'] ?? false) ? $growthToolsData['themes'] : [];
+        $addons = array_merge($addonsPluginsData, $addonsThemesData);
         if (empty($addons)) {
             return;
         }
-
-        $type      = sanitize_text_field($_REQUEST['type']);
+        $type = sanitize_text_field($_REQUEST['type']);
         $addonMain = sanitize_text_field($_REQUEST['addon']);
-
         if ($type === 'install') {
             foreach ($addons as $addon) {
                 if (($addon['main']['free'] ?? null) === $addonMain) {
@@ -164,7 +129,6 @@ class App
             }
         }
     }
-
     /**
      * Install plugin.
      *
@@ -175,7 +139,6 @@ class App
     {
         AddonHelper::installAddon($link, $addonType);
     }
-
     /**
      * Activate plugin.
      *
@@ -186,7 +149,6 @@ class App
     {
         AddonHelper::activateAddon($file, $addonType);
     }
-
     /**
      * Deactivate plugin.
      *
@@ -197,7 +159,6 @@ class App
     {
         AddonHelper::deactivateAddon($file, $addonType);
     }
-
     /**
      * Render header contents.
      *

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support\Exceptions;
+namespace PrettyLinks\GroundLevel\Support\Exceptions;
 
 /**
  * Error encountered when an invalid attribute format is supplied.

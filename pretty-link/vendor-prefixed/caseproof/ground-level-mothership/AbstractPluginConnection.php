@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Mothership;
-
-use Prli\GroundLevel\Container\Service as BaseService;
+namespace PrettyLinks\GroundLevel\Mothership;
 
 /**
  * This class is used to serve as a contract to set how the plugin gets/sets data (license key, domain, email, api token) used to connect to the mothership.
@@ -14,9 +12,21 @@ use Prli\GroundLevel\Container\Service as BaseService;
  * 2. Email and API Token.
  *
  * The License Key and Domain method is the default and is used to authenticate the plugin.
+ *
+ * The consumer plugin may override the public methods to implement its own logic for retrieving
+ * and storing the data used to connect to the Mothership API.
+ *
+ * @property string $pluginId     The ID of the plugin using this component.
+ * @property string $pluginPrefix The prefix of the plugin using this component.
+ * @property string $productId    The ID of the product using this component.
+ * @property string $pluginFile   The plugin basename relative to the plugins directory.
  */
-abstract class AbstractPluginConnection extends BaseService
+abstract class AbstractPluginConnection
 {
+    public const AUTOMATIC_UPDATE_ALL   = 'all';
+    public const AUTOMATIC_UPDATE_MINOR = 'minor';
+    public const AUTOMATIC_UPDATE_NONE  = 'none';
+
     /**
      * The ID of the plugin using this component.
      *
@@ -27,37 +37,28 @@ abstract class AbstractPluginConnection extends BaseService
     /**
      * Used to set the constants for the plugin's license key, domain, email, and API token for local development.
      *
-     * @var string
-     */
-    protected string $pluginPrefix = '';
-
-    /**
-     * The name of the constant to use for the plugin's license key.
+     * A trailing underscore is automatically added to the prefix if it is not already present.
      *
      * @var string
      */
-    protected string $nameForConstantLicenseKey = '';
+    protected string $pluginPrefix;
 
     /**
-     * The name of the constant to use for the plugin's activation domain.
+     * Used to connect to the Mothership API.
      *
      * @var string
      */
-    protected string $nameForConstantDomain = '';
+    protected string $productId = '';
 
     /**
-     * The name of the constant to use for the plugin's email.
+     * The plugin basename relative to the plugins directory.
+     *
+     * For example: 'ground-level/ground-level.php'. This is the same format returned
+     * by WordPress's `plugin_basename()` function.
      *
      * @var string
      */
-    protected string $nameForConstantEmail = '';
-
-    /**
-     * The name of the constant to use for the plugin's API token.
-     *
-     * @var string
-     */
-    protected string $nameForConstantApiToken = '';
+    protected string $pluginFile = '';
 
     /**
      * Magic method to get the property of the class.
@@ -78,35 +79,93 @@ abstract class AbstractPluginConnection extends BaseService
      *
      * @return boolean
      */
-    abstract public function getLicenseActivationStatus(): bool;
+    public function getLicenseActivationStatus(): bool
+    {
+        return (bool) get_option($this->pluginId . '_license_active', false);
+    }
+
 
     /**
      * Updates the license activation status.
      *
      * @param  boolean $status The new status of the license activation.
-     * @return void
+     * @return boolean Whether the license activation status was updated successfully.
      */
-    abstract public function updateLicenseActivationStatus(bool $status): void;
+    public function updateLicenseActivationStatus(bool $status): bool
+    {
+        return update_option($this->pluginId . '_license_active', $status);
+    }
 
     /**
-     * Gets the License Key.
+     * Gets the license key.
      *
-     * @return string The License Key.
+     * @return string The license key.
      */
-    abstract public function getLicenseKey(): string;
+    public function getLicenseKey(): string
+    {
+        return (string) get_option($this->pluginId . '_license_key', '');
+    }
 
     /**
-     * Updates the License Key.
+     * Updates the license key.
      *
-     * @param  string $licenseKey The License Key.
-     * @return void
+     * @param  string $licenseKey The license key.
+     * @return boolean Whether the license key was updated successfully.
      */
-    abstract public function updateLicenseKey(string $licenseKey): void;
+    public function updateLicenseKey(string $licenseKey): bool
+    {
+        return update_option($this->pluginId . '_license_key', $licenseKey);
+    }
 
     /**
-     * Gets the Domain.
+     * Whether to include prerelease versions (alpha, beta, custom or release_candidate) when checking for updates.
      *
-     * @return string The Domain.
+     * @return boolean
+     */
+    public function allowPrereleaseVersions(): bool
+    {
+        /**
+         * Filters whether prerelease versions are included when checking for updates.
+         *
+         * @param bool $allow Whether to allow prerelease versions. Default false.
+         */
+        return (bool) apply_filters("{$this->pluginId}_allow_prerelease_versions", false);
+    }
+
+    /**
+     * Controls which updates are applied automatically during WordPress background updates.
+     *
+     * Possible values:
+     * - {@see self::AUTOMATIC_UPDATE_ALL}   - auto-update for all versions including major bumps.
+     * - {@see self::AUTOMATIC_UPDATE_MINOR} - auto-update for minor and patch only, blocks major bumps.
+     * - {@see self::AUTOMATIC_UPDATE_NONE}  - never auto-update.
+     *
+     * @return string
+     */
+    public function automaticUpdates(): string
+    {
+        /**
+         * Filters the automatic update level for the plugin.
+         *
+         * @param string $level The automatic update level. Default self::AUTOMATIC_UPDATE_MINOR.
+         */
+        return (string) apply_filters("{$this->pluginId}_automatic_updates", self::AUTOMATIC_UPDATE_MINOR);
+    }
+
+    /**
+     * Gets the account URL.
+     *
+     * @return string The account URL.
+     */
+    public function getAccountUrl(): string
+    {
+        return '';
+    }
+
+    /**
+     * Gets the domain.
+     *
+     * @return string The domain.
      */
     public function getDomain(): string
     {
@@ -114,9 +173,9 @@ abstract class AbstractPluginConnection extends BaseService
     }
 
     /**
-     * Gets the Email.
+     * Gets the email.
      *
-     * @return string The Email.
+     * @return string The email.
      */
     public function getEmail(): string
     {
@@ -124,9 +183,9 @@ abstract class AbstractPluginConnection extends BaseService
     }
 
     /**
-     * Gets the API Token.
+     * Gets the API token.
      *
-     * @return string The API Token.
+     * @return string The API token.
      */
     public function getApiToken(): string
     {

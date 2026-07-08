@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support\Concerns;
+namespace PrettyLinks\GroundLevel\Support\Concerns;
 
 use TypeError;
 

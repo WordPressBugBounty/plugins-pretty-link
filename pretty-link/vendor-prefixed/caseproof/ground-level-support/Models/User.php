@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support\Models;
+namespace PrettyLinks\GroundLevel\Support\Models;
 
 use WP_User;
 

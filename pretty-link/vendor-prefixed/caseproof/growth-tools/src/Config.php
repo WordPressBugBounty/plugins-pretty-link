@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Prli\Caseproof\GrowthTools;
+namespace PrettyLinks\Caseproof\GrowthTools;
 
-use Prli\Caseproof\GrowthTools\Helper\AddonHelper;
+use PrettyLinks\Caseproof\GrowthTools\Helper\AddonHelper;
 
 class Config
 {

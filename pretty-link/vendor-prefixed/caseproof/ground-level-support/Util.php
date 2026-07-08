@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support;
+namespace PrettyLinks\GroundLevel\Support;
 
 class Util
 {
     /**
      * Retrieves the "base name" of the given class.
      *
-     * For example, if the class name is "Prli\GroundLevel\Support\Util", this method will return "Util".
+     * For example, if the class name is "PrettyLinks\GroundLevel\Support\Util", this method will return "Util".
      *
      * @param  string|object $class The class name or object.
      * @return string

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Container;
+namespace PrettyLinks\GroundLevel\Container;
 
-use Prli\Psr\Container\ContainerExceptionInterface;
+use PrettyLinks\Psr\Container\ContainerExceptionInterface;
 use Exception as BaseException;
 
 class Exception extends BaseException implements ContainerExceptionInterface

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Container;
+namespace PrettyLinks\GroundLevel\Container;
 
-use Prli\Psr\Container\NotFoundExceptionInterface;
+use PrettyLinks\Psr\Container\NotFoundExceptionInterface;
 
 class NotFoundException extends Exception implements NotFoundExceptionInterface
 {

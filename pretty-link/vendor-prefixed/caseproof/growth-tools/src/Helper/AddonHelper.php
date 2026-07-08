@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\Caseproof\GrowthTools\Helper;
+namespace PrettyLinks\Caseproof\GrowthTools\Helper;
 
 class AddonHelper
 {

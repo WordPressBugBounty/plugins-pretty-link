@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support;
+namespace PrettyLinks\GroundLevel\Support;
 
 /**
  * Data formats (casts).

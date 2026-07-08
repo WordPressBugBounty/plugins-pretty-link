@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Mothership\Manager;
+namespace PrettyLinks\GroundLevel\Mothership\Manager;
 
 /**
  * WordPress class extended for on-the-fly add-on installations.

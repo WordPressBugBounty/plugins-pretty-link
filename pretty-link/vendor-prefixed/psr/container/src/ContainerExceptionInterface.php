@@ -1,6 +1,6 @@
 <?php
 
-namespace Prli\Psr\Container;
+namespace PrettyLinks\Psr\Container;
 
 use Throwable;
 

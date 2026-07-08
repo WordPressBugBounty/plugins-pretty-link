@@ -2,18 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\InProductNotifications\Services;
+namespace PrettyLinks\GroundLevel\InProductNotifications\Services;
 
-use Prli\GroundLevel\Container\Container;
-use Prli\GroundLevel\Container\Contracts\LoadableDependency;
-use Prli\GroundLevel\Container\Service;
-use Prli\GroundLevel\InProductNotifications\Service as IPNService;
-use Prli\GroundLevel\Support\Concerns\Hookable;
-use Prli\GroundLevel\Support\Models\Hook;
+use PrettyLinks\GroundLevel\InProductNotifications\Util as IPNUtil;
+use PrettyLinks\GroundLevel\Support\Concerns\Hookable;
+use PrettyLinks\GroundLevel\Support\Models\Hook;
 
-abstract class ScheduledService extends Service implements LoadableDependency
+/**
+ * Abstract base class for scheduled IPN services.
+ */
+abstract class ScheduledService
 {
     use Hookable;
+
+    /**
+     * The IPN utility service.
+     *
+     * @var IPNUtil
+     */
+    protected IPNUtil $util;
 
     /**
      * The cron recurrence interval.
@@ -21,6 +28,17 @@ abstract class ScheduledService extends Service implements LoadableDependency
      * @var string
      */
     protected string $recurrence = 'daily';
+
+    /**
+     * Constructor.
+     *
+     * @param IPNUtil $util The IPN utility service.
+     */
+    public function __construct(IPNUtil $util)
+    {
+        $this->util = $util;
+        $this->addHooks();
+    }
 
     /**
      * Retrieves the hook name for the event action.
@@ -62,19 +80,9 @@ abstract class ScheduledService extends Service implements LoadableDependency
      */
     protected function eventHookName(): string
     {
-        return $this->container->get(IPNService::class)->prefixId(
+        return $this->util->prefixId(
             $this->eventName()
         );
-    }
-
-    /**
-     * Load service dependencies.
-     *
-     * @param \Prli\GroundLevel\Container\Container $container The container.
-     */
-    public function load(Container $container): void
-    {
-        $this->addHooks();
     }
 
     /**

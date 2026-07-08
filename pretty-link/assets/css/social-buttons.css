@@ -1,0 +1,136 @@
+/* Pretty Links social share bar.
+ *
+ * Rendered on the front-end of posts/pages by PrettyLinks\Pro\SocialButtons.
+ * Pro-only. File only enqueues when Pro is active and the buttons feature
+ * is enabled in options.
+ */
+
+.prli-social-buttons {
+  list-style: none;
+  margin: 24px 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.prli-social-buttons__item {
+  margin: 0;
+  padding: 0;
+}
+
+.prli-social-buttons__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  background: #fff;
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    background-color 0.12s ease, color 0.12s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.prli-social-buttons__btn:hover,
+.prli-social-buttons__btn:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+}
+
+.prli-social-buttons__btn:focus-visible {
+  outline: 2px solid #01aae9;
+  outline-offset: 2px;
+}
+
+.prli-social-buttons__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.prli-social-buttons__label {
+  white-space: nowrap;
+}
+
+/* Brand tints on hover. Base state stays neutral so the bar adapts to
+ * the host theme. */
+.prli-social-buttons__item--x .prli-social-buttons__btn:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.prli-social-buttons__item--facebook .prli-social-buttons__btn:hover {
+  background: #1877f2;
+  color: #fff;
+  border-color: #1877f2;
+}
+
+.prli-social-buttons__item--linkedin .prli-social-buttons__btn:hover {
+  background: #0a66c2;
+  color: #fff;
+  border-color: #0a66c2;
+}
+
+.prli-social-buttons__item--pinterest .prli-social-buttons__btn:hover {
+  background: #e60023;
+  color: #fff;
+  border-color: #e60023;
+}
+
+.prli-social-buttons__item--reddit .prli-social-buttons__btn:hover {
+  background: #ff4500;
+  color: #fff;
+  border-color: #ff4500;
+}
+
+.prli-social-buttons__item--whatsapp .prli-social-buttons__btn:hover {
+  background: #25d366;
+  color: #fff;
+  border-color: #25d366;
+}
+
+.prli-social-buttons__item--telegram .prli-social-buttons__btn:hover {
+  background: #26a5e4;
+  color: #fff;
+  border-color: #26a5e4;
+}
+
+.prli-social-buttons__item--email .prli-social-buttons__btn:hover {
+  background: #334155;
+  color: #fff;
+  border-color: #334155;
+}
+
+.prli-social-buttons__item--copy .prli-social-buttons__btn:hover {
+  background: #334155;
+  color: #fff;
+  border-color: #334155;
+}
+
+.prli-social-buttons__item--copy .prli-social-buttons__btn.is-copied {
+  background: #10b981;
+  color: #fff;
+  border-color: #10b981;
+}
+
+/* Compact variant — hide labels on small screens, show icons only. */
+@media (max-width: 600px) {
+  .prli-social-buttons__label {
+    display: none;
+  }
+
+  .prli-social-buttons__btn {
+    padding: 10px;
+  }
+}

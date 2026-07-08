@@ -2,31 +2,47 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Mothership\Api\Request;
+namespace PrettyLinks\GroundLevel\Mothership\Api\Request;
 
-use Prli\GroundLevel\Mothership\Api\Request;
-use Prli\GroundLevel\Mothership\Api\Response;
+use PrettyLinks\GroundLevel\Mothership\Api\Request;
+use PrettyLinks\GroundLevel\Mothership\Api\Response;
 
 /**
  * This class is used to interact with the products API.
  *
- * @see https://licenses.caseproof.com/docs/api#products
+ * @link https://licenses.caseproof.com/help/api-reference#products
  */
 class Products
 {
+    /**
+     * The request instance.
+     *
+     * @var \PrettyLinks\GroundLevel\Mothership\Api\Request
+     */
+    private Request $request;
+
+    /**
+     * Constructor.
+     *
+     * @param \PrettyLinks\GroundLevel\Mothership\Api\Request $request The request instance.
+     */
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /**
      * Get product by slug.
      *
      * @param string $slug The product slug.
      * @param array  $args Additional arguments for the request.
      *
-     * @return mixed The product data.
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The product data.
      */
-    public static function get(string $slug = '', array $args = [])
+    public function get(string $slug = '', array $args = []): Response
     {
-        $endpoint    = 'products/' . $slug;
-        $productData = Request::get($endpoint, $args);
-        return $productData;
+        $endpoint = 'products/' . $slug;
+        return $this->request->get($endpoint, $args);
     }
 
     /**
@@ -34,12 +50,12 @@ class Products
      *
      * @param  string $slug The product slug.
      * @param  array  $args Additional arguments for the request.
-     * @return \Prli\GroundLevel\Mothership\Api\Response The response from the API.
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
      */
-    public static function getNotifications(string $slug, array $args = []): Response
+    public function getNotifications(string $slug, array $args = []): Response
     {
         $endpoint = 'products/' . $slug . '/notifications';
-        return Request::get($endpoint, $args);
+        return $this->request->get($endpoint, $args);
     }
 
     /**
@@ -47,11 +63,11 @@ class Products
      *
      * @param array $args Additional arguments for the request.
      *
-     * @return mixed The list of products.
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The list of products.
      */
-    public static function list(array $args = [])
+    public function list(array $args = []): Response
     {
-        return self::get('', $args);
+        return $this->get('', $args);
     }
 
     /**
@@ -59,12 +75,84 @@ class Products
      *
      * @param string $slug    The product slug.
      * @param string $version The product version.
+     * @param array  $args    Additional arguments for the request.
      *
-     * @return Response The response from the API.
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
      */
-    public static function getVersion(string $slug, string $version): Response
+    public function getVersion(string $slug, string $version, array $args = []): Response
     {
         $endpoint = 'products/' . $slug . '/versions/' . $version;
-        return Request::get($endpoint);
+        return $this->request->get($endpoint, $args);
+    }
+
+    /**
+     * Get the latest version for a product.
+     *
+     * @param string $slug The product slug.
+     * @param array  $args Additional arguments for the request.
+     *
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
+     */
+    public function getVersionLatest(string $slug, array $args = []): Response
+    {
+        $endpoint = 'products/' . $slug . '/versions/latest';
+        return $this->request->get($endpoint, $args);
+    }
+
+    /**
+     * Get the latest version check for a product. Requests without a valid license
+     * are permitted, but may not utilize embeds.
+     *
+     * @param string $slug The product slug.
+     * @param array  $args Additional arguments for the request.
+     *
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
+     */
+    public function getVersionCheck(string $slug, array $args = []): Response
+    {
+        $endpoint = 'products/' . $slug . '/versions/check';
+        return $this->request->get($endpoint, $args);
+    }
+
+    /**
+     * Get all versions for a product.
+     *
+     * @param string $slug The product slug.
+     * @param array  $args Additional arguments for the request.
+     *
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
+     */
+    public function getVersions(string $slug, array $args = []): Response
+    {
+        $endpoint = 'products/' . $slug . '/versions';
+        return $this->request->get($endpoint, $args);
+    }
+
+    /**
+     * Get relations for a product.
+     *
+     * @param string $slug The product slug.
+     * @param array  $args Additional arguments for the request.
+     *
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
+     */
+    public function getRelations(string $slug, array $args = []): Response
+    {
+        $endpoint = 'products/' . $slug . '/relations';
+        return $this->request->get($endpoint, $args);
+    }
+
+    /**
+     * Deploy a version of a product.
+     *
+     * @param string $slug    The product slug.
+     * @param string $version The product version.
+     *
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
+     */
+    public function deployVersion(string $slug, string $version): Response
+    {
+        $endpoint = 'products/' . $slug . '/versions/' . $version . '/deploy';
+        return $this->request->post($endpoint);
     }
 }

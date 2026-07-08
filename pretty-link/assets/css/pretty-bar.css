@@ -1,0 +1,552 @@
+/*
+ * Pretty Bar cloaked-redirect stylesheet.
+ *
+ * Four templates render into this file:
+ *   1. Legacy (.prli-bar-*)     — grandfathered from 3.x; frozen for v3 users
+ *   2. Top bar   (.prli-pb-top)   — modern horizontal, top-anchored
+ *   3. Bottom bar (.prli-pb-bottom) — modern horizontal, bottom-anchored
+ *   4. Floating  (.prli-pb-float)  — compact pill, 6 anchor positions
+ *
+ * Modern templates (2–4) are fully variable-driven. Each template emits a
+ * scoped :root with the following custom properties; this stylesheet
+ * consumes them without hardcoding any colour or dimension:
+ *
+ *   --pb-bg        background colour OR linear-gradient(...)
+ *   --pb-text      primary text colour
+ *   --pb-accent    share-button background
+ *   --pb-cta-text  share-button text colour
+ *   --pb-shadow    full CSS box-shadow value
+ *   --pb-radius    bar / pill border-radius
+ *   --pb-logo-h    logo image height
+ *
+ * No design-token dependency — this sheet renders outside the WP admin
+ * shell, on a cloaked full-viewport page.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Legacy (v3 Classic) template — mirrors v3's #prettybar stylesheet so
+   sites upgraded from 3.x keep the exact visual they had. Shape is
+   table-based and fixed-height on purpose, matching v3 1:1. The only
+   adaptation from v3 is using an iframe in place of the <frameset>
+   element that modern browsers no longer support.
+   ========================================================================== */
+
+.prli-bar-body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+#prettybar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 65px;
+  background: #ffffff;
+  border-bottom: 2px solid black;
+  z-index: 2147483647;
+  box-sizing: border-box;
+}
+
+#prettybar table { border-collapse: collapse; }
+
+#prettybar h2,
+#prettybar h4,
+#prettybar p {
+  font-family: Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+#prettybar a { text-decoration: none; }
+
+#prettybar .blog-image {
+  padding-top: 7px;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 50px;
+}
+
+#prettybar .blog-title {
+  padding-top: 5px;
+  margin: 0;
+  width: 200px;
+}
+
+#prettybar .blog-title h2 { font-size: 16px; line-height: 1.2; }
+#prettybar .blog-title p  { font-size: 12px; line-height: 1.2; }
+
+#prettybar .retweet {
+  padding-top: 5px;
+  padding-left: 15px;
+  line-height: 26px;
+  width: 240px;
+}
+
+#prettybar .retweet h4 { font-size: 13px; line-height: 20px; }
+
+#prettybar .pb-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#prettybar .right_container {
+  float: right;
+  margin-top: 8px;
+  margin-right: 8px;
+  text-align: right;
+}
+
+#prettybar .closebutton {
+  height: 20px;
+  width: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: right;
+  float: right;
+}
+
+#prettybar .closebutton a {
+  display: inline-flex;
+  color: #555;
+}
+#prettybar .closebutton a:hover { color: #000; }
+
+#prettybar .small-text { font-size: 10px; }
+
+#prettybar .powered-by {
+  padding-top: 15px;
+  text-align: right;
+}
+
+/* Destination iframe sits beneath the fixed 65px bar. */
+.prli-bar-body .prli-bar-frame {
+  border: 0;
+  position: fixed;
+  top: 67px;                 /* 65px bar + 2px border */
+  left: 0;
+  width: 100%;
+  height: calc(100% - 67px);
+  display: block;
+  background: #ffffff;
+}
+
+/* ==========================================================================
+   Modern templates (Top / Bottom / Floating) — fully variable-driven.
+   ========================================================================== */
+
+.prli-pb {
+  color: var( --pb-text, #111827 );
+}
+
+.prli-pb-frame {
+  border: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #ffffff;
+}
+
+/* Links inside modern templates pick up the accent when explicitly
+ * labeled .prli-pb-share; target / title / desc keep template-specific
+ * colour handling below. */
+.prli-pb a {
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.prli-pb a:hover,
+.prli-pb a:focus-visible {
+  opacity: 0.8;
+  outline: 0;
+}
+
+/* ---- Shared inner components ------------------------------------------- */
+
+.prli-pb-logo {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.prli-pb-logo img {
+  /* Explicit height + width:auto is the fix for viewBox-only SVGs
+   * whose intrinsic size some browsers compute as 0. `object-fit:
+   * contain` preserves aspect ratio. */
+  height: var( --pb-logo-h, 32px );
+  width: auto;
+  max-width: 200px;
+  display: block;
+  object-fit: contain;
+}
+
+.prli-pb-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.prli-pb-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: var( --pb-text, #111827 );
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.005em;
+}
+
+.prli-pb-desc {
+  font-size: 12.5px;
+  color: var( --pb-text, #111827 );
+  opacity: 0.65;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prli-pb-target {
+  font-size: 12px;
+  color: var( --pb-text, #111827 );
+  opacity: 0.55;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.prli-pb-target:hover,
+.prli-pb-target:focus-visible {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
+.prli-pb-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.prli-pb-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: var( --pb-accent, #01aae9 );
+  color: var( --pb-cta-text, #ffffff );
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.prli-pb-share:hover,
+.prli-pb-share:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.18);
+  opacity: 1;
+  outline: 0;
+}
+
+.prli-pb-attrib {
+  font-size: 10.5px;
+  color: var( --pb-text, #111827 );
+  opacity: 0.5;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.prli-pb-attrib:hover,
+.prli-pb-attrib:focus-visible {
+  opacity: 0.85;
+}
+
+.prli-pb-dismiss {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid currentColor;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: inherit;
+  opacity: 0.55;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.prli-pb-dismiss:hover,
+.prli-pb-dismiss:focus-visible {
+  opacity: 1;
+  outline: 0;
+}
+
+/* Dark-background variant: keep dismiss border visible on dark bars. */
+.prli-pb-bottom .prli-pb-dismiss,
+.prli-pb-float .prli-pb-dismiss {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ---- Top bar (.prli-pb-top) --------------------------------------------- */
+
+.prli-pb-top {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+}
+
+.prli-pb-top .prli-pb-bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 24px;
+  background: var( --pb-bg, #ffffff );
+  box-shadow: var( --pb-shadow, 0 1px 2px rgba(0,0,0,0.04) );
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 0;
+  z-index: 2;
+}
+
+.prli-pb-top.prli-pb--compact .prli-pb-bar { padding: 6px 18px; gap: 12px; }
+.prli-pb-top.prli-pb--compact .prli-pb-title  { font-size: 13px; }
+.prli-pb-top.prli-pb--compact .prli-pb-desc   { font-size: 11px; }
+.prli-pb-top.prli-pb--compact .prli-pb-target { font-size: 11px; }
+.prli-pb-top.prli-pb--compact .prli-pb-share  { padding: 6px 12px; font-size: 12px; }
+.prli-pb-top.prli-pb--tall    .prli-pb-bar { padding: 26px 32px; gap: 22px; }
+.prli-pb-top.prli-pb--tall    .prli-pb-title  { font-size: 18px; }
+.prli-pb-top.prli-pb--tall    .prli-pb-desc   { font-size: 14px; }
+.prli-pb-top.prli-pb--tall    .prli-pb-share  { padding: 12px 20px; font-size: 15px; }
+
+/* ---- Bottom bar (.prli-pb-bottom) --------------------------------------- */
+
+.prli-pb-bottom {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100vh;
+}
+
+.prli-pb-bottom .prli-pb-bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 24px;
+  background: var( --pb-bg, #1f2937 );
+  box-shadow: var( --pb-shadow, 0 -1px 2px rgba(0,0,0,0.08) );
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  z-index: 2;
+}
+
+.prli-pb-bottom.prli-pb--compact .prli-pb-bar { padding: 6px 18px; gap: 12px; }
+.prli-pb-bottom.prli-pb--compact .prli-pb-title  { font-size: 13px; }
+.prli-pb-bottom.prli-pb--compact .prli-pb-desc   { font-size: 11px; }
+.prli-pb-bottom.prli-pb--compact .prli-pb-target { font-size: 11px; }
+.prli-pb-bottom.prli-pb--compact .prli-pb-share  { padding: 6px 12px; font-size: 12px; }
+.prli-pb-bottom.prli-pb--tall    .prli-pb-bar { padding: 26px 32px; gap: 22px; }
+.prli-pb-bottom.prli-pb--tall    .prli-pb-title  { font-size: 18px; }
+.prli-pb-bottom.prli-pb--tall    .prli-pb-desc   { font-size: 14px; }
+.prli-pb-bottom.prli-pb--tall    .prli-pb-share  { padding: 12px 20px; font-size: 15px; }
+
+/* ---- Floating pill (.prli-pb-float) ------------------------------------- */
+
+.prli-pb-float {
+  position: relative;
+  height: 100vh;
+}
+
+.prli-pb-float .prli-pb-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.prli-pb-pill {
+  position: fixed;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var( --pb-bg, #ffffff );
+  color: var( --pb-text, #111827 );
+  border-radius: var( --pb-radius, 999px );
+  box-shadow: var( --pb-shadow, 0 10px 30px rgba(0, 0, 0, 0.15) );
+  /* Grow from a comfortable baseline up to the viewport edge. Admin's
+   * character-limit caps are the ceiling on content length; the pill
+   * expands to fit whatever content the caps allow. */
+  min-width: 300px;
+  max-width: calc(100vw - 32px);
+  z-index: 2147483647;
+}
+
+/* Six anchor positions, selected by data-pos on the .prli-pb.prli-pb-float
+ * body. Both centers use transform so the pill actually centers rather
+ * than anchoring to a 50% edge. */
+.prli-pb-float[data-pos="top-left"] .prli-pb-pill {
+  top: 16px;
+  left: 16px;
+}
+.prli-pb-float[data-pos="top-center"] .prli-pb-pill {
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.prli-pb-float[data-pos="top-right"] .prli-pb-pill {
+  top: 16px;
+  right: 16px;
+}
+.prli-pb-float[data-pos="bottom-left"] .prli-pb-pill {
+  bottom: 16px;
+  left: 16px;
+}
+.prli-pb-float[data-pos="bottom-center"] .prli-pb-pill {
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.prli-pb-float[data-pos="bottom-right"] .prli-pb-pill {
+  bottom: 16px;
+  right: 16px;
+}
+
+/* ---- Responsive --------------------------------------------------------- */
+
+/* Tablet: trim padding / gap but keep the full layout. */
+@media (max-width: 900px) {
+  .prli-pb-top .prli-pb-bar,
+  .prli-pb-bottom .prli-pb-bar {
+    padding: 12px 16px;
+    gap: 14px;
+  }
+  .prli-pb-top.prli-pb--compact .prli-pb-bar,
+  .prli-pb-bottom.prli-pb--compact .prli-pb-bar { padding: 8px 12px; gap: 10px; }
+  .prli-pb-top.prli-pb--tall    .prli-pb-bar,
+  .prli-pb-bottom.prli-pb--tall    .prli-pb-bar { padding: 16px 20px; gap: 16px; }
+}
+
+/* Phone: shrink the content itself — URL hides (redundant with the
+ * iframe destination), attribution collapses to an icon-sized dot,
+ * share button goes icon-only, logo scales down. Fonts drop a notch
+ * so a 3–4 word title still fits without wrapping. */
+@media (max-width: 640px) {
+  .prli-pb {
+    --pb-logo-h: min( var( --pb-logo-h, 32px ), 26px );
+  }
+
+  .prli-pb-top .prli-pb-bar,
+  .prli-pb-bottom .prli-pb-bar {
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  .prli-pb-title  { font-size: 13px; }
+  .prli-pb-desc   { display: none; } /* Two-line bar at mobile size is ugly. */
+  .prli-pb-target { font-size: 11px; }
+
+  .prli-pb-share {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+  .prli-pb-attrib { display: none; } /* Too small to be useful on mobile. */
+
+  .prli-pb-actions {
+    gap: 6px;
+  }
+
+  .prli-pb-pill {
+    /* Drop the desktop min-width on narrow viewports so a 300px
+     * baseline doesn't overflow a 360px phone. */
+    min-width: 0;
+    max-width: calc(100vw - 24px);
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .prli-pb-float[data-pos$="-left"] .prli-pb-pill,
+  .prli-pb-float[data-pos$="-right"] .prli-pb-pill {
+    left: 12px !important;
+    right: 12px !important;
+    transform: none;
+  }
+  .prli-pb-float[data-pos="top-center"] .prli-pb-pill,
+  .prli-pb-float[data-pos="bottom-center"] .prli-pb-pill {
+    left: 12px;
+    right: 12px;
+    transform: none;
+  }
+
+  .prli-pb-float[data-pos^="top"] .prli-pb-pill    { top: 12px; }
+  .prli-pb-float[data-pos^="bottom"] .prli-pb-pill { bottom: 12px; }
+}
+
+/* Very narrow (≤ 420px): bars need to stack content or the share button
+ * pushes the title off-screen. Two-row bar: logo + meta on top, actions
+ * aligned to the right. */
+@media (max-width: 420px) {
+  .prli-pb-top .prli-pb-bar,
+  .prli-pb-bottom .prli-pb-bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "logo meta actions";
+    row-gap: 6px;
+  }
+  .prli-pb-top .prli-pb-logo,
+  .prli-pb-bottom .prli-pb-logo    { grid-area: logo; }
+  .prli-pb-top .prli-pb-meta,
+  .prli-pb-bottom .prli-pb-meta    { grid-area: meta; }
+  .prli-pb-top .prli-pb-actions,
+  .prli-pb-bottom .prli-pb-actions { grid-area: actions; }
+
+  /* Pill at ≤ 420: drop the URL to save space, keep title + share. */
+  .prli-pb-pill .prli-pb-target { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prli-pb,
+  .prli-pb a,
+  .prli-pb-dismiss,
+  .prli-pb-share {
+    transition: none;
+  }
+}
+
+@media print {
+  .prli-pb-top .prli-pb-bar,
+  .prli-pb-bottom .prli-pb-bar,
+  .prli-pb-pill {
+    display: none;
+  }
+}

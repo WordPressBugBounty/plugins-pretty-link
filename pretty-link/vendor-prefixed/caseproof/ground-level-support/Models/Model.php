@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support\Models;
+namespace PrettyLinks\GroundLevel\Support\Models;
 
-use Prli\GroundLevel\Support\Contracts\Arrayable;
-use Prli\GroundLevel\Support\Contracts\Jsonable;
-use Prli\GroundLevel\Support\Casts;
-use Prli\GroundLevel\Support\Exceptions\Exception;
-use Prli\GroundLevel\Support\Exceptions\ReadOnlyAttributeError;
-use Prli\GroundLevel\Support\Time;
-use Prli\GroundLevel\Support\Concerns\HasAttributes;
-use Prli\GroundLevel\Support\Util;
+use PrettyLinks\GroundLevel\Support\Contracts\Arrayable;
+use PrettyLinks\GroundLevel\Support\Contracts\Jsonable;
+use PrettyLinks\GroundLevel\Support\Casts;
+use PrettyLinks\GroundLevel\Support\Exceptions\Exception;
+use PrettyLinks\GroundLevel\Support\Exceptions\ReadOnlyAttributeError;
+use PrettyLinks\GroundLevel\Support\Time;
+use PrettyLinks\GroundLevel\Support\Concerns\HasAttributes;
+use PrettyLinks\GroundLevel\Support\Util;
 use JsonSerializable;
 use stdClass;
 

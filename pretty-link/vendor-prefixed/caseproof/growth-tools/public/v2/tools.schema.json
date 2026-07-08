@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Growth Tools addon's Configuration",
+  "description": "Schema for Growth Tools addon's configuration",
+  "type": "object",
+  "required": ["plugins"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "plugins": {
+      "type": "array",
+      "description": "Array of plugin configurations",
+      "items": {
+        "$ref": "#/$defs/items"
+      }
+    },
+    "themes": {
+      "type": "array",
+      "description": "Array of theme configurations",
+      "items": {
+        "$ref": "#/$defs/items"
+      }
+    }
+  },
+  "$defs": {
+    "items": {
+        "type": "object",
+        "required": ["title", "main", "target", "description", "settings_page", "img"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Display name of the addon"
+          },
+          "priority": {
+            "type": "number",
+            "description": "Priority of the addon, lower number means lower priority (0 is lowest priority)"
+          },
+          "main": {
+            "type": "object",
+            "description": "Addon file paths",
+            "minProperties": 1,
+            "properties": {
+              "free": {
+                "type": "string",
+                "description": "Path to free version main file"
+              },
+              "premium": {
+                "type": "string",
+                "description": "Path to premium version main file"
+              }
+            },
+            "additionalProperties": false
+
+          },
+          "settings_page": {
+            "type": "object",
+            "description": "Settings page URLs of the addon",
+            "properties": {
+              "free": {
+                "type": "string",
+                "description": "URL for free version settings"
+              },
+              "premium": {
+                "type": "string",
+                "description": "URL for premium version settings"
+              }
+            },
+            "additionalProperties": false
+
+          },
+          "img": {
+            "type": "string",
+            "description": "Image filename for addon icon from public/img directory",
+            "pattern": "^(plugin|theme)-.*\\.(png|jpe?g)$"
+          },
+          "target": {
+            "type": "array",
+            "description": "Array of target platforms",
+            "items": {
+              "type": "string",
+              "enum": [
+                "accessally",
+                "easy-affiliate",
+                "membercore",
+                "membermouse",
+                "memberpress",
+                "members",
+                "popupally",
+                "pretty-link",
+                "thirstyaffiliates",
+                "wishlist-member",
+                "wishlistlms"
+              ]
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "download_url": {
+            "type": "string",
+            "description": "URL to download the addon",
+            "format": "uri"
+          },
+          "website": {
+            "type": "string",
+            "description": "Addon's website URL",
+            "format": "uri"
+          },
+          "description": {
+            "type": "string",
+            "description": "addons description"
+          }
+        },
+        "additionalProperties": false
+      }
+  },
+  "additionalProperties": false
+} 

@@ -1,0 +1,59 @@
+/* "Get More with Pro" upgrade link — Pretty Links brand yellow so it reads
+ * as a distinct CTA rather than another admin page link. The row is added
+ * via ProUpsell::registerMenu() with a CSS class hook on the <li>. WP core
+ * pipes that class to the <a> wrapper on submenu rows. */
+#adminmenu .wp-submenu li.prli-upgrade-menu-item a,
+#adminmenu .wp-submenu li.prli-upgrade-menu-item a:hover,
+#adminmenu .wp-submenu li.prli-upgrade-menu-item a:focus {
+  color: #FFD200;
+  font-weight: 600;
+}
+
+/* "(PRO)" chip rendered inline with locked Pro-only submenu labels on
+ * Lite installs (currently only Custom Reports). Muted pill so it reads
+ * as "this is a Pro feature" without competing with the brand yellow
+ * "Get More with Pro" CTA row. */
+#adminmenu .wp-submenu a .prli-menu-pro-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  background: rgba( 255, 255, 255, 0.12 );
+  color: inherit;
+  vertical-align: middle;
+  line-height: 16px;
+}
+
+#adminmenu .wp-submenu a:hover .prli-menu-pro-badge,
+#adminmenu .wp-submenu a:focus .prli-menu-pro-badge {
+  background: rgba( 255, 255, 255, 0.2 );
+}
+
+/* Locked full-page placeholder (e.g. Custom Reports on Lite). The page is
+ * server-rendered PHP, not a React mount, so it relies on shell.css
+ * providing the shared tokens + the `.prli-pro-locked-card` styles that
+ * `base.css` ships. WordPress's default `.wrap` margin pins the content
+ * to the left, so we use a flex container to center the card and cap
+ * its width directly on the child rather than the wrap. */
+.wrap.prli-locked-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 0 2px;
+}
+
+.wrap.prli-locked-page #prli-notices-app {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.wrap.prli-locked-page .prli-pro-locked-card {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}

@@ -1,415 +1,221 @@
-=== PrettyLinks - Affiliate Links, Link Branding, Link Tracking, Marketing and Stripe Payments Plugin ===
+=== PrettyLinks – Affiliate Link Management, URL Shortener, Link Cloaking, Tracking & Branded Short Links ===
 Contributors: supercleanse, cartpauj
 Donate link: https://prettylinks.com
-Tags: affiliate links, link tracking, ecommerce, payments, stripe
+Tags: affiliate links, url shortener, link cloaking, link tracking, link management
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 3.6.22
+Stable Tag: 4.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-🌠 The best WordPress link management, branding, tracking, sharing and payments plugin. Easily make pretty & trackable shortlinks. 🔗
+🌠 Shorten, brand, and track any URL on your own domain. Keep your links — and your data — where they belong. 🔗
 
 == Description ==
 
-PrettyLinks helps you shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!
+PrettyLinks takes any long, ugly URL and turns it into a short, branded link on your own domain. So instead of sharing some endless affiliate string, you share `yoursite.com/recommends/widget` — clean, memorable, and unmistakably yours. No more renting your links from bit.ly, tinyurl.com, or whichever shortener raised its prices this year.
 
-## PrettyLinks 🌠
+Here's the part people love most: your links and your click data live on your site, not someone else's. You own the branding. You keep the analytics. And if a destination URL ever changes, you update it once and every link you've ever shared just keeps working.
 
-PrettyLinks enables you to shorten links using your own domain name (as opposed to using tinyurl.com, bit.ly, or any other link shrinking service)! In addition to creating clean links, PrettyLinks tracks each hit on your URL and provides a full, detailed report of where the hit came from, the browser, OS, and host. PrettyLinks is a killer plugin for people who want to clean up their affiliate links, track clicks from emails, their links on Twitter to come from their own domain, or generally increase the reach of their website by spreading these links on forums or comments on other blogs.
+## Why people pick PrettyLinks 🌠
+
+If you share links for a living — affiliate marketers, bloggers, podcasters, social media folks — you want three things: links that look professional, the freedom to change where they point, and a real picture of what's getting clicked. PrettyLinks does all three. Every click is logged with referrer, browser, OS, and host, so you're never guessing about what's working.
+
+And version 4.0 is a big one. We rebuilt the whole thing from scratch on a fast, modern React admin, then added smarter bot filtering, built-in privacy controls, and CSV link importing — all of it free.
 
 ## PrettyPay™ Links 💵
 
-PrettyLinks now comes with PrettyPay™. PrettyPay™ enables you to make one-click payments with Stripe to sell e-books, courses, downloads, subscriptions and really, anything -- all from your domain name and brand. Share your PrettyPay™ links and start selling anywhere—instantly!
+Want to sell something? PrettyPay™ lets you spin up a one-click Stripe checkout link and share it anywhere — e-books, courses, downloads, subscriptions, you name it. It all runs through your own domain and brand. Share the link, get paid. No store required.
 
-## Examples 👇
+## Lite Features ✔️
 
-This is a link setup using PrettyLinks that redirects to the PrettyLinks Homepage where you can find more info about this Plugin:
+**[🔗 Branded Short Links on Your Own Domain](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+Turn any long URL into a clean, branded short link in seconds.
 
-http://blairwilliams.com/pl
+**[💰 PrettyPay™ Stripe Checkout Links](https://prettylinks.com/docs/prettypay-links/?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**\*
+Create one-click payment links with Stripe. Share anywhere and start selling instantly.
 
-Here's a named pretty link (I used the slug 'aweber') that does a 307 redirect to my affiliate link for aweber.com:
+**[🔃 301, 302 and 307 Redirects](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+Choose between Permanent (301) and Temporary (302/307) redirects per link.
 
-http://blairwilliams.com/aweber
+**[⚙️ Custom or Auto-Generated Slugs](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+Pick your own slug or let PrettyLinks generate one. Reserved Slug Patterns protect critical WordPress paths from accidental collisions.
 
-Here's a link that PrettyLinks generated a random slug for (similar to what bit.ly or tinyurl would do):
+**[🔎 Click & Unique-Click Tracking](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+Every click logged with referrer, IP, browser, OS, and host data.
 
-http://blairwilliams.com/w7a
+**[🤖 Modern Bot Filtering](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+Keep AI crawlers and bots out of your stats out of the box — with Cloudflare bot-header support and your own custom user-agent rules.
 
-## Features ✔️
+**[🔐 Built-In Privacy Controls](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+IP anonymization and a configurable click-retention window help you stay GDPR-friendly.
 
-**[🔗 Create clean, simple URLs that redirect to any other URL](https://prettylinks.com/about#pl-link-setup?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
-Easily turn your long URLs into short ones within a matter of seconds.
+**[📊 Customizable Click Reports](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+Filter charts by date range, link, and unique vs. total clicks.
 
-**[💰 Seamless Stripe Sales](https://prettylinks.com/docs/prettypay-links/?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**\*
-Create a branded, one-click path to payment with NEW PrettyPay™ Links. Share your link and start selling anywhere – instantly.
+**[⬆️⬇️ CSV Import & Export](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+Bulk-import links from a spreadsheet and export click history to CSV anytime — link importing is now free.
 
-**[🔃 Supports 301, 302, and 307 redirects](https://prettylinks.com/about#pl-redirect-types?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
-Redirect users using one of our three redirect types: 301 (Permanent), 302 (Temporary), and 307 (Temporary).
+**[🖱️ One-Click Sharing & Copy](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+Copy any link to the clipboard from the links list, the editor, or a Gutenberg block.
 
-**[🖱️ One-Click Link Sharing](https://prettylinks.com/about#pl-dashboard?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
-Copy and manage your PrettyLinks all in one centralized area.
+**[💡 Modern Admin Experience](https://prettylinks.com/about?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
+A fast, clean React-based admin UI with bulk actions, one-click duplicate, and auto-saving options.
 
-**[⚙️ Fully configurable slugs](https://prettylinks.com/about#pl-link-setup?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
-PrettyLinks will automatically generate 3-4 random characters to use as the slug, but you can also create your own slug to use for your URL.
+... and much more. [Visit our site](https://prettylinks.com?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=home) to see everything PrettyLinks can do.
 
-**[🔎 Track the Number of Clicks and Unique Clicks per link](https://prettylinks.com/about#pl-dashboard?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
-Track how well your PrettyLinks are performing by viewing the number of overall clicks and unique clicks on your links.
-
-**[📊 Generate Highly Customizable Reports](https://prettylinks.com/about#pl-dashboard?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
-Create reports where you can see a configurable chart of clicks per day. The report can be filtered by the specific link clicked, date range, and/or unique clicks.
-
-**[💡 Extremely Intuitive Admin User Interface](https://prettylinks.com/about#pl-dashboard?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
-No need to guess where everything is located. PrettyLinks makes the setup and link management process as simple as possible.
-
-**[⬇️ Download Click Details](https://prettylinks.com/about#pl-dashboard?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=features)**
-Need to download click data for your links? PrettyLinks has you covered. The plugin will generate a CSV containing all the information you need to successfully manage your links.
-
-... and so much more! [Visit our site](https://prettylinks.com?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=home) to learn more about what PrettyLinks can do for you.
-
-\* Pro users benefit from no added payment processing fees, while a small 3% fee is added per-transaction for free users.
+\* Pro users pay no added processing fees. Free users have a small 3% per-transaction fee added on PrettyPay™ links.
 
 ## PrettyLinks Pro 💪
 
-*PrettyLinks Pro* is a **significant upgrade** that adds many tools and redirection types.  Here's a glimpse at some of the different features that PrettyLinks Pro offers:
-
-* [**Product Displays**](https://prettylinks.com/blog/introducing-product-display-add-on?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features) (**NEW!**)
-Create beautifully styled and responsive displays for your affiliate links to drive more commissions with ease.
+When you're ready for more, *PrettyLinks Pro* adds the automation, advanced redirects, and deeper reporting that power users tend to grow into:
 
 * [**Keyword & URL Replacements**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
-Using one of Pretty Link's automation features, you can define a list of keywords and URLs, then PrettyLinks will automatically scan your site's content and replace them with your pretty link.
+Map keywords to links and PrettyLinks automatically turns them into your branded links across your site's content.
 
 * [**Advanced Redirect Types**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
-Take full control over how your users are redirected. With the Pro version, you can now offer Cloaked redirects, JavaScript redirects, Meta-Refresh redirects, Tracking Pixel redirects, and Geographic redirects.
+Cloaked, JavaScript, Meta-Refresh, Tracking Pixel, and branded Splash Page redirects on top of the standard 301/302/307.
 
-* [**Automatically Create PrettyLinks for Posts/Pages**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
-Another one of Pretty Link's powerful automation features. Whenever a new page or post is published, PrettyLinks will automatically create a pretty link for it.
+* [**Geographic, Device & Time Targeting**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Send visitors to different destinations based on country, device, browser, OS, day, or hour.
 
-* [**Link Categories & Tags**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
-Make link management easier by grouping your links together and assigning them a category or tag.
+* [**Link Rotation & A/B Split Testing**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Distribute traffic across multiple destinations by weight or round-robin, and split-test which one converts.
 
 * [**Expiring Links**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
-Set an expiration date on your links and decide where the user is redirected to after clicking an expired link.
+Set an expiry date or click limit and choose where expired traffic goes.
 
-* [**Link Health**](https://prettylinks.com/blog/repair-broken-links?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
-Runs weekly scans on your site to look for and report any broken links you've created within the PrettyLinks plugin.
+* [**Categories & Tags**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Organize and filter a large link library with full taxonomy-style grouping.
 
-You can learn more about *PrettyLinks Pro* here:
+* [**Auto-Create Links for Posts & Pages**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+A pretty link is created automatically every time you publish.
 
-[Learn More](https://prettylinks.com/why-upgrade?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro "Learn More") | [Pricing](https://prettylinks.com/pricing/plans?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro "Pricing")
+* [**Link Health Monitoring**](https://prettylinks.com/blog/repair-broken-links?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Scheduled scans flag broken destinations, with email digests so you can fix them fast.
+
+* [**QR Codes**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Auto-generate a downloadable QR code for every link, with an optional inner logo.
+
+* [**Pretty Bar Branding**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Frame third-party destinations in a branded top, bottom, or floating bar with your CTA.
+
+* [**Advanced Reports & Conversions**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Rich click-history breakdowns, KPI cards, charts, and a conversion-tracking pixel for your thank-you pages.
+
+* [**Redirect Turbo Mode**](https://prettylinks.com/features?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro_features)
+Answer link requests before the rest of WordPress loads — built for high-traffic affiliate sites.
+
+## Pro Add-ons 🧩
+
+Pro plans come with a handful of optional add-ons. Install the ones you need, skip the ones you don't:
+
+* **Link in Bio** — Build customizable "link in bio" landing pages for Instagram, TikTok, and other social profiles, hosted on your own domain.
+* **Product Displays** — Drop styled, responsive product cards into any post or page to showcase affiliate products.
+* **Splash Pages** — Show a branded interstitial (with optional CTAs) before forwarding visitors, with a per-link conversion funnel report.
+* **UTMs** — Build and append Google Analytics UTM parameters from a dedicated tab on the link editor.
+* **User Links** — A front-end dashboard letting logged-in visitors create and manage their own pretty links.
+* **Developer Tools** — API tokens and webhooks for integrating PrettyLinks with external systems.
+
+[See Why Upgrade](https://prettylinks.com/why-upgrade?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro "Why Upgrade") | [Pricing](https://prettylinks.com/pricing/plans?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=pro "Pricing")
 
 ## Integrations ⚡
-* [Google Analytics](https://prettylinks.com/docs/integrating-google-analytics?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=kb) - Easily start tracking your links within Google Analytics
-* [MonsterInsights](https://prettylinks.com/docs/integrating-pretty-links-with-monsterinsights?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=kb) - See how well your links are performing with the MonsterInsights plugin
+
+* [MonsterInsights](https://prettylinks.com/docs/integrating-pretty-links-with-monsterinsights?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=kb) — Surface PrettyLinks click data inside the MonsterInsights dashboard.
+* [CookieYes](https://prettylinks.com/docs?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=kb) — Automatic cookie consent compliance for click tracking.
+* [Easy Affiliate](https://easyaffiliate.com/) — Use PrettyLinks as the affiliate link layer in your Easy Affiliate program.
+* Gutenberg & Classic Editor — Native block + toolbar buttons for inserting links inline.
 
 ## What's Next 🤩
-Enjoying your time with PrettyLinks? Consider checking out some of our other projects:
 
-* [MemberPress](https://memberpress.com/) - Full-featured Membership solution for WordPress. Control who has access to your site and sell content securely through payment gateways such as Stripe, PayPal, and Authorize.net
-* [EasyAffiliate](https://easyaffiliate.com/) - Complete Affiliate Program management plugin for WordPress. Start an Affiliate Program to dramatically increase traffic, attention, and sales.
-* [ThirstyAffiliates](https://thirstyaffiliates.com/) - Link cloaking plugin made specifically for affiliate bloggers to start making money.
-* [Buy Now Plus](https://buynowplus.com/) - Easily start accepting Credit Card payments through a simple buy now button on your website or social media accounts using the Stripe gateway.
-* [Members](https://members-plugin.com/) - Roles and capabilities management plugin for your WordPress site. This is an excellent plugin to use alongside a Membership solution such as MemberPress.
+Enjoying PrettyLinks? Check out our other plugins:
+
+* [MemberPress](https://memberpress.com/) — Full-featured membership and course platform for WordPress with Stripe, PayPal, and Authorize.net support.
+* [Easy Affiliate](https://easyaffiliate.com/) — Run your own self-hosted affiliate program and grow your traffic with referral marketing.
+* [Members](https://members-plugin.com/) — Roles and capabilities management plugin for fine-grained access control.
 
 == Installation ==
 
-1. Upload 'pretty-link.zip' to the '/wp-content/plugins/' directory
-
-2. Activate the plugin through the 'Plugins' menu in WordPress
-
-3. Make sure you have changed your permalink Common Settings in Settings -> Permalinks away from "Default" to something else. I prefer using custom and then "/%year%/%month%/%postname%/" for the simplest possible URL slugs with the best performance.
+1. Upload `pretty-link.zip` to `/wp-content/plugins/` (or install via Plugins → Add New).
+2. Activate the plugin through the **Plugins** menu in WordPress.
+3. Make sure your permalink settings (Settings → Permalinks) are set to anything other than "Plain". Custom permalinks like `/%year%/%month%/%postname%/` work great.
+4. Open **PrettyLinks** in the admin menu and follow the onboarding wizard to create your first link.
 
 == Frequently Asked Questions ==
+
 = Who will find PrettyLinks useful? =
-PrettyLinks is particularly useful to affiliate marketers. It helps them to clean up, brand, group, organize, and track their links. In addition to affiliate marketing, PrettyLinks is also useful to bloggers, podcasters, merchants, social media marketers, and anyone else who wants to easily take control of their link strategy.
+Affiliate marketers, bloggers, podcasters, course creators, social media managers, e-commerce merchants, and anyone else who needs to brand, organize, and track outbound links.
 
 = Can I use PrettyLinks with any WordPress theme? =
-Absolutely! PrettyLinks operates mainly in the WordPress admin, but the front end features should be totally compatible with any WordPress theme.
+Yes. PrettyLinks operates primarily in the WordPress admin and the front-end pieces are theme-agnostic.
 
-= How do I get started with PrettyLinks? =
-Getting started with PrettyLinks is incredibly easy. Everything you need to know you can find on our [Getting Started page](https://prettylinks.com/doc-categories/getting-started/).
+= How do I get started? =
+The in-plugin onboarding wizard walks you through the basics. For deeper docs, see our [Getting Started page](https://prettylinks.com/doc-categories/getting-started/).
 
-= Is PrettyLinks Translatable? =
-Yes! PrettyLinks is ready for translation. See our [Translating PrettyLinks](https://prettylinks.com/docs/translating-pretty-link-pro/) documentation for more information on how you can translate the plugin into your language.
+= Is upgrading from 3.x to 4.0 safe? =
+Yes. 4.0 is a drop-in upgrade — all of your existing links, clicks, and settings keep working with no migration step. As with any major update, back up your site first.
 
-= What are the differences in redirect types? =
-301 (Permanent) redirects are used to tell search engines that a requested URL has been permanently moved to another URL. If you're confident that your target URL will never change, then use this redirect type. 302 and 307 (Temporary) redirects tell search engines that the requested URL has been moved temporarily, but will be back eventually.
+= What add-ons are available for PrettyLinks Pro? =
+Pro includes six add-ons: **Link in Bio**, **Developer Tools**, **Product Displays**, **Splash Pages**, **UTMs**, and **User Links**. Link in Bio and Developer Tools are available on Marketer and above; the rest are on Executive. See the [add-ons page](https://prettylinks.com/add-ons/?utm_source=wordpress.org&utm_medium=lite_plugin_listing&utm_content=faq) for details.
+
+= Is PrettyLinks translatable? =
+Yes. PrettyLinks is fully translation-ready — see our [translation guide](https://prettylinks.com/docs/translating-pretty-link-pro/) for instructions.
+
+= What's the difference between 301, 302, and 307 redirects? =
+**301 (Permanent)** tells search engines the URL has permanently moved — link equity is passed to the destination. **302** and **307 (Temporary)** signal a temporary redirect, so search engines keep indexing the original URL. Pro adds Cloaked, JavaScript, Meta-Refresh, Tracking Pixel, and Splash Page redirect types on top of these.
+
+= Are there any fees for using PrettyPay™? =
+Stripe's standard processing fees always apply. PrettyLinks adds no extra fee for Pro users. Free users have a small 3% per-transaction PrettyLinks fee added on top of Stripe's fees.
 
 == Screenshots ==
-1. Setting up a Pretty Link
-2. Settings Page
-3. PrettyLinks Listing
-4. Click Tracking
+
+1. The PrettyLinks admin dashboard
+2. Adding a Pretty Link
+3. Click tracking and reports
+4. Settings page
 
 == Changelog ==
-= 3.6.22 =
-* Additional security hardening
-* Compatibility with WP 7.0
 
-= 3.6.21 =
-* Minor security fix
+= 4.0.0 =
+* Complete rewrite — brand-new React-based admin UI, REST-first API, and custom-table data model
+* PHP 7.4+ required; full PHP 8.x compatibility
+* Drop-in upgrade — no migration required, all 3.x data continues to work
+* Performance: faster click tracking, lighter admin pages, and leaner database queries
+* New: IP-anonymization toggle that truncates IPv4 / IPv6 addresses before they're stored
+* New: configurable click-retention window — 30 days up to 2 years (was hardcoded to 90 days, on/off only)
+* New: automatic safety wipe of click counters when switching between Simple and Normal/Extended tracking modes
+* New: modern bot detection — catches AI crawlers (GPTBot, ClaudeBot, PerplexityBot…), honors Cloudflare Bot Management headers, and adds behavioral signals, plus your own custom user-agent patterns
+* New: PrettyPay™ master on/off toggle (no longer always-on once Stripe is connected)
+* New: Reserved Slug Patterns moved from Pro into Lite, with a new admin-bypass toggle and distinct slug prefixes for admin-, user-, and frontend-created links
+* New: CSV link import is now free (was Pro-only in v3), with a downloadable starter template
+* New: chunked CSV export that handles large link libraries without timing out
+* New: click-history CSV export across all links, with date-range and link-ID filters
+* New: one-click "Duplicate" on any link
+* New: bulk "turn nofollow on/off" and "turn sponsored on/off" actions across selected links
+* New: one-click slug regenerate button on the Add/Edit Link form
+* New: per-user "items per page" picker and column show/hide on the Links list, saved to your account
+* New: Options page auto-saves — change any field and it saves on its own
+* New: Connect-Stripe step inside the setup wizard
+* New: CookieYes integration — auto-tags pretty-link redirects so they're consent-gated by your cookie banner
+* PRO: Redirect Turbo Mode — opt-in must-use plugin that answers pretty-link requests before the rest of WordPress loads
+* PRO: no_enforce_url_scheme option — disable the automatic http:// prepend so you can target custom protocols (app://, tel:, etc.)
+* PRO: Link Health — choose how often destinations are checked and how often you get the broken-link digest, separately, plus a multi-status filter on the Links list
+* PRO: Keyword & URL Replacements — case-sensitive matching toggle, a new per-post total-links cap (defaults to unlimited), and distinct nofollow / sponsored / open-in-new-window and custom-CSS settings for URL-replaced anchors
+* PRO: Rotations — pick Weighted Random or Sequential round-robin (v3 was random-only with weights ignored)
+* PRO: Smart targeting — new operators: exclude-country, hour-of-day range, day-of-week, plus compound AND-rules
+* PRO: Pretty Bar — multiple branded templates instead of one global look, plus a Media-library logo picker
+* PRO: Custom Reports — new [pretty_link_pixel] shortcode and Gutenberg block to drop a tracked-conversion pixel onto any thank-you page
+* PRO: Link list filter segments — "Expired" and "Split tests" segments, and the search box now matches category and tag names
+* PRO: Click History extras — KPI cards, an over-time line chart, a top-links list, and breakdown tabs by country / referrer / device / browser, each with a donut chart
+* PRO: Dashboard extras — KPI tiles become clickable, drilling into Click History pre-filtered to the matching date range and link
+* PRO: Splash Pages add-on (new) — branded "splash" interstitial redirect type with up to two CTAs and a per-link conversion funnel report
+* PRO: UTMs add-on (new) — dedicated UTM tab on the link editor for all six Google Analytics UTM parameters, no URL hand-editing
+* PRO: User Links add-on (new) — front-end self-service dashboard for logged-in visitors to create and manage their own pretty links
+* PRO: Link in Bio add-on — rebuilt on the v4 foundation with three frontend templates; existing v3 pages migrate automatically
+* PRO: Product Displays add-on — rebuilt on the v4 foundation with a shortcode and server-rendered Gutenberg block
+* PRO: Developer Tools add-on — rebuilt on the v4 foundation with API keys, HMAC-signed webhooks, an event registry, and a v3-compatibility REST layer
 
-= 3.6.20 =
-* Pro: Updated QR Codes to support inner image/logo
-* Minor security fix
+== Upgrade Notice ==
 
-= 3.6.19 =
-* Pro: Empty link rotations gaps - show warning before save
-
-= 3.6.18 =
-* Add link_cpt_id column to links CSV export file
-* Fix timeout on options page for sites with a large comments database
-* Fix slow loading on add/edit link page when using password manager browser extensions
-* Fix CSV import failures caused by UTF-8 BOM
-* Fix PHP deprecation warnings
-
-= 3.6.17 =
-* Add capability check to Ajax endpoints
-* Update Growth Tools
-* Fix PL search functionality in Gutenberg broken
-
-= 3.6.16 =
-* Fix admin menu style on mobile view
-* Minor bugfixes and security hardening
-* Pro: Fix keyword replacements with new line chars in html attributes
-
-= 3.6.15 =
-* Add Growth Tools menu
-* Fix error with new notifications inbox
-* Fix error when set_time_limit() function doesn't exist
-
-= 3.6.14 =
-* Fix translations error w/WP 6.7
-* Fix PHP 8.2 notice
-* Fix warning during automatic update
-
-= 3.6.12 =
-* New In-plugin Notifications inbox
-* Fix wrong edition label in lite plugin's main file
-
-= 3.6.11 =
-* Fix PHP 8 deprecation warnings
-
-= 3.6.10 =
-* Minor bugfixes
-
-= 3.6.9 =
-* Fixed Gutenberblock for Link Creation.
-* Updated Pretty Link post table Search.
-
-= 3.6.8 =
-* Updated getting started URL
-* Bug fixes
-* Updated onboarding steps
-* Fixed ACF integration issue
-* New tooltip styling
-* Product Display updates
-
-= 3.6.7 =
-* Security hardening
-* Removed pause option from PrettyPay Customer Portal as Stripe has temporarily removed this feature
-* Pro: Fixed QR code generation on nginx webservers 
-
-= 3.6.6 =
-* Fixing issue with prior release showing incorrect version
-
-= 3.6.5 =
-* Additional security hardening
-
-= 3.6.4 =
-* Security fixes (potential for CSRF patched)
-
-= 3.6.3 =
-* Add section for PrettyPay™ within the Welcome and Complete steps for in-plugin onboarding
-* Add notice of 3% fee to PrettyPay™ Links sub-page for free users
-* Add support for ISO encoding when pulling in title from pretty link's target URL
-* Fix PHP 8 deprecation warnings
-* Fix database error on initial plugin activation
-* Fix body class on PrettyLinks page not being escaped
-* Pro: Add filter hook for invalid response codes in Link Health
-
-= 3.6.2 = 
-* Fix PrettyPay™ auto-creating Thank You pages
-
-= 3.6.1 =
-* WP 6.4 Compatibility
-* Saving settings would break in some cases
-* Show proper error when saving Customer Portal failed
-* Link Inserter broken due to missing lodash
-
-= 3.6.0 =
-* Launching all-new PrettyPay™ Links
-* PHP 8.2 compatibility fixes
-
-= 3.5.3 =
-* Fix scheduling and how empty images are displayed within in-plugin notifications
-* Replace feature images on onboarding welcome page
-* PHP 8.2 compatibility fixes
-
-= 3.5.2 =
-* PHP 8.2 compatibility fixes
-
-= 3.5.1 =
-* Fix deprecation notice when table result is null
-* Fix undefined post type warning when enqueuing frontend scripts
-
-= 3.5.0 =
-* NEW: Significantly improved onboarding process by implementing a full-fledged wizard that walks through the basics of setting up PrettyLinks
-* Pro: Add filter hooks for geolocation
-* Pro: Add ability to scan link's health status individually
-* Pro: Display link's health status as a separate column on PrettyLinks listing page
-* Pro: Deprecate Pretty Bar
-* Pro: Deprecate GA integration
-* Pro: Refactor Replacements tab so URL and Keyword replacements function independently of each other
-* Prevent redirect code from running during search
-* Allow special characters for URI and Referrer fields on Clicks page
-* Fix PHP warnings being displayed when editing a restored pretty link
-
-= 3.4.2 =
-* Update dependencies used for building Gutenberg assets.
-
-= 3.4.1 =
-* Separate PrettyLinks inserter button into its own toolbar group within the Block Editor
-* Consolidate PrettyLinks metaboxes
-* Add nonces to Tools page
-* Pro: Disable content decoding by default on posts built with Elementor
-* Pro: Changed "Activate" link to "Manage License" on Plugins screen
-
-= 3.4.0 =
-* Introducing support for Add-ons in PrettyLinks (NEW!)
-* Add code needed for Product Displays Add-on (Pro Add-on)
-* Add footer containing helpful links
-* Fix conflict with localized JS object
-* Fix issue with keyword replacements and HTML tags containing new line characters (Pro)
-
-= 3.3.3 =
-* Fix issue with bulk editing link settings
-* Remove legacy code that overrides PHP memory_limit
-* Update Link Health to only check for 404 errors (Pro)
-
-= 3.3.2 =
-* Optimize SQL query for Link Health (Pro)
-
-= 3.3.1 =
-* Fix error on older PHP versions
-
-= 3.3.0 =
-* Pro: Add Link Health
-* Fix warning when using PHP8 and server-side cron
-
-= 3.2.8 =
-* Update readme.txt
-* Fix JS error on options page
-* Set cookie using secure attribute when accessed via secure connection
-* Fix PL Link Inserter jumping to bottom of page on WP 6.1
-* Fix Gutenberg deprecation notices
-
-= 3.2.7 =
-* Fix index replacements
-
-= 3.2.6 =
-* Fix upgrade to Pro bug
-
-= 3.2.5 =
-* Fix fatal error if update transient is false
-* Notifications Inbox
-* Small bug fixes
-* Pro: Don't force black background on cloaked urls
-* Pro: License key optimizations
-
-= 3.2.4 =
-* Review notification dismissal improvements
-
-= 3.2.3 =
-* Removing vestigial files
-
-= 3.2.2 =
-* Show link slug instead of full URL in list
-* PHP 8.0 support
-* Pro: Fix keywords being replaced in scripts
-
-= 3.2.1 =
-* UI Tweaks
-* Pro: Fix auto-created links not using requested slug
-* Pro: Link rotation weights of 1% supported now
-
-= 3.1.1 =
-* Remove duplicate queries to help performance
-* Fix compatibility issue with WPML language prefix in URL's
-* Pro: Fix infinite loops with broken or missing import files
-
-= 3.1.0 =
-* Add support for sponsored rel tag
-* Add sponsored toggle support in gutenberg and tinymce editors
-* Fix report graphs not loading for some
-* PRO: Fix bug with keywords replacements
-* PRO: Cleaned up GA support
-
-= 3.0.10 =
-* Add support for nofollow in Gutenberg popup
-* Fix post_author being set to 0 on CPT
-* Fix for duplicate links being created
-* Fix clicks ordering on links list
-* Fix Redirection dropdown display WP 3.5
-
-= 3.0.9 =
-* Change shortcut key to CTRL + P instead of CTRL + K
-* Support for Nofollow and Tracking Quick Edit and Bulk Edit on the links list page
-* Fix keyword replacement regex
-
-= 3.0.8 =
-* PRO: Fix replacements checkbox getting unchecked when using page builders
-
-= 3.0.7 =
-* Fix broken Add New link page - theme conflicts
-
-= 3.0.6 =
-* Disable "enter" key on the Target URL field
-* Add copy to clipboard to the add/edit link page
-* Fix the incorrect message being display when updating a link
-* Redirect to the links list page after creating or updating a link
-* Add the ability to sort by Clicks to the links list table
-
-= 3.0.5 =
-* Fix description conflict with the WP Product Review plugin
-* Avoid menu position conflicts
-* Add Target column to links list table
-* Disable auto-saving on links
-* Fix links having Draft status on creation
-* Fix not being able to Create/Edit links until saving options
-* Fix Prettybar color issue when saving plugin options
-
-= 3.0.4 =
-* Fix clicks pagination
-
-= 3.0.3 =
-* Fix Avada Fusion Builder conflict
-* Fix redirect caching on update/welcome page
-* Fix conflict with WP Product Review plugin
-
-= 3.0.2 =
-* Minor fixes
-
-= 3.0.1 =
-* Fix issues when accessing the plugin as a non-administrator
-* Simplify the checks in is_slug_available
-* Add slug and url as searchable fields in the links list
-* Fix for high CPU issues and huge log sizes
-* Fix layout issue on the update page
-* Fix category migration not running
-* Fix errors when dates are null
-* Call wp_cache_delete after update/delete_option
-* Only redirect if delete succeeds, redirect status code 307
-* Fix failed category/cpt migrations
-
-= 3.0.0 =
-* Re-designed Admin UI especially the Admin Links UI including links listing, adding new links and editing links 
-* Added an Insert Pretty Link button for Gutenberg Paragraph Blocks
-* Security fixes and hardening
-* Fixed Slug is not Available Error
-* Removed PrettyLinks Groups (lite users will still be able to access legacy groups on the links listing page but pro users & lite users who upgrade to pro will have their groups migrated to become link categories)
-* PRO ONLY: Added Pretty Link Categories
-* PRO ONLY: Added Pretty Link Tags
-* PRO ONLY: Fixed some issues with Pretty Link Imports and Exports
-* Many other small fixes and enhancements
+= 4.0.0 =
+Major release. Complete rewrite with a new React admin UI and modular add-on architecture. Drop-in upgrade — back up your site before updating.

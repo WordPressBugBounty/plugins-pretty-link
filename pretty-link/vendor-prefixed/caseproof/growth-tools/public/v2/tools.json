@@ -1,0 +1,233 @@
+{
+  "$schema": "https://cspf-growth-tools.s3.us-east-2.amazonaws.com/v2/tools.schema.json",
+  "plugins": [
+    {
+      "title": "AdSanity",
+      "priority": 1000,
+      "main": {
+        "free": "",
+        "premium": "adsanity/adsanity.php"
+      },
+      "settings_page": {
+        "premium": "edit.php?post_type=ads&page=adsanity-settings"
+      },
+      "img": "plugin-adsanity.png",
+      "target": ["accessally", "easy-affiliate", "membercore", "membermouse", "memberpress", "members", "popupally", "pretty-link", "thirstyaffiliates", "wishlist-member", "wishlistlms"],
+      "website": "https://adsanityplugin.com/",
+      "description": "Place self-hosted and network ads on your WordPress site with ease. No matter what your ad management needs are, AdSanity has a solution that is the right fit for you."
+    },
+    {
+      "title": "All in One SEO",
+      "priority": 1500,
+      "img": "plugin-aioseo.png",
+      "target": ["accessally", "membercore", "membermouse", "memberpress", "members", "wishlist-member", "popupally", "wishlistlms"],
+      "download_url": "https://downloads.wordpress.org/plugin/all-in-one-seo-pack.latest-stable.zip",
+      "main": {
+        "free": "all-in-one-seo-pack/all_in_one_seo_pack.php",
+        "premium": "all-in-one-seo-pack-pro/all_in_one_seo_pack.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=aioseo-settings",
+        "premium": "admin.php?page=aioseo-settings"
+      },
+      "description": "The original WordPress SEO plugin. Improve your WordPress SEO rankings and traffic with our comprehensive SEO tools and smart SEO optimizations."
+    },
+    {
+      "title": "Easy Affiliate",
+      "priority": 1700,
+      "img": "plugin-easyaffiliate.png",
+      "target": ["membercore", "membermouse", "memberpress", "members"],
+      "website": "https://easyaffiliate.com",
+      "main": {
+        "free": "easy-affiliate/easy-affiliate.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=easy-affiliate-settings"
+      },
+      "description": "Easy Affiliate helps you create a completely self-hosted affiliate program for your WordPress membership site or ecommerce store within minutes. Start growing your sales with the power of referral marketing."
+    },
+    {
+      "title": "Formidable Forms",
+      "priority": 1400,
+      "img": "plugin-formidable-forms.png",
+      "target": ["membercore", "membermouse", "memberpress", "members", "pretty-link", "thirstyaffiliates", "wishlist-member", "wishlistlms"],
+      "download_url": "https://downloads.wordpress.org/plugin/formidable.latest-stable.zip",
+      "main": {
+        "free": "formidable/formidable.php",
+        "premium": "formidable-pro/formidable-pro.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=formidable-settings",
+        "premium": "admin.php?page=formidable-settings"
+      },
+      "description": "The most advanced WordPress forms plugin. Go beyond contact forms with our drag and drop form builder for surveys, quizzes, and more."
+    },
+    {
+      "title": "FunnelKit",
+      "priority": 1100,
+      "main": {
+        "free": "funnel-builder/funnel-builder.php",
+        "premium": "funnel-builder-pro/funnel-builder-pro.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=bwf&path=/settings",
+        "premium": "admin.php?page=bwf&path=/settings"
+      },
+      "download_url": "https://downloads.wordpress.org/plugin/funnel-builder.latest-stable.zip",
+      "img": "plugin-funnel-kit.jpg",
+      "target": ["membercore", "membermouse", "memberpress", "members", "wishlist-member", "wishlistlms"],
+      "description": "Create high-converting WooCommerce checkout pages, WooCommerce thank you pages & sales funnels with the highest-rated WordPress funnel builder."
+    },
+    {
+      "title": "MemberPress Courses",
+      "priority": 1600,
+      "img": "plugin-memberpress-courses.png",
+      "target": ["pretty-link", "thirstyaffiliates"],
+      "website": "https://memberpress.com/addons/memberpress-courses/",
+      "main": {
+        "free": "memberpress-courses/main.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=memberpress-courses"
+      },
+      "description": "Create lessons, add quizzes, even award your students with shareable certificates. Every feature is right there, ready to go.\n\nThe MemberPress Courses Add-on boils course building down to an easy, click-and-go process."
+    },
+    {
+      "title": "MonsterInsights",
+      "priority": 2400,
+      "main": {
+        "free": "google-analytics-for-wordpress/googleanalytics.php",
+        "premium": "google-analytics-premium/googleanalytics-premium.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=monsterinsights_settings",
+        "premium": "admin.php?page=monsterinsights_settings"
+      },
+      "img": "plugin-mi.png",
+      "target": ["accessally", "easy-affiliate", "membercore", "membermouse", "memberpress", "members", "popupally", "pretty-link", "thirstyaffiliates", "wishlist-member", "wishlistlms"],
+      "download_url": "https://downloads.wordpress.org/plugin/google-analytics-for-wordpress.latest-stable.zip",
+      "description": "MonsterInsights makes it “effortless” to properly connect your WordPress site with Google Analytics, so you can start making data-driven decisions to grow your business."
+    },
+    {
+      "title": "OptinMonster",
+      "priority": 2100,
+      "img": "plugin-om.png",
+      "target": ["easy-affiliate", "membercore", "membermouse", "memberpress", "members", "pretty-link", "thirstyaffiliates", "wishlist-member", "wishlistlms"],
+      "download_url": "https://downloads.wordpress.org/plugin/optinmonster.latest-stable.zip",
+      "main": {
+        "free": "optinmonster/optin-monster-wp-api.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=optin-monster-settings"
+      },
+      "description": "Our high-converting optin forms like Exit-Intent® popups, Fullscreen Welcome Mats, and Scroll boxes help you dramatically boost conversions and get more email subscribers."
+    },
+    {
+      "title": "PopupAlly",
+      "priority": 2000,
+      "main": {
+        "free": "popupally/popup-ally.php",
+        "premium": "popupally-pro/popup-ally-pro.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=_popupally_setting",
+        "premium": "admin.php?page=_popupally_pro_setting"
+      },
+      "img": "plugin-popupally.png",
+      "target": ["accessally", "easy-affiliate", "membercore", "membermouse", "memberpress", "members", "pretty-link", "thirstyaffiliates", "wishlist-member", "wishlistlms"],
+      "download_url": "https://downloads.wordpress.org/plugin/popupally.zip",
+      "website": "https://popupally.com/features/",
+      "description": "PopupAlly allows you to create advanced popup signup forms in under 5 minutes without dealing with messy code."
+    },
+    {
+      "title": "Pretty Links",
+      "priority": 1800,
+      "main": {
+        "free": "pretty-link/pretty-link.php"
+      },
+      "settings_page": {
+        "free": "edit.php?post_type=pretty-link&page=pretty-link-options"
+      },
+      "download_url": "https://downloads.wordpress.org/plugin/pretty-link.latest-stable.zip",
+      "img": "plugin-prettylinks.png",
+      "target": ["accessally", "membercore", "membermouse", "memberpress", "members", "wishlist-member", "popupally", "wishlistlms"],
+      "description": "Pretty Links helps you shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!"
+    },
+    {
+      "title": "PushEngage",
+      "priority": 1300,
+      "main": {
+        "free": "pushengage/main.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=pushengage#/settings/site-details"
+      },
+      "target": ["membercore", "membermouse", "memberpress", "members", "pretty-link", "thirstyaffiliates", "wishlist-member", "wishlistlms"],
+      "download_url": "https://downloads.wordpress.org/plugin/pushengage.latest-stable.zip",
+      "img": "plugin-pushengage.png",
+      "description": "Send personalized web push notifications on autopilot. 10x your repeat traffic and WordPress site engagement with push notification campaigns."
+    },
+    {
+      "title": "SeedProd",
+      "priority": 1900,
+      "img": "plugin-sp.png",
+      "main": {
+        "free": "coming-soon/coming-soon.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=seedprod_lite_settings"
+      },
+      "target": ["easy-affiliate", "membercore", "membermouse", "memberpress", "members", "pretty-link", "thirstyaffiliates", "wishlist-member", "wishlistlms"],
+      "download_url": "https://downloads.wordpress.org/plugin/coming-soon.latest-stable.zip",
+      "description": "SEEDPROD – DRAG & DROP WORDPRESS WEBSITE BUILDER, LANDING PAGE BUILDER, COMING SOON PAGE & MAINTENANCE MODE\nSeedProd was originally created in 2011 and allowed you to create a Coming Soon Page or a Maintenance Mode Page."
+    },
+    {
+      "title": "Uncanny Automator",
+      "priority": 1200,
+      "main": {
+        "free": "uncanny-automator/uncanny-automator.php",
+        "premium": "uncanny-automator-pro/uncanny-automator-pro.php"
+      },
+      "settings_page": {
+        "free": "edit.php?post_type=uo-recipe&page=uncanny-automator-config",
+        "premium": "edit.php?post_type=uo-recipe&page=uncanny-automator-config"
+      },
+      "download_url": "https://downloads.wordpress.org/plugin/uncanny-automator.latest-stable.zip",
+      "img": "plugin-uncanny-automator.png",
+      "target": ["membercore", "membermouse", "memberpress", "members", "wishlist-member", "wishlistlms"],
+      "description": "Uncanny Automator is the easiest and most powerful way to automate your WordPress site with no code. Build automations in minutes that connect your WordPress plugins, sites and apps together using billions of recipe combinations."
+    },
+    {
+      "title": "WP Mail SMTP",
+      "priority": 2300,
+      "main": {
+        "free": "wp-mail-smtp/wp_mail_smtp.php",
+        "premium": "wp-mail-smpt-pro/wp_mail_smtp.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=wp-mail-smtp",
+        "premium": "admin.php?page=wp-mail-smtp"
+      },
+      "img": "plugin-smtp.png",
+      "target": ["easy-affiliate", "membercore", "membermouse", "memberpress", "members", "wishlist-member", "wishlistlms"],
+      "download_url": "https://downloads.wordpress.org/plugin/wp-mail-smtp.latest-stable.zip",
+      "description": "WP Mail SMTP fixes your email deliverability by reconfiguring WordPress to use a proper SMTP provider when sending emails.\n\nWP Mail SMTP is free and has everything you need to reliably send your WordPress emails!"
+    },
+    {
+      "title": "WPForms",
+      "priority": 2200,
+      "main": {
+        "free": "wpforms-lite/wpforms.php",
+        "premium": "wpforms/wpforms.php"
+      },
+      "settings_page": {
+        "free": "admin.php?page=wpforms-settings",
+        "premium": "admin.php?page=wpforms-settings"
+      },
+      "img": "plugin-wpforms.png",
+      "target": ["easy-affiliate"],
+      "download_url": "https://downloads.wordpress.org/plugin/wpforms-lite.latest-stable.zip",
+      "description": "WPForms allows you to create beautiful contact forms, feedback forms, subscription forms, payment forms, and other types of forms for your site in minutes, not hours!"
+    }
+  ]
+}

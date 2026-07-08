@@ -1,0 +1,1 @@
+(()=>{"use strict";const i=window.prli.shared,n=window.ReactJSXRuntime;(0,i.mountPage)("pay-links",()=>(0,n.jsx)(i.LinksApp,{pageType:"pay-links"}))})();

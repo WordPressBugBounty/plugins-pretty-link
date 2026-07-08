@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support\Concerns;
+namespace PrettyLinks\GroundLevel\Support\Concerns;
 
-use Prli\GroundLevel\Support\Models\User;
+use PrettyLinks\GroundLevel\Support\Models\User;
 
 /**
  * Trait which defines an objects relationship to a user model.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support\Contracts;
+namespace PrettyLinks\GroundLevel\Support\Contracts;
 
 interface Arrayable
 {

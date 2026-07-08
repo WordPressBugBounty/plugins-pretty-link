@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support\Concerns;
+namespace PrettyLinks\GroundLevel\Support\Concerns;
 
-use Prli\GroundLevel\Support\Models\Hook;
+use PrettyLinks\GroundLevel\Support\Models\Hook;
 
 /**
  * Trait enabling classes to manage WordPress actions and filters.
@@ -14,7 +14,7 @@ trait Hookable
     /**
      * An array of configured Hook objects.
      *
-     * @var \Prli\GroundLevel\Support\Models\Hook[]
+     * @var \PrettyLinks\GroundLevel\Support\Models\Hook[]
      */
     protected array $configuredHooks;
 
@@ -50,10 +50,10 @@ trait Hookable
     /**
      * Initializes a hook object.
      *
-     * @param  \Prli\GroundLevel\Support\Models\Hook|array $hookOrHookArgs The hook args to initialize the hook with.
+     * @param  \PrettyLinks\GroundLevel\Support\Models\Hook|array $hookOrHookArgs The hook args to initialize the hook with.
      *                                                                Or the hook itself, in which case it is returned
      *                                                                as it is.
-     * @return \Prli\GroundLevel\Support\Models\Hook
+     * @return \PrettyLinks\GroundLevel\Support\Models\Hook
      */
     public static function initHook($hookOrHookArgs): Hook
     {
@@ -77,7 +77,7 @@ trait Hookable
     /**
      * Retrieves a list of hooks defined by the class.
      *
-     * @return \Prli\GroundLevel\Support\Models\Hook[]
+     * @return \PrettyLinks\GroundLevel\Support\Models\Hook[]
      */
     public function getHooks(): array
     {

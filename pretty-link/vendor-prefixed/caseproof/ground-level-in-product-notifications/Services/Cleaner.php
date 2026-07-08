@@ -2,10 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\InProductNotifications\Services;
+namespace PrettyLinks\GroundLevel\InProductNotifications\Services;
 
+use PrettyLinks\GroundLevel\InProductNotifications\Util as IPNUtil;
+
+/**
+ * Cleaner service for removing expired notifications.
+ */
 class Cleaner extends ScheduledService
 {
+    /**
+     * The store service.
+     *
+     * @var Store
+     */
+    protected Store $store;
+
+    /**
+     * Constructor.
+     *
+     * @param IPNUtil $util  The IPN utility service.
+     * @param Store   $store The store service.
+     */
+    public function __construct(IPNUtil $util, Store $store)
+    {
+        $this->store = $store;
+        parent::__construct($util);
+    }
+
     /**
      * Retrieves the hook name for the event action.
      *
@@ -23,17 +47,15 @@ class Cleaner extends ScheduledService
     {
         $hasChanges = false;
 
-        /** @var Store $store */ // phpcs:ignore
-        $store = $this->container->get(Store::class);
-        foreach ($store->fetch(true)->notifications(false) as $notification) {
+        foreach ($this->store->fetch(true)->notifications(false) as $notification) {
             if ($notification->isExpired() || $notification->isStale()) {
-                $store->delete($notification->id);
+                $this->store->delete($notification->id);
                 $hasChanges = true;
             }
         }
 
         if ($hasChanges) {
-            $store->persist();
+            $this->store->persist();
         }
     }
 }

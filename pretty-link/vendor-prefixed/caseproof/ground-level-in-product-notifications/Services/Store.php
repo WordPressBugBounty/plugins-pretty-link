@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\InProductNotifications\Services;
+namespace PrettyLinks\GroundLevel\InProductNotifications\Services;
 
-use Prli\GroundLevel\Container\Service;
-use Prli\GroundLevel\InProductNotifications\Models\Notification;
-use Prli\GroundLevel\Support\Time;
+use PrettyLinks\GroundLevel\InProductNotifications\Models\Notification;
+use PrettyLinks\GroundLevel\Support\Time;
 use InvalidArgumentException;
 
-class Store extends Service
+/**
+ * Store service for managing IPN notification data.
+ */
+class Store
 {
     /**
      * Filter for unread notifications.
@@ -30,14 +32,24 @@ class Store extends Service
      *
      * @var array
      */
-    protected array $data;
+    protected array $data = [];
+
+    /**
+     * Constructor.
+     *
+     * @param \PrettyLinks\GroundLevel\InProductNotifications\Util $util The IPN utility service.
+     */
+    public function __construct(\PrettyLinks\GroundLevel\InProductNotifications\Util $util)
+    {
+        $this->key = $util->prefixId('store');
+    }
 
     /**
      * Adds a notification to the store.
      *
      * @param  array   $raw        The raw notification data.
      * @param  boolean $withLastId If true, set the last notification ID.
-     * @return \Prli\GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function add(array $raw, bool $withLastId = false): self
     {
@@ -52,7 +64,7 @@ class Store extends Service
     /**
      * Clear all stored data.
      *
-     * @return \Prli\GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function clear(): self
     {
@@ -64,7 +76,7 @@ class Store extends Service
      * Delete a notification from the store.
      *
      * @param  string $id The notification ID.
-     * @return \Prli\GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function delete(string $id): self
     {
@@ -76,7 +88,7 @@ class Store extends Service
      * Retrieves stored data from the database.
      *
      * @param  boolean $force If true, force a fetch from the database.
-     * @return \Prli\GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function fetch(bool $force = false): self
     {
@@ -92,7 +104,7 @@ class Store extends Service
      *
      * @param  string $id      The notification ID.
      * @param  string $context The notification context.
-     * @return \Prli\GroundLevel\InProductNotifications\Models\Notification|null
+     * @return Notification|null
      */
     public function get(string $id, string $context = Notification::CONTEXT_DISPLAY): ?Notification
     {
@@ -125,13 +137,18 @@ class Store extends Service
      * Mark a notification as read.
      *
      * @param  string $id The notification ID.
-     * @return \Prli\GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function markRead(string $id): self
     {
         if (isset($this->data[$id])) {
-            $this->data[$id]['read']   = true;
-            $this->data[$id]['readAt'] = Time::now();
+            $this->update(
+                $id,
+                [
+                    'read'   => true,
+                    'readAt' => Time::now(),
+                ]
+            );
         }
         return $this;
     }
@@ -189,7 +206,7 @@ class Store extends Service
     /**
      * Persist data to the database.
      *
-     * @return \Prli\GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function persist(): self
     {
@@ -198,24 +215,29 @@ class Store extends Service
     }
 
     /**
-     * Sets the option key/name where notification data will be stored.
-     *
-     * @param string $key The option key/name.
-     */
-    public function setKey(string $key): void
-    {
-        $this->key = $key;
-    }
-
-    /**
      * Sets the last notification ID.
      *
      * @param  string $id The notification ID.
-     * @return \Prli\GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function setLastId(string $id): self
     {
         $this->data['__lastId'] = $id;
+        return $this;
+    }
+
+    /**
+     * Updates a notification in the store.
+     *
+     * @param  string $id   The notification ID.
+     * @param  array  $data The notification data.
+     * @return \PrettyLinks\GroundLevel\InProductNotifications\Services\Store
+     */
+    public function update(string $id, array $data): self
+    {
+        if (isset($this->data[$id])) {
+            $this->data[$id] = array_merge($this->data[$id], $data);
+        }
         return $this;
     }
 }

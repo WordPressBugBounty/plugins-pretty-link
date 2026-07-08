@@ -1,0 +1,211 @@
+/**
+ * Pretty Links — Quick Add dashboard widget.
+ * Scoped under .prli-quick-add so it can't leak to other widgets.
+ */
+.prli-quick-add {
+    --prli-qa-brand: #01aae9;
+    --prli-qa-brand-hover: #0189c0;
+    --prli-qa-brand-active: #036a96;
+    --prli-qa-text: #1f2937;
+    --prli-qa-muted: #6b7684;
+    --prli-qa-border: #cfd6de;
+    --prli-qa-bg-subtle: #f5f7fa;
+    --prli-qa-success-bg: #ecfdf5;
+    --prli-qa-success-text: #047857;
+    --prli-qa-success-border: #10b981;
+    --prli-qa-danger-bg: #fef2f2;
+    --prli-qa-danger-text: #b91c1c;
+    --prli-qa-danger-border: #ef4444;
+    --prli-qa-radius: 6px;
+    --prli-qa-focus-ring: 0 0 0 3px rgba(1, 170, 233, 0.2);
+
+    color: var(--prli-qa-text);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.prli-quick-add__intro {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--prli-qa-border);
+}
+
+.prli-quick-add__icon {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    color: var(--prli-qa-brand);
+}
+
+.prli-quick-add__hint {
+    margin: 0;
+    font-size: 13px;
+    color: var(--prli-qa-muted);
+}
+
+.prli-quick-add__field {
+    margin-bottom: 12px;
+}
+
+.prli-quick-add__label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--prli-qa-text);
+    letter-spacing: 0.01em;
+}
+
+.prli-quick-add__label-meta {
+    margin-left: 4px;
+    font-weight: 400;
+    color: var(--prli-qa-muted);
+}
+
+.prli-quick-add__input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px 10px;
+    background: #fff;
+    border: 1px solid var(--prli-qa-border);
+    border-radius: var(--prli-qa-radius);
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--prli-qa-text);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.prli-quick-add__input:focus {
+    outline: none;
+    border-color: var(--prli-qa-brand);
+    box-shadow: var(--prli-qa-focus-ring);
+}
+
+.prli-quick-add__input::placeholder {
+    color: #9aa6b2;
+}
+
+.prli-quick-add__slug-wrap {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--prli-qa-border);
+    border-radius: var(--prli-qa-radius);
+    background: #fff;
+    overflow: hidden;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.prli-quick-add__slug-wrap:focus-within {
+    border-color: var(--prli-qa-brand);
+    box-shadow: var(--prli-qa-focus-ring);
+}
+
+.prli-quick-add__slug-prefix {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    background: var(--prli-qa-bg-subtle);
+    border-right: 1px solid var(--prli-qa-border);
+    color: var(--prli-qa-muted);
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50%;
+}
+
+.prli-quick-add__input--slug {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.prli-quick-add__input--slug:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.prli-quick-add__actions {
+    margin-top: 14px;
+}
+
+.prli-quick-add__submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--prli-qa-brand);
+    border: 1px solid var(--prli-qa-brand);
+    border-radius: var(--prli-qa-radius);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.prli-quick-add__submit:hover {
+    background: var(--prli-qa-brand-hover);
+    border-color: var(--prli-qa-brand-hover);
+    color: #fff;
+}
+
+.prli-quick-add__submit:active {
+    background: var(--prli-qa-brand-active);
+    border-color: var(--prli-qa-brand-active);
+}
+
+.prli-quick-add__submit:focus {
+    outline: none;
+    box-shadow: var(--prli-qa-focus-ring);
+}
+
+.prli-quick-add__submit-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.prli-quick-add__notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 14px;
+    padding: 8px 10px;
+    border-radius: var(--prli-qa-radius);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.prli-quick-add__notice--success {
+    background: var(--prli-qa-success-bg);
+    color: var(--prli-qa-success-text);
+    border: 1px solid var(--prli-qa-success-border);
+}
+
+.prli-quick-add__notice--error {
+    background: var(--prli-qa-danger-bg);
+    color: var(--prli-qa-danger-text);
+    border: 1px solid var(--prli-qa-danger-border);
+}
+
+.prli-quick-add__notice-icon {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    margin-top: 1px;
+}
+
+/* Trim WP's default postbox padding so the form fills the widget cleanly. */
+#prli_quick_add .inside {
+    padding: 14px 16px 16px;
+    margin: 0;
+}

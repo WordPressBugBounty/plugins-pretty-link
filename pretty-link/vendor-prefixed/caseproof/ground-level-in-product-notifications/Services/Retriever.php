@@ -2,15 +2,56 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\InProductNotifications\Services;
+namespace PrettyLinks\GroundLevel\InProductNotifications\Services;
 
-use Prli\GroundLevel\InProductNotifications\Service as IPNService;
-use Prli\GroundLevel\Mothership\Api\Request\Products;
-use Prli\GroundLevel\Support\Models\Hook;
-use Prli\GroundLevel\Support\Str;
+use PrettyLinks\GroundLevel\InProductNotifications\Util as IPNUtil;
+use PrettyLinks\GroundLevel\Mothership\Api\Request\Products;
+use PrettyLinks\GroundLevel\Support\Models\Hook;
+use PrettyLinks\GroundLevel\Support\Str;
 
+/**
+ * Retriever service for fetching notifications from the Mothership API.
+ */
 class Retriever extends ScheduledService
 {
+    /**
+     * The store service.
+     *
+     * @var Store
+     */
+    protected Store $store;
+
+    /**
+     * The products API service.
+     *
+     * @var Products
+     */
+    protected Products $products;
+
+    /**
+     * The product slug for API requests.
+     *
+     * @inject \PrettyLinks\GroundLevel\InProductNotifications\IPNServiceProvider::PARAM_PRODUCT_SLUG
+     * @var    string
+     */
+    protected string $productSlug;
+
+    /**
+     * Constructor.
+     *
+     * @param IPNUtil  $util        The IPN utility service.
+     * @param Store    $store       The store service.
+     * @param Products $products    The products API service.
+     * @param string   $productSlug The product slug for API requests.
+     */
+    public function __construct(IPNUtil $util, Store $store, Products $products, string $productSlug)
+    {
+        $this->store       = $store;
+        $this->products    = $products;
+        $this->productSlug = $productSlug;
+        parent::__construct($util);
+    }
+
     /**
      * Configures the hooks for the service.
      *
@@ -45,12 +86,18 @@ class Retriever extends ScheduledService
      */
     public function maybeForceFetch(): void
     {
+        if (! $this->util->userHasPermission()) {
+            return;
+        }
         $var = Str::toCamelCase(
-            $this->container->get(IPNService::class)->prefixId('refresh')
+            $this->util->prefixId('refresh')
         ); // EG: meprIpnRefresh.
         if (1 === (int) filter_input(INPUT_GET, $var, FILTER_VALIDATE_INT)) {
-            $this->container->get(Store::class)->clear()->persist();
+            $this->store->clear()->persist();
             do_action($this->eventHookName());
+            if (wp_redirect(remove_query_arg($var))) {
+                exit;
+            }
         }
     }
 
@@ -59,36 +106,33 @@ class Retriever extends ScheduledService
      */
     public function performEvent(): void
     {
-        /** @var Store $store */ // phpcs:ignore
-        $store = $this->container->get(Store::class);
-
         $args = [
             'per_page' => 20,
         ];
 
-        $lastId = $store->fetch()->lastId();
+        $lastId = $this->store->fetch()->lastId();
         if (! empty($lastId)) {
             $args['since'] = $lastId;
         }
 
-        $req = Products::getNotifications(
-            $this->container->get(IPNService::PRODUCT_SLUG),
+        $response = $this->products->getNotifications(
+            $this->productSlug,
             $args
         );
 
-        if (! $req->isError()) {
+        if (! $response->isError()) {
             // If there's more notifications, rerun in 1 minute instead of waiting for the next cron.
-            if ($req->hasNext()) {
+            if ($response->hasNext()) {
                 wp_schedule_single_event(
                     time() + 60,
                     $this->eventHookName()
                 );
             }
 
-            foreach ($req->notifications as $notification) {
-                $store->add((array) $notification, true);
+            foreach ($response->getData('notifications', []) as $notification) {
+                $this->store->add((array) $notification, true);
             }
-            $store->persist();
+            $this->store->persist();
         }
     }
 }

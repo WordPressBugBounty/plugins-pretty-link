@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support\Concerns;
+namespace PrettyLinks\GroundLevel\Support\Concerns;
 
-use Prli\GroundLevel\Support\Casts;
-use Prli\GroundLevel\Support\Exceptions\InvalidFormatError;
-use Prli\GroundLevel\Support\Str;
+use PrettyLinks\GroundLevel\Support\Casts;
+use PrettyLinks\GroundLevel\Support\Str;
 
 /**
  * Trait enabling attribute access on an object.

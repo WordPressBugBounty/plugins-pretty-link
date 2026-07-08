@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\Support;
+namespace PrettyLinks\GroundLevel\Support;
 
 /**
  * String utilities.
@@ -42,6 +42,24 @@ class Str
     public static function toCamelCase(string $string): string
     {
         return lcfirst(self::toPascalCase($string));
+    }
+
+    /**
+     * Converts the input string to constant case.
+     *
+     * @param  string $string String to convert.
+     * @return string
+     */
+    public static function toConstantCase(string $string): string
+    {
+        return strtoupper(
+            implode(
+                '_',
+                self::toWords(
+                    str_replace('.', '_', $string)
+                )
+            )
+        );
     }
 
     /**
@@ -88,6 +106,22 @@ class Str
         return implode('_', self::toWords($string));
     }
 
+    /**
+     * Converts the input string to space-separated words.
+     *
+     * Accepts strings in camel, pascal, snake, and kebab case as well as space-separated strings.
+     *
+     * Note: this method will normalize "weird" capitalization and result in the final
+     * string being all in lower case. If you need to preserve capitalization of
+     * the input string you should avoid using this method.
+     *
+     * @param  string $string String to convert.
+     * @return string
+     */
+    public static function toSpacedCase(string $string): string
+    {
+        return implode(' ', self::toWords($string));
+    }
 
     /**
      * Appends a trailing slash to a string without creating double slashes.

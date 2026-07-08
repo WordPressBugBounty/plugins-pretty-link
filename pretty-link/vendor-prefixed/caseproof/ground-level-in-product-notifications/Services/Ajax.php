@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Prli\GroundLevel\InProductNotifications\Services;
+namespace PrettyLinks\GroundLevel\InProductNotifications\Services;
 
-use Prli\GroundLevel\Container\Container;
-use Prli\GroundLevel\Container\Contracts\LoadableDependency;
-use Prli\GroundLevel\Container\Service;
-use Prli\GroundLevel\InProductNotifications\Service as IPNService;
-use Prli\GroundLevel\Support\Concerns\Hookable;
-use Prli\GroundLevel\Support\Models\Hook;
-use Prli\GroundLevel\Support\Str;
+use PrettyLinks\GroundLevel\InProductNotifications\Util as IPNUtil;
+use PrettyLinks\GroundLevel\Support\Concerns\Hookable;
+use PrettyLinks\GroundLevel\Support\Models\Hook;
+use PrettyLinks\GroundLevel\Support\Str;
 use WP_Error;
 
-class Ajax extends Service implements LoadableDependency
+/**
+ * Ajax service for handling IPN AJAX requests.
+ */
+class Ajax
 {
     use Hookable;
 
@@ -43,6 +43,46 @@ class Ajax extends Service implements LoadableDependency
     public const NONCE_FIELD = 'nonce';
 
     /**
+     * The IPN utility service.
+     *
+     * @var IPNUtil
+     */
+    protected IPNUtil $util;
+
+    /**
+     * The store service.
+     *
+     * @var Store
+     */
+    protected Store $store;
+
+    /**
+     * The capability required to view the inbox.
+     *
+     * @inject \PrettyLinks\GroundLevel\InProductNotifications\IPNServiceProvider::PARAM_USER_CAPABILITY
+     * @var    string
+     */
+    protected string $userCapability;
+
+    /**
+     * Constructor.
+     *
+     * @param IPNUtil $util           The IPN utility service.
+     * @param Store   $store          The store service.
+     * @param string  $userCapability The capability required to view the inbox.
+     */
+    public function __construct(IPNUtil $util, Store $store, string $userCapability)
+    {
+        $this->util           = $util;
+        $this->store          = $store;
+        $this->userCapability = $userCapability;
+
+        if ($this->util->userHasPermission()) {
+            $this->addHooks();
+        }
+    }
+
+    /**
      * Returns the action name used for the AJAX endpoint.
      *
      * @return string The action name, eg: mepr_ipn_dismiss.
@@ -50,7 +90,7 @@ class Ajax extends Service implements LoadableDependency
     public function action(): string
     {
         return Str::toSnakeCase(
-            $this->container->get(IPNService::class)->prefixId('dismiss')
+            $this->util->prefixId('dismiss')
         );
     }
 
@@ -125,7 +165,7 @@ class Ajax extends Service implements LoadableDependency
             wp_send_json_error(...$this->errorData(self::E_UNAUTHORIZED));
         }
 
-        if (! current_user_can($this->container->get(IPNService::USER_CAPABILITY))) {
+        if (! current_user_can($this->userCapability)) {
             wp_send_json_error(...$this->errorData(self::E_FORBIDDEN));
         }
 
@@ -134,20 +174,8 @@ class Ajax extends Service implements LoadableDependency
             wp_send_json_error(...$this->errorData(self::E_INVALID_ID));
         }
 
-        $this->container->get(Store::class)->fetch()->markRead($id)->persist();
+        $this->store->fetch()->markRead($id)->persist();
         wp_send_json_success(null, 200);
-    }
-
-    /**
-     * Service load method.
-     *
-     * @param \Prli\GroundLevel\Container\Container $container The container.
-     */
-    public function load(Container $container): void
-    {
-        if ($container->get(IPNService::class)->userHasPermission()) {
-            $this->addHooks();
-        }
     }
 
     /**
@@ -168,6 +196,6 @@ class Ajax extends Service implements LoadableDependency
      */
     public function nonceAction(): string
     {
-        return $this->container->get(IPNService::class)->prefixId('ajax_dismiss');
+        return $this->util->prefixId('ajax_dismiss');
     }
 }

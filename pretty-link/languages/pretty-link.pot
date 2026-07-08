@@ -1,0 +1,5221 @@
+# Copyright (C) 2026 Pretty Links
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Pretty Links 4.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-08T17:43:08+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: pretty-link\n"
+
+#. Plugin Name of the plugin
+#. Author of the plugin
+#: pretty-link.php
+#: src/Admin/Page.php:32
+#: src/Admin/Page.php:44
+#: src/Admin/Pages/Links.php:22
+#: src/Admin/Pages/Links.php:23
+#: src/Admin/Pages/WhatsNew.php:261
+#: src/Admin/PluginRow.php:54
+#: src/Admin/TopBar.php:74
+#: src/Onboarding/Wizard.php:452
+#: src-js/shared/components/Header.js:17
+msgid "Pretty Links"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: pretty-link.php
+msgid "https://prettylinks.com/pl/plugin-uri"
+msgstr ""
+
+#. Description of the plugin
+#: pretty-link.php
+msgid "Shrink, track and share any URL using your website and brand."
+msgstr ""
+
+#. Author URI of the plugin
+#: pretty-link.php
+msgid "https://prettylinks.com"
+msgstr ""
+
+#: src/Admin/AdminBar.php:35
+#: src/Onboarding/Wizard.php:468
+#: src-js/editor/index.js:82
+#: src-js/editor/index.js:110
+msgid "Pretty Link"
+msgstr ""
+
+#: src/Admin/AdminBar.php:43
+msgid "PrettyPay™ Link"
+msgstr ""
+
+#: src/Admin/Assets.php:431
+msgid "302 Found"
+msgstr ""
+
+#: src/Admin/Assets.php:435
+msgid "301 Moved Permanently"
+msgstr ""
+
+#: src/Admin/Assets.php:457
+#: src/Admin/Upsell/ProUpsell.php:133
+msgid "Cloaked redirect"
+msgstr ""
+
+#: src/Admin/Assets.php:462
+#: src/Admin/Upsell/ProUpsell.php:137
+msgid "Meta Refresh redirect"
+msgstr ""
+
+#: src/Admin/Assets.php:467
+#: src/Admin/Upsell/ProUpsell.php:141
+msgid "JavaScript redirect"
+msgstr ""
+
+#: src/Admin/Assets.php:472
+#: src/Admin/Upsell/ProUpsell.php:145
+msgid "Pixel redirect"
+msgstr ""
+
+#: src/Admin/Assets.php:477
+#: src/Admin/Upsell/ProUpsell.php:149
+msgid "Pretty Bar redirect"
+msgstr ""
+
+#: src/Admin/Assets.php:499
+msgid "307 Temporary Redirect (legacy)"
+msgstr ""
+
+#: src/Admin/Assets.php:520
+msgid "PrettyPay™ Link (Stripe)"
+msgstr ""
+
+#: src/Admin/Dashboard.php:37
+msgid "Pretty Links — Quick Add"
+msgstr ""
+
+#: src/Admin/Dashboard.php:112
+msgid "Shorten and track a URL in seconds."
+msgstr ""
+
+#: src/Admin/Dashboard.php:127
+#: src/Editor/ClassicEditor.php:113
+#: src/Onboarding/views/first-link.php:34
+#: src-js/editor/InlineLinkUI.js:560
+#: src-js/shared/components/LinkForm.js:502
+msgid "Target URL"
+msgstr ""
+
+#: src/Admin/Dashboard.php:141
+msgid "Custom slug"
+msgstr ""
+
+#: src/Admin/Dashboard.php:142
+msgid "optional"
+msgstr ""
+
+#: src/Admin/Dashboard.php:164
+msgid "Create Pretty Link"
+msgstr ""
+
+#: src/Admin/Page.php:58
+#: src-js/dashboard/index.js:125
+#: src-js/dashboard/index.js:712
+msgid "Dashboard"
+msgstr ""
+
+#: src/Admin/Pages/AddNew.php:21
+#: src-js/add-new/index.js:155
+msgid "Add New Link"
+msgstr ""
+
+#: src/Admin/Pages/AddNew.php:22
+msgid "Add New"
+msgstr ""
+
+#: src/Admin/Pages/AddNew.php:52
+#: src-js/add-new/index.js:154
+msgid "Edit Link"
+msgstr ""
+
+#: src/Admin/Pages/Addons.php:22
+#: src/Admin/Pages/Addons.php:23
+#: src/Onboarding/views/features.php:91
+#: src-js/addons/index.js:277
+msgid "Add-ons"
+msgstr ""
+
+#: src/Admin/Pages/Clicks.php:47
+#: src/Admin/Pages/Clicks.php:48
+#: src-js/clicks/index.js:769
+msgid "Click History"
+msgstr ""
+
+#: src/Admin/Pages/Onboarding.php:32
+#: src/Onboarding/views/welcome.php:15
+msgid "Welcome to Pretty Links"
+msgstr ""
+
+#: src/Admin/Pages/Onboarding.php:33
+msgid "Onboarding"
+msgstr ""
+
+#: src/Admin/Pages/Options.php:22
+#: src/Admin/Pages/Options.php:23
+#: src-js/options/index.js:713
+#: src-js/options/index.js:728
+msgid "Options"
+msgstr ""
+
+#: src/Admin/Pages/PayLinks.php:37
+#: src/Admin/Pages/PayLinks.php:38
+#: src-js/shared/components/LinksApp.js:109
+msgid "PrettyPay™ Links"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:37
+msgid "What's New in Pretty Links 4.0"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:38
+msgid "What's New"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:61
+#: src/Onboarding/Wizard.php:88
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:76
+msgid "Rebuilt admin experience"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:77
+msgid "Every screen is a focused React app built on WordPress' own component system. Faster to load, easier to read, keyboard-navigable end to end."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:81
+msgid "Blazing-fast redirects"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:82
+msgid "A single prepared-statement lookup per request and a deferred click write so the redirect response goes out the door first — your visitors never wait on analytics."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:86
+msgid "Trash, restore, and safer deletes"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:87
+msgid "Links move to a dedicated Trash view before they're removed for good. Restore anything you deleted by mistake — no database surgery required."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:91
+msgid "Reserved-slug protection"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:92
+msgid "Pretty Links now blocks collisions with WordPress core paths, REST routes, and other plugin URLs before they happen — so a stray slug can't take down /wp-admin."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:96
+msgid "Configurable click retention"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:97
+msgid "Choose how long click history sticks around — 30 days through 2 years — and a scheduled task keeps the clicks table lean without manual purges."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:101
+msgid "Privacy built in"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:102
+msgid "Optional IP anonymization, CDN-header geolocation (Cloudflare, Akamai, Google), and full support for WordPress' privacy export and erasure tools."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:106
+msgid "Block editor & Classic integrations"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:107
+msgid "Insert and create pretty links without leaving the post editor. A dedicated Gutenberg block with typeahead search, plus a refreshed Classic editor button."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:111
+msgid "Configurable link prefix"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:112
+msgid "New installs default to /go/<slug> so caching layers can cleanly exclude link traffic. Existing sites keep whatever prefix they had."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:116
+msgid "PrettyPay™ Stripe links"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:117
+msgid "Collect a Stripe payment before the redirect with a dedicated Pay Link type — connect once and every checkout is wired up end to end."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:121
+msgid "Bot & device detection"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:122
+msgid "Every click captures device type, browser, and a bot flag so reports reflect real visitors — not crawlers padding the numbers."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:126
+msgid "Powerful bulk actions & search"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:127
+msgid "Search, sort, and filter thousands of links in milliseconds, then trash, restore, toggle nofollow, or flip tracking on dozens at once from the new Links table."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:131
+msgid "CSV import & click-history export"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:132
+msgid "Bulk-import hundreds of links from a spreadsheet and export full click history — with filters, date ranges, and Unicode-safe encoding — straight to CSV."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:139
+msgid "Split testing with reports"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:140
+msgid "Rotate visitors across multiple destinations and measure which one wins. Per-variant charts, conversion tracking, and winner detection."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:144
+#: src/Admin/Upsell/ProUpsell.php:161
+msgid "Smart targeting"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:145
+msgid "Send visitors to different destinations based on country, device, browser, or time of day — all without touching code."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:149
+msgid "QR codes for every link"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:150
+msgid "Generate PNG or SVG QR codes on demand, with optional logo overlay and configurable size and colors."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:154
+msgid "Pretty Bar interstitials"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:155
+msgid "Wrap any destination in a branded top bar, bottom bar, or floating pill — with your logo, your colors, and optional share buttons."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:159
+msgid "Automatic affiliate linking"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:160
+msgid "Auto-linkify keywords across posts, pages, custom post types, WooCommerce and more, silently rewrite existing URLs through Pretty Links, and auto-create new pretty links from URL patterns in your content — turn published writing into affiliate revenue without manual edits."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:164
+#: src/Admin/Upsell/ProUpsell.php:181
+msgid "Link health monitoring"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:165
+msgid "Scheduled health checks catch broken destinations before your visitors do, with optional email digests summarizing what needs attention."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:169
+#: src/Admin/Upsell/ProUpsell.php:222
+msgid "Link categories"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:170
+msgid "Organize hundreds or thousands of links with first-class categories. Filter the dashboard and reports by category at a glance."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:174
+#: src/Admin/Upsell/ProUpsell.php:165
+msgid "Expiring links"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:175
+msgid "Set a date, time, or click count and let Pretty Links disable the link automatically when it hits the limit — ideal for limited-time promos."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:179
+msgid "Cloaked & referrer-wiping redirects"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:180
+msgid "Go beyond 301/302/307 with cloak, JavaScript, and Pretty Bar redirects. Meta Refresh wipes the Referer header so merchants can't see the page your affiliate click came from — great for protecting your traffic sources."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:184
+#: src/Admin/Upsell/ProUpsell.php:242
+msgid "Redirect turbo mode"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:185
+msgid "Pro installs a tiny must-use plugin that answers pretty-link requests before the rest of WordPress loads — no theme, no plugins, no page builder in the hot path. Built for high-traffic affiliate sites."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:189
+msgid "Custom reports & A/B conversion tracking"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:190
+msgid "Aggregate clicks across any set of pretty links into a single report and track real conversion goals via a one-line tracking pixel you drop on your thank-you or confirmation pages — see which split-test variant actually closes sales, not just which one gets the most clicks."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:194
+msgid "Visual click history"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:195
+msgid "Pro adds KPI cards, an over-time line chart, a top-links list, and donut-chart breakdowns by country, referrer, device, and browser — all on the Click History page so you can spot trends without exporting to a spreadsheet."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:206
+#: src/Admin/Upsell/LinkInBioLocked.php:28
+#: src/Admin/Upsell/ProUpsell.php:206
+#: src/Licensing/PlanCatalog.php:90
+msgid "Link in Bio"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:207
+msgid "Publish a single page on your own domain that holds every link you want to share — perfect for the one-link-only field on Instagram, TikTok, and other social bios, with your branding instead of a third-party shortener."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:211
+#: src/Admin/Upsell/DeveloperToolsLocked.php:30
+#: src/Admin/Upsell/ProUpsell.php:214
+#: src/Licensing/PlanCatalog.php:96
+msgid "Developer Tools"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:212
+msgid "A documented REST API plus webhook events for link added, updated, trashed, restored, and removed — wire Pretty Links into your stack, sync with external systems, and automate workflows without touching the database."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:216
+#: src/Admin/Upsell/ProUpsell.php:202
+#: src/Licensing/PlanCatalog.php:108
+#: src-js/shared/upsell/locked-option-sections.js:72
+msgid "Splash Pages"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:217
+msgid "A new splash redirect type that shows visitors a branded interstitial — heading, image or video, and up to two pretty-link CTAs — before forwarding them to the destination. Comes with four templates, a per-link funnel report, and full visitor-correlation analytics."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:221
+#: src/Admin/Upsell/ProductDisplaysLocked.php:31
+#: src/Admin/Upsell/ProUpsell.php:210
+#: src/Licensing/PlanCatalog.php:102
+msgid "Product Displays"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:222
+msgid "Drop beautiful product and product-group display boxes into any post or page — image, price, and call-to-action button pulling through one of your pretty links so every click is tracked."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:226
+#: src/Licensing/PlanCatalog.php:114
+msgid "UTMs"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:227
+msgid "Build Google Analytics UTM parameters (source, medium, campaign, content, term, ID) right on the link form — no manual URL editing, no broken tags, no copy-paste from a spreadsheet."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:231
+#: src/Licensing/PlanCatalog.php:120
+#: src-js/shared/upsell/locked-option-sections.js:64
+msgid "User Links"
+msgstr ""
+
+#. Translators: %1$s: opening MemberPress link anchor, %2$s: closing anchor.
+#: src/Admin/Pages/WhatsNew.php:234
+msgid "Drop a self-service pretty-link manager onto a front-end page so logged-in users create and manage their own shortlinks without ever touching wp-admin. Pair it with %1$sMemberPress%2$s to charge subscriptions for access and run your own branded URL-shortening service."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:262
+msgid "What's new in Pretty Links 4.0"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:264
+msgid "A ground-up rewrite focused on speed, clarity, and the tools you use every day. Here's what changed."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:269
+msgid "In every install"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:271
+msgid "The rewritten foundation that ships with Pretty Links Lite and Pro alike — faster, safer, and easier to live in every day."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:285
+msgid "Unlock even more with Pro"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:288
+msgid "These features ship with Pretty Links Pro — the same rebuilt foundation, with power tools for serious affiliate marketers and content creators."
+msgstr ""
+
+#. translators: suffix appended to Pro-locked options in the Lite dropdown.
+#: src/Admin/Pages/WhatsNew.php:293
+#: src/Admin/Upsell/ProUpsell.php:547
+#: src/Licensing/PlanCatalog.php:218
+#: src-js/shared/upsell/components.js:125
+#: src-js/shared/upsell/components.js:461
+#: src-js/shared/upsell/locked-redirect-types.js:32
+msgid "Pro"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:314
+msgid "Pro add-ons"
+msgstr ""
+
+#. Translators: %1$s: opening anchor to the add-ons page, %2$s: closing anchor.
+#: src/Admin/Pages/WhatsNew.php:319
+msgid "Six Pro %1$sadd-ons%2$s extend Pretty Links Pro — hosted bio pages, REST + webhook access, branded splash interstitials, rich product cards, an in-form UTM builder, and a front-end user dashboard. Link in Bio and Developer Tools are included on the Marketer plan; the rest unlock on Executive (Super Affiliate)."
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:328
+msgid "Add-on"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:338
+msgid "Manage your links"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:341
+msgid "View click history"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:344
+msgid "Review options"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:347
+msgid "Back to dashboard"
+msgstr ""
+
+#: src/Admin/PluginRow.php:25
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/PluginRow.php:28
+msgid "Docs"
+msgstr ""
+
+#: src/Admin/PluginRow.php:31
+msgid "Manage License"
+msgstr ""
+
+#. Translators: %s: link to the WordPress.org review page.
+#: src/Admin/PluginRow.php:52
+msgid "Please rate %s on WordPress.org"
+msgstr ""
+
+#: src/Admin/TopBar.php:119
+msgid "Support"
+msgstr ""
+
+#: src/Admin/Upsell/AddonMenuLocked.php:78
+#: src/Admin/Upsell/CustomReportsLocked.php:44
+msgid "PRO"
+msgstr ""
+
+#: src/Admin/Upsell/AddonMenuLocked.php:129
+#: src-js/shared/upsell/components.js:334
+msgid "Already installed."
+msgstr ""
+
+#: src/Admin/Upsell/AddonMenuLocked.php:131
+msgid "This add-on is on your site but currently deactivated. Activate it to start using it."
+msgstr ""
+
+#: src/Admin/Upsell/AddonMenuLocked.php:139
+#: src-js/shared/upsell/components.js:352
+msgid "Activate add-on"
+msgstr ""
+
+#. translators: %s: add-on name.
+#: src/Admin/Upsell/AddonMenuLocked.php:152
+#: src-js/shared/upsell/components.js:197
+msgid "%s is a Pretty Links add-on."
+msgstr ""
+
+#: src/Admin/Upsell/AddonMenuLocked.php:161
+#: src-js/shared/upsell/components.js:216
+msgid "View add-ons"
+msgstr ""
+
+#: src/Admin/Upsell/CustomReportsLocked.php:43
+#: src/Admin/Upsell/CustomReportsLocked.php:49
+msgid "Custom Reports"
+msgstr ""
+
+#: src/Admin/Upsell/CustomReportsLocked.php:68
+#: src/Admin/Upsell/ProUpsell.php:226
+msgid "Custom reports & conversions"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:59
+#: src-js/shared/upsell/components.js:79
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:134
+msgid "Keep the pretty URL in the address bar and show the destination inside it — hides the final affiliate URL from visitors."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:138
+msgid "Wipes the Referer header so merchants can't see which page on your site the click came from — protects your traffic sources."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:142
+msgid "Browser-side redirect that evades server-log tracking and some referral-attribution schemes."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:146
+msgid "Fires one or more tracking pixels before redirecting — use for remarketing or conversion tags."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:150
+msgid "Wraps the destination in a branded top bar, bottom bar, or floating pill with your logo and share buttons."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:153
+msgid "Keywords & URL replacements"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:154
+msgid "Auto-linkify words in your content and silently rewrite existing URLs through Pretty Links — hands-off affiliate linking."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:157
+msgid "Rotation & split testing"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:158
+msgid "Rotate visitors across multiple destinations and measure which one converts best."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:162
+msgid "Send visitors to different destinations based on country, device, browser, or time of day."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:166
+msgid "Automatically disable a link on a set date or after N clicks — ideal for limited-time promos."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:169
+msgid "Per-link QR codes"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:170
+msgid "Generate PNG or SVG QR codes with optional logo overlay and custom colors."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:173
+msgid "Pretty Bar templates"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:174
+msgid "Branded interstitial overlays with your logo, colors, and optional share buttons."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:177
+msgid "Keyword & URL replacement engine"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:178
+msgid "Site-wide auto-linkification with throttling, case sensitivity, and disclosure controls."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:182
+msgid "Scheduled health checks catch broken destinations before your visitors do."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:185
+msgid "Auto-create links"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:186
+msgid "Turn URL patterns in your content into pretty links automatically as you publish."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:194
+msgid "UTM Builder"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:195
+msgid "Build Google Analytics UTM parameters (source, medium, campaign, content, term, ID) right on the link form — no manual URL editing, no broken tags."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:198
+msgid "User Links — front-end dashboard"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:199
+#: src/Licensing/PlanCatalog.php:121
+msgid "Drop a self-service pretty-link manager onto a front-end page so logged-in users create and manage their own shortlinks without ever touching wp-admin."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:203
+msgid "Show a branded interstitial page (heading, media, CTAs, optional countdown) before forwarding visitors — perfect for affiliate disclosures, choose-your-own-destination, or video gates."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:207
+msgid "Build branded /bio/{slug}/ landing pages — profile, stacked buttons, social-icon row — every click tracked through Pretty Links."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:211
+msgid "Drop styled product cards/grids into any post, page, or Bio page via shortcode or Gutenberg block — every CTA tracked as a pretty link."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:215
+msgid "Public REST API with bearer-token auth and outbound HMAC-signed webhooks — connect Pretty Links to Make, Zapier, n8n, custom dashboards, and CI pipelines."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:218
+msgid "Alternate short domain"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:219
+msgid "Serve pretty URLs on a second domain you own (e.g. short.yoursite.com) without moving WordPress."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:223
+msgid "Organize hundreds or thousands of links with first-class categories. Filter dashboard and reports at a glance."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:227
+msgid "Aggregate clicks across any set of links and track real conversion goals via a one-line pixel on your thank-you page."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:230
+msgid "Zero platform fee on PrettyPay"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:231
+msgid "Pretty Links Pro removes the 3% platform fee added to every PrettyPay checkout — you keep every dollar after Stripe's own fees."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:234
+msgid "Bookmarklet"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:235
+msgid "Drag a button to your bookmarks bar and create a pretty link for any page you're browsing with one click."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:238
+msgid "Duplicate keywords"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:239
+msgid "Find keywords assigned to more than one link and resolve the conflicts so auto-replacements stay unambiguous."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:243
+msgid "Short-circuits redirects before the rest of WordPress loads via a must-use plugin — dramatically faster on high-traffic sites."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:343
+#: src-js/shared/upsell/components.js:480
+msgid "Upgrade to Pretty Links Pro"
+msgstr ""
+
+#. Translators: %s: plan label, e.g. "Marketer".
+#: src/Admin/Upsell/ProUpsell.php:415
+msgid "Upgrade to %s to finish setup"
+msgstr ""
+
+#. Translators: %s: plan label.
+#: src/Admin/Upsell/ProUpsell.php:420
+msgid "Upgrade to %s"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:492
+#: src/Onboarding/views/features.php:102
+msgid "Already active"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:492
+msgid "Pro add-on"
+msgstr ""
+
+#. Translators: %s: feature name, e.g. "Link health monitoring".
+#: src/Admin/Upsell/ProUpsell.php:536
+msgid "%s (Pro feature)"
+msgstr ""
+
+#: src/Compat/AddonCompatibilityGuard.php:285
+msgid "The following Pretty Links add-on was deactivated because it is not compatible with Pretty Links 4.0. It must be updated before it can be reactivated:"
+msgid_plural "The following Pretty Links add-ons were deactivated because they are not compatible with Pretty Links 4.0. They must be updated before they can be reactivated:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Compat/AddonCompatibilityGuard.php:302
+msgid "Dismiss this notice"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:104
+#: src/Editor/ClassicEditor.php:119
+msgid "Insert Pretty Link"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:105
+#: src-js/editor/InlineLinkUI.js:420
+msgid "Search Pretty Links…"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:106
+#: src-js/editor/InlineLinkUI.js:481
+#: src-js/shared/components/LinksApp.js:1260
+msgid "Apply"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:107
+msgid "Update"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:108
+#: src-js/clicks/index.js:867
+#: src-js/options/index.js:354
+#: src-js/options/index.js:380
+#: src-js/options/ToolsSection.js:807
+#: src-js/options/ToolsSection.js:866
+#: src-js/shared/components/ConfirmDialog.js:34
+#: src-js/shared/components/StripeAddProductDialog.js:264
+#: src-js/shared/components/TaxonomyApp.js:525
+msgid "Cancel"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:109
+#: src-js/editor/InlineLinkUI.js:513
+msgid "Open in New Tab"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:110
+#: src-js/editor/InlineLinkUI.js:522
+msgid "Nofollow"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:111
+#: src/Onboarding/views/features.php:73
+#: src/Onboarding/Wizard.php:864
+#: src-js/editor/InlineLinkUI.js:531
+msgid "Sponsored"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:112
+#: src-js/editor/InlineLinkUI.js:542
+msgid "Create New Pretty Link"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:114
+#: src-js/editor/InlineLinkUI.js:570
+#: src-js/shared/components/LinkForm.js:525
+#: src-js/shared/components/LinksApp.js:533
+#: src-js/shared/components/PayLinkForm.js:348
+#: src-js/shared/components/TaxonomyApp.js:254
+#: src-js/shared/components/TaxonomyApp.js:465
+msgid "Slug"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:115
+#: src-js/editor/InlineLinkUI.js:597
+msgid "Create & Insert"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:116
+#: src-js/editor/InlineLinkUI.js:596
+msgid "Creating…"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:117
+#: src-js/editor/InlineLinkUI.js:378
+msgid "Could not create link. The slug may already be in use."
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:118
+#: src-js/shared/components/ChipPicker.js:161
+msgid "No matches."
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:120
+msgid "Edit Pretty Link"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:121
+msgid "Remove link"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:122
+msgid "Link text"
+msgstr ""
+
+#: src/Editor/ClassicEditor.php:123
+msgid "Leave empty to use the link name."
+msgstr ""
+
+#: src/Integrations/CookieYes.php:219
+msgid "Pretty Links sets this cookie to assign each visitor a stable identifier so the plugin can count distinct visitors across clicks."
+msgstr ""
+
+#: src/Integrations/CookieYes.php:230
+msgid "Pretty Links sets one of these cookies (one per link, with the link ID appended to the name) the first time a visitor clicks each link, so the unique-click counter is not inflated by repeat visits."
+msgstr ""
+
+#: src/Integrations/CookieYes.php:241
+msgid "Pretty Links sets one of these short-lived cookies on every redirect to suppress duplicate click rows from rapid browser retries, prefetch, or accidental double-clicks."
+msgstr ""
+
+#. translators: %s: licensed edition name.
+#: src/Licensing/EditionMismatch.php:122
+msgid "Install %s now."
+msgstr ""
+
+#: src/Licensing/EditionMismatch.php:130
+msgid "Pretty Links edition mismatch."
+msgstr ""
+
+#. translators: %1$s: installed edition name, %2$s: licensed edition name
+#: src/Licensing/EditionMismatch.php:134
+msgid "You have %1$s installed, but your license is for %2$s."
+msgstr ""
+
+#. translators: %1$s: installed edition name, %2$s: licensed edition name
+#: src/Licensing/EditionMismatch.php:173
+msgid "Heads up: you have %1$s installed but your license is for %2$s. Install the correct edition to resume updates."
+msgstr ""
+
+#: src/Licensing/InstallLicensedEdition.php:37
+msgid "No licensed edition download URL is available. Try refreshing your license."
+msgstr ""
+
+#: src/Licensing/InstallLicensedEdition.php:71
+msgid "The installer failed with no error message."
+msgstr ""
+
+#: src/Licensing/InstallLicensedEdition.php:81
+msgid "Installed successfully, but the plugin file could not be located."
+msgstr ""
+
+#: src/Licensing/LicenseManager.php:197
+msgid "License key deactivated"
+msgstr ""
+
+#. translators: %s: error message returned by the mothership.
+#: src/Licensing/LicenseManager.php:277
+msgid "Error with PRETTYLINK_LICENSE_KEY: %s"
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:44
+msgid "Beginner"
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:49
+msgid "Marketer"
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:57
+msgid "Executive"
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:69
+msgid "Pro Blogger"
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:74
+msgid "Pro Developer"
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:91
+msgid "Publish a hosted mini-site of your best pretty links — one URL for every platform that only allows a single link."
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:97
+msgid "REST API keys, webhook dispatch, and programmatic link management for developers building on top of Pretty Links."
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:103
+msgid "Insert rich product cards (image, price, buy button) that auto-update from your affiliate feeds and track clicks as pretty links."
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:109
+msgid "Show a branded interstitial (heading, media, CTAs, optional countdown) before forwarding visitors — affiliate disclosures, choose-your-own-destination, video gates."
+msgstr ""
+
+#: src/Licensing/PlanCatalog.php:115
+msgid "Build Google Analytics UTM parameters (source, medium, campaign, content, term, ID) right on the link form — no manual URL editing."
+msgstr ""
+
+#: src/Onboarding/views/category.php:20
+msgid "Categorize your link"
+msgstr ""
+
+#: src/Onboarding/views/category.php:35
+msgid "Skip & Continue"
+msgstr ""
+
+#: src/Onboarding/views/category.php:45
+msgid "You didn't create a link in the previous step — skip this and add categories later from the Pretty Links dashboard."
+msgstr ""
+
+#: src/Onboarding/views/category.php:49
+#: src/Onboarding/views/features.php:117
+#: src/Onboarding/views/finish.php:102
+#: src/Onboarding/views/license.php:58
+#: src/Onboarding/views/paylinks.php:68
+#: src-js/options/index.js:353
+msgid "Continue"
+msgstr ""
+
+#: src/Onboarding/views/category.php:58
+msgid "Categories keep things tidy as your link collection grows. Create a new one for this link or pick an existing category."
+msgstr ""
+
+#. translators: %s: category name
+#: src/Onboarding/views/category.php:66
+msgid "Link assigned to: %s"
+msgstr ""
+
+#: src/Onboarding/views/category.php:74
+msgid "New category name"
+msgstr ""
+
+#: src/Onboarding/views/category.php:75
+msgid "e.g. Affiliate Products"
+msgstr ""
+
+#: src/Onboarding/views/category.php:80
+msgid "…or pick one"
+msgstr ""
+
+#: src/Onboarding/views/category.php:82
+msgid "— Select —"
+msgstr ""
+
+#: src/Onboarding/views/category.php:95
+msgid "Create & Assign"
+msgstr ""
+
+#: src/Onboarding/views/category.php:99
+msgid "Assign Selected"
+msgstr ""
+
+#: src/Onboarding/views/category.php:103
+msgid "Skip"
+msgstr ""
+
+#: src/Onboarding/views/complete.php:15
+msgid "You're all set"
+msgstr ""
+
+#: src/Onboarding/views/complete.php:16
+msgid "Pretty Links is ready to use. Head to the dashboard to see your links and click reports."
+msgstr ""
+
+#: src/Onboarding/views/complete.php:19
+msgid "Create more links under Pretty Links → Add New."
+msgstr ""
+
+#: src/Onboarding/views/complete.php:20
+msgid "Review tracking and retention settings under Pretty Links → Options."
+msgstr ""
+
+#: src/Onboarding/views/complete.php:21
+msgid "Install the Pretty Link block in Gutenberg to drop links into posts."
+msgstr ""
+
+#: src/Onboarding/views/complete.php:24
+msgid "Finish Setup"
+msgstr ""
+
+#: src/Onboarding/views/features.php:22
+msgid "Choose your features"
+msgstr ""
+
+#: src/Onboarding/views/features.php:23
+msgid "Pick the features you want on. You can change any of these later under Pretty Links → Settings."
+msgstr ""
+
+#: src/Onboarding/views/features.php:27
+msgid "MonsterInsights installed and activated."
+msgstr ""
+
+#: src/Onboarding/views/features.php:31
+msgid "We couldn't install MonsterInsights automatically. Install it manually from Plugins → Add New."
+msgstr ""
+
+#: src/Onboarding/views/features.php:51
+#: src/Onboarding/Wizard.php:858
+msgid "Link Tracking"
+msgstr ""
+
+#: src/Onboarding/views/features.php:52
+msgid "Track click counts and unique visitors on every link."
+msgstr ""
+
+#: src/Onboarding/views/features.php:53
+msgid "Every click on a Pretty Link is recorded with the visitor's IP, user agent, referrer, and timestamp so you can see exactly which campaigns are earning attention. Leave this on if you want the Reports page to show anything — without it, click counts stay at zero. Tracking runs on your own server, so data never leaves the site."
+msgstr ""
+
+#: src/Onboarding/views/features.php:62
+#: src/Onboarding/Wizard.php:861
+msgid "No Follow"
+msgstr ""
+
+#: src/Onboarding/views/features.php:63
+msgid "Add rel=\"nofollow\" to every link by default."
+msgstr ""
+
+#: src/Onboarding/views/features.php:64
+msgid "Tells search engines not to pass your site's ranking authority to the destination. Essential for affiliate, sponsored, or user-generated links so Google doesn't treat them as editorial endorsements — leaving affiliate links \"followed\" can trigger manual penalties. You can still override this per-link for trusted partners."
+msgstr ""
+
+#: src/Onboarding/views/features.php:74
+msgid "Add rel=\"sponsored\" to every link by default."
+msgstr ""
+
+#: src/Onboarding/views/features.php:75
+msgid "The modern, Google-blessed signal for paid or affiliate relationships (introduced 2019). It communicates intent more precisely than nofollow alone and is what Google actually prefers on monetised links. Most affiliate marketers enable both — nofollow protects ranking authority, sponsored declares the commercial relationship."
+msgstr ""
+
+#: src/Onboarding/views/features.php:96
+msgid "MonsterInsights"
+msgstr ""
+
+#: src/Onboarding/views/features.php:97
+msgid "Install the free Google Analytics plugin for deeper traffic insights alongside Pretty Links stats."
+msgstr ""
+
+#: src/Onboarding/views/features.php:98
+msgid "Pretty Links counts your clicks, but MonsterInsights shows what visitors do next — which pages they read, how long they stay, whether they convert. Together you get both sides of the funnel: which links pull traffic in, and what that traffic actually does on your site."
+msgstr ""
+
+#: src/Onboarding/views/finish.php:23
+msgid "Welcome back!"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:24
+msgid "We finished setting up the features you selected."
+msgstr ""
+
+#: src/Onboarding/views/finish.php:29
+msgid "Some add-ons couldn't be installed automatically. You can install them manually from Pretty Links → Add-ons."
+msgstr ""
+
+#. translators: %s: Pretty Links plan label (e.g. "Pro").
+#: src/Onboarding/views/finish.php:39
+msgid "Some of the features you selected need Pretty Links %s. Upgrade to finish your setup — we'll bring you right back here and turn them on for you."
+msgstr ""
+
+#: src/Onboarding/views/finish.php:50
+msgid "Here's what's ready"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:55
+msgid "Your first Pretty Link"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:59
+msgid "No link created yet — you can add one from Pretty Links → Add New."
+msgstr ""
+
+#: src/Onboarding/views/finish.php:64
+#: src/Onboarding/Wizard.php:469
+msgid "Category"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:71
+#: src/Onboarding/Wizard.php:466
+#: src-js/options/index.js:38
+msgid "License"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:72
+msgid "Activated"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:78
+msgid "Stripe"
+msgstr ""
+
+#. translators: %s: Stripe account name
+#: src/Onboarding/views/finish.php:84
+msgid "Connected (%s)"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:88
+msgid "Connected"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:96
+msgid "Features enabled"
+msgstr ""
+
+#: src/Onboarding/views/first-link.php:17
+msgid "Create your first Pretty Link"
+msgstr ""
+
+#: src/Onboarding/views/first-link.php:18
+msgid "Paste any URL and we'll create a short, branded link on your domain. You can change or delete it at any time."
+msgstr ""
+
+#. translators: %s: pretty link URL
+#: src/Onboarding/views/first-link.php:26
+msgid "Your first link is ready: %s"
+msgstr ""
+
+#: src/Onboarding/views/first-link.php:39
+msgid "Name (optional)"
+msgstr ""
+
+#: src/Onboarding/views/first-link.php:46
+msgid "Create Link"
+msgstr ""
+
+#: src/Onboarding/views/first-link.php:49
+#: src/Onboarding/views/license.php:62
+#: src/Onboarding/views/paylinks.php:68
+#: src/Onboarding/views/welcome.php:29
+msgid "Skip for now"
+msgstr ""
+
+#: src/Onboarding/views/license.php:19
+#: src-js/options/LicenseSection.js:124
+msgid "Activate your license"
+msgstr ""
+
+#: src/Onboarding/views/license.php:23
+#: src-js/options/LicenseSection.js:83
+msgid "License activated."
+msgstr ""
+
+#. translators: %s: product name
+#: src/Onboarding/views/license.php:34
+msgid "Plan: %s"
+msgstr ""
+
+#: src/Onboarding/views/license.php:42
+msgid "Enter your Pretty Links Pro license key to unlock automatic updates and Pro features. This step is optional — you can activate a key later under Pretty Links → Settings."
+msgstr ""
+
+#: src/Onboarding/views/license.php:46
+msgid "Activation failed. Double-check the key and try again."
+msgstr ""
+
+#: src/Onboarding/views/license.php:50
+#: src-js/options/LicenseSection.js:174
+msgid "License Key"
+msgstr ""
+
+#: src/Onboarding/views/license.php:58
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:765
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:788
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:80
+#: src-js/addons/index.js:51
+msgid "Activate"
+msgstr ""
+
+#: src/Onboarding/views/paylinks.php:21
+msgid "Set up PrettyPay™ Links"
+msgstr ""
+
+#: src/Onboarding/views/paylinks.php:22
+msgid "PrettyPay™ Links turn any Pretty Link into a Stripe checkout — perfect for selling digital goods, donations, or one-off charges without a full store."
+msgstr ""
+
+#: src/Onboarding/views/paylinks.php:27
+msgid "Start accepting payments right away. A small platform fee applies per sale; Stripe's own processing fees also apply."
+msgstr ""
+
+#. translators: %s: Stripe account name
+#: src/Onboarding/views/paylinks.php:44
+msgid "Stripe connected (%s). You can create PrettyPay™ Links right after setup."
+msgstr ""
+
+#: src/Onboarding/views/paylinks.php:48
+msgid "Stripe connected. You can create PrettyPay™ Links right after setup."
+msgstr ""
+
+#: src/Onboarding/views/paylinks.php:56
+msgid "Connecting Stripe uses a secure Caseproof handoff — you'll enroll your account, then land on Stripe to finish the connection."
+msgstr ""
+
+#: src/Onboarding/views/paylinks.php:64
+#: src-js/options/PaymentsSection.js:404
+#: src-js/shared/components/LinksApp.js:970
+msgid "Connect Stripe"
+msgstr ""
+
+#: src/Onboarding/views/welcome.php:17
+msgid "This setup walks you through activating your license, picking the features you want, creating your first Pretty Link, and organizing it into a category."
+msgstr ""
+
+#: src/Onboarding/views/welcome.php:20
+msgid "You can skip any step and revisit it later from the Pretty Links menu."
+msgstr ""
+
+#: src/Onboarding/views/welcome.php:24
+msgid "Get Started"
+msgstr ""
+
+#. translators: %1$s: open link, %2$s: close link
+#: src/Onboarding/WhatsNew.php:39
+msgid "Pretty Links 4.0 is here — rebuilt admin, faster redirects, and new click analytics. %1$sSee what's new%2$s."
+msgstr ""
+
+#: src/Onboarding/Wizard.php:467
+msgid "Features"
+msgstr ""
+
+#: src/Onboarding/Wizard.php:470
+#: src-js/options/PaymentsSection.js:195
+#: src-js/shared/components/PayLinksEmptyState.js:64
+msgid "PrettyPay™"
+msgstr ""
+
+#: src/Onboarding/Wizard.php:471
+msgid "Finish"
+msgstr ""
+
+#: src/Onboarding/Wizard.php:472
+msgid "Complete"
+msgstr ""
+
+#: src/Onboarding/Wizard.php:524
+#: src/Onboarding/Wizard.php:771
+msgid "Back"
+msgstr ""
+
+#: src/Onboarding/Wizard.php:824
+msgid "Recommended"
+msgstr ""
+
+#: src/Onboarding/Wizard.php:830
+#: src-js/shared/components/InfoTooltip.js:27
+msgid "More information"
+msgstr ""
+
+#. translators: %1$s opens link tag, %2$s closes link tag
+#: src/Onboarding/Wizard.php:1229
+msgid "Welcome back! It looks like you didn't finish the Pretty Links setup. %1$sPick up where you left off%2$s."
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:206
+msgid "Stripe is not connected."
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:646
+msgid "A product name is required"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:649
+msgid "A product price is required"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:652
+msgid "The product price must be numeric and greater than zero"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:655
+msgid "A product currency is required"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:658
+msgid "The given currency is not supported"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:661
+msgid "The given product type is not supported"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:665
+msgid "The given billing period is not supported"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:669
+msgid "The given custom billing interval count must be numeric and greater than zero"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:672
+msgid "The given custom billing interval is not supported"
+msgstr ""
+
+#: src/Rest/Controllers/StripeController.php:677
+msgid "The given tax behavior is not supported"
+msgstr ""
+
+#: src/Stripe/Client.php:76
+msgid "HTTP error"
+msgstr ""
+
+#: src/Stripe/Client.php:83
+msgid "Invalid response from the remote server"
+msgstr ""
+
+#: src/Stripe/ConnectAjax.php:50
+msgid "Sorry, updating your credentials failed. (security)"
+msgstr ""
+
+#: src/Stripe/ConnectAjax.php:58
+msgid "Sorry, updating your credentials failed. (pmt)"
+msgstr ""
+
+#: src/Stripe/ConnectAjax.php:62
+#: src/Stripe/ConnectAjax.php:104
+#: src/Stripe/ConnectAjax.php:138
+msgid "Sorry, you don't have permission to do this."
+msgstr ""
+
+#: src/Stripe/ConnectAjax.php:101
+#: src/Stripe/ConnectAjax.php:118
+msgid "Sorry, the refresh failed."
+msgstr ""
+
+#: src/Stripe/ConnectAjax.php:135
+#: src/Stripe/ConnectAjax.php:142
+msgid "Sorry, the disconnect failed."
+msgstr ""
+
+#: src/Stripe/ConnectAjax.php:205
+msgid "Sorry, updating your credentials failed."
+msgstr ""
+
+#: src/Stripe/CustomerPortal.php:74
+#: src-js/options/PaymentsSection.js:262
+msgid "Configure Customer Portal"
+msgstr ""
+
+#: src/Stripe/CustomerPortal.php:79
+msgid "The Customer Portal is not yet configured."
+msgstr ""
+
+#: src/Stripe/data/countries.php:10
+msgid "Afghanistan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:11
+msgid "&#197;land Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:12
+msgid "Albania"
+msgstr ""
+
+#: src/Stripe/data/countries.php:13
+msgid "Algeria"
+msgstr ""
+
+#: src/Stripe/data/countries.php:14
+msgid "Andorra"
+msgstr ""
+
+#: src/Stripe/data/countries.php:15
+msgid "Angola"
+msgstr ""
+
+#: src/Stripe/data/countries.php:16
+msgid "Anguilla"
+msgstr ""
+
+#: src/Stripe/data/countries.php:17
+msgid "Antarctica"
+msgstr ""
+
+#: src/Stripe/data/countries.php:18
+msgid "Antigua and Barbuda"
+msgstr ""
+
+#: src/Stripe/data/countries.php:19
+msgid "Argentina"
+msgstr ""
+
+#: src/Stripe/data/countries.php:20
+msgid "Armenia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:21
+msgid "Aruba"
+msgstr ""
+
+#: src/Stripe/data/countries.php:22
+msgid "Australia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:23
+msgid "Austria"
+msgstr ""
+
+#: src/Stripe/data/countries.php:24
+msgid "Azerbaijan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:25
+msgid "Bahamas"
+msgstr ""
+
+#: src/Stripe/data/countries.php:26
+msgid "Bahrain"
+msgstr ""
+
+#: src/Stripe/data/countries.php:27
+msgid "Bangladesh"
+msgstr ""
+
+#: src/Stripe/data/countries.php:28
+msgid "Barbados"
+msgstr ""
+
+#: src/Stripe/data/countries.php:29
+msgid "Belarus"
+msgstr ""
+
+#: src/Stripe/data/countries.php:30
+msgid "Belgium"
+msgstr ""
+
+#: src/Stripe/data/countries.php:31
+msgid "Belau"
+msgstr ""
+
+#: src/Stripe/data/countries.php:32
+msgid "Belize"
+msgstr ""
+
+#: src/Stripe/data/countries.php:33
+msgid "Benin"
+msgstr ""
+
+#: src/Stripe/data/countries.php:34
+msgid "Bermuda"
+msgstr ""
+
+#: src/Stripe/data/countries.php:35
+msgid "Bhutan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:36
+msgid "Bolivia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:37
+msgid "Bonaire, Saint Eustatius and Saba"
+msgstr ""
+
+#: src/Stripe/data/countries.php:38
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: src/Stripe/data/countries.php:39
+msgid "Botswana"
+msgstr ""
+
+#: src/Stripe/data/countries.php:40
+msgid "Bouvet Island"
+msgstr ""
+
+#: src/Stripe/data/countries.php:41
+msgid "Brazil"
+msgstr ""
+
+#: src/Stripe/data/countries.php:42
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: src/Stripe/data/countries.php:43
+msgid "British Virgin Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:44
+msgid "Brunei"
+msgstr ""
+
+#: src/Stripe/data/countries.php:45
+msgid "Bulgaria"
+msgstr ""
+
+#: src/Stripe/data/countries.php:46
+msgid "Burkina Faso"
+msgstr ""
+
+#: src/Stripe/data/countries.php:47
+msgid "Burundi"
+msgstr ""
+
+#: src/Stripe/data/countries.php:48
+msgid "Cambodia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:49
+msgid "Cameroon"
+msgstr ""
+
+#: src/Stripe/data/countries.php:50
+msgid "Canada"
+msgstr ""
+
+#: src/Stripe/data/countries.php:51
+msgid "Cape Verde"
+msgstr ""
+
+#: src/Stripe/data/countries.php:52
+msgid "Cayman Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:53
+msgid "Central African Republic"
+msgstr ""
+
+#: src/Stripe/data/countries.php:54
+msgid "Chad"
+msgstr ""
+
+#: src/Stripe/data/countries.php:55
+msgid "Chile"
+msgstr ""
+
+#: src/Stripe/data/countries.php:56
+msgid "China"
+msgstr ""
+
+#: src/Stripe/data/countries.php:57
+msgid "Christmas Island"
+msgstr ""
+
+#: src/Stripe/data/countries.php:58
+msgid "Cocos (Keeling) Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:59
+msgid "Colombia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:60
+msgid "Comoros"
+msgstr ""
+
+#: src/Stripe/data/countries.php:61
+msgid "Congo (Brazzaville)"
+msgstr ""
+
+#: src/Stripe/data/countries.php:62
+msgid "Congo (Kinshasa)"
+msgstr ""
+
+#: src/Stripe/data/countries.php:63
+msgid "Cook Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:64
+msgid "Costa Rica"
+msgstr ""
+
+#: src/Stripe/data/countries.php:65
+msgid "Croatia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:66
+msgid "Cuba"
+msgstr ""
+
+#: src/Stripe/data/countries.php:67
+msgid "Cura&Ccedil;ao"
+msgstr ""
+
+#: src/Stripe/data/countries.php:68
+msgid "Cyprus"
+msgstr ""
+
+#: src/Stripe/data/countries.php:69
+msgid "Czech Republic"
+msgstr ""
+
+#: src/Stripe/data/countries.php:70
+msgid "Denmark"
+msgstr ""
+
+#: src/Stripe/data/countries.php:71
+msgid "Djibouti"
+msgstr ""
+
+#: src/Stripe/data/countries.php:72
+msgid "Dominica"
+msgstr ""
+
+#: src/Stripe/data/countries.php:73
+msgid "Dominican Republic"
+msgstr ""
+
+#: src/Stripe/data/countries.php:74
+msgid "Ecuador"
+msgstr ""
+
+#: src/Stripe/data/countries.php:75
+msgid "Egypt"
+msgstr ""
+
+#: src/Stripe/data/countries.php:76
+msgid "El Salvador"
+msgstr ""
+
+#: src/Stripe/data/countries.php:77
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: src/Stripe/data/countries.php:78
+msgid "Eritrea"
+msgstr ""
+
+#: src/Stripe/data/countries.php:79
+msgid "Estonia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:80
+msgid "Ethiopia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:81
+msgid "Falkland Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:82
+msgid "Faroe Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:83
+msgid "Fiji"
+msgstr ""
+
+#: src/Stripe/data/countries.php:84
+msgid "Finland"
+msgstr ""
+
+#: src/Stripe/data/countries.php:85
+msgid "France"
+msgstr ""
+
+#: src/Stripe/data/countries.php:86
+msgid "French Guiana"
+msgstr ""
+
+#: src/Stripe/data/countries.php:87
+msgid "French Polynesia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:88
+msgid "French Southern Territories"
+msgstr ""
+
+#: src/Stripe/data/countries.php:89
+msgid "Gabon"
+msgstr ""
+
+#: src/Stripe/data/countries.php:90
+msgid "Gambia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:91
+msgid "Georgia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:92
+msgid "Germany"
+msgstr ""
+
+#: src/Stripe/data/countries.php:93
+msgid "Ghana"
+msgstr ""
+
+#: src/Stripe/data/countries.php:94
+msgid "Gibraltar"
+msgstr ""
+
+#: src/Stripe/data/countries.php:95
+msgid "Greece"
+msgstr ""
+
+#: src/Stripe/data/countries.php:96
+msgid "Greenland"
+msgstr ""
+
+#: src/Stripe/data/countries.php:97
+msgid "Grenada"
+msgstr ""
+
+#: src/Stripe/data/countries.php:98
+msgid "Guadeloupe"
+msgstr ""
+
+#: src/Stripe/data/countries.php:99
+msgid "Guatemala"
+msgstr ""
+
+#: src/Stripe/data/countries.php:100
+msgid "Guernsey"
+msgstr ""
+
+#: src/Stripe/data/countries.php:101
+msgid "Guinea"
+msgstr ""
+
+#: src/Stripe/data/countries.php:102
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: src/Stripe/data/countries.php:103
+msgid "Guyana"
+msgstr ""
+
+#: src/Stripe/data/countries.php:104
+msgid "Haiti"
+msgstr ""
+
+#: src/Stripe/data/countries.php:105
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:106
+msgid "Honduras"
+msgstr ""
+
+#: src/Stripe/data/countries.php:107
+msgid "Hong Kong"
+msgstr ""
+
+#: src/Stripe/data/countries.php:108
+msgid "Hungary"
+msgstr ""
+
+#: src/Stripe/data/countries.php:109
+msgid "Iceland"
+msgstr ""
+
+#: src/Stripe/data/countries.php:110
+msgid "India"
+msgstr ""
+
+#: src/Stripe/data/countries.php:111
+msgid "Indonesia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:112
+msgid "Iran"
+msgstr ""
+
+#: src/Stripe/data/countries.php:113
+msgid "Iraq"
+msgstr ""
+
+#: src/Stripe/data/countries.php:114
+msgid "Republic of Ireland"
+msgstr ""
+
+#: src/Stripe/data/countries.php:115
+msgid "Isle of Man"
+msgstr ""
+
+#: src/Stripe/data/countries.php:116
+msgid "Israel"
+msgstr ""
+
+#: src/Stripe/data/countries.php:117
+msgid "Italy"
+msgstr ""
+
+#: src/Stripe/data/countries.php:118
+msgid "Ivory Coast"
+msgstr ""
+
+#: src/Stripe/data/countries.php:119
+msgid "Jamaica"
+msgstr ""
+
+#: src/Stripe/data/countries.php:120
+msgid "Japan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:121
+msgid "Jersey"
+msgstr ""
+
+#: src/Stripe/data/countries.php:122
+msgid "Jordan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:123
+msgid "Kazakhstan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:124
+msgid "Kenya"
+msgstr ""
+
+#: src/Stripe/data/countries.php:125
+msgid "Kiribati"
+msgstr ""
+
+#: src/Stripe/data/countries.php:126
+msgid "Kuwait"
+msgstr ""
+
+#: src/Stripe/data/countries.php:127
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:128
+msgid "Laos"
+msgstr ""
+
+#: src/Stripe/data/countries.php:129
+msgid "Latvia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:130
+msgid "Lebanon"
+msgstr ""
+
+#: src/Stripe/data/countries.php:131
+msgid "Lesotho"
+msgstr ""
+
+#: src/Stripe/data/countries.php:132
+msgid "Liberia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:133
+msgid "Libya"
+msgstr ""
+
+#: src/Stripe/data/countries.php:134
+msgid "Liechtenstein"
+msgstr ""
+
+#: src/Stripe/data/countries.php:135
+msgid "Lithuania"
+msgstr ""
+
+#: src/Stripe/data/countries.php:136
+msgid "Luxembourg"
+msgstr ""
+
+#: src/Stripe/data/countries.php:137
+msgid "Macao S.A.R., China"
+msgstr ""
+
+#: src/Stripe/data/countries.php:138
+msgid "Macedonia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:139
+msgid "Madagascar"
+msgstr ""
+
+#: src/Stripe/data/countries.php:140
+msgid "Malawi"
+msgstr ""
+
+#: src/Stripe/data/countries.php:141
+msgid "Malaysia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:142
+msgid "Maldives"
+msgstr ""
+
+#: src/Stripe/data/countries.php:143
+msgid "Mali"
+msgstr ""
+
+#: src/Stripe/data/countries.php:144
+msgid "Malta"
+msgstr ""
+
+#: src/Stripe/data/countries.php:145
+msgid "Marshall Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:146
+msgid "Martinique"
+msgstr ""
+
+#: src/Stripe/data/countries.php:147
+msgid "Mauritania"
+msgstr ""
+
+#: src/Stripe/data/countries.php:148
+msgid "Mauritius"
+msgstr ""
+
+#: src/Stripe/data/countries.php:149
+msgid "Mayotte"
+msgstr ""
+
+#: src/Stripe/data/countries.php:150
+msgid "Mexico"
+msgstr ""
+
+#: src/Stripe/data/countries.php:151
+msgid "Micronesia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:152
+msgid "Moldova"
+msgstr ""
+
+#: src/Stripe/data/countries.php:153
+msgid "Monaco"
+msgstr ""
+
+#: src/Stripe/data/countries.php:154
+msgid "Mongolia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:155
+msgid "Montenegro"
+msgstr ""
+
+#: src/Stripe/data/countries.php:156
+msgid "Montserrat"
+msgstr ""
+
+#: src/Stripe/data/countries.php:157
+msgid "Morocco"
+msgstr ""
+
+#: src/Stripe/data/countries.php:158
+msgid "Mozambique"
+msgstr ""
+
+#: src/Stripe/data/countries.php:159
+msgid "Myanmar"
+msgstr ""
+
+#: src/Stripe/data/countries.php:160
+msgid "Namibia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:161
+msgid "Nauru"
+msgstr ""
+
+#: src/Stripe/data/countries.php:162
+msgid "Nepal"
+msgstr ""
+
+#: src/Stripe/data/countries.php:163
+msgid "Netherlands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:164
+msgid "Netherlands Antilles"
+msgstr ""
+
+#: src/Stripe/data/countries.php:165
+msgid "New Caledonia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:166
+msgid "New Zealand"
+msgstr ""
+
+#: src/Stripe/data/countries.php:167
+msgid "Nicaragua"
+msgstr ""
+
+#: src/Stripe/data/countries.php:168
+msgid "Niger"
+msgstr ""
+
+#: src/Stripe/data/countries.php:169
+msgid "Nigeria"
+msgstr ""
+
+#: src/Stripe/data/countries.php:170
+msgid "Niue"
+msgstr ""
+
+#: src/Stripe/data/countries.php:171
+msgid "Norfolk Island"
+msgstr ""
+
+#: src/Stripe/data/countries.php:172
+msgid "North Korea"
+msgstr ""
+
+#: src/Stripe/data/countries.php:173
+msgid "Norway"
+msgstr ""
+
+#: src/Stripe/data/countries.php:174
+msgid "Oman"
+msgstr ""
+
+#: src/Stripe/data/countries.php:175
+msgid "Pakistan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:176
+msgid "Palestinian Territory"
+msgstr ""
+
+#: src/Stripe/data/countries.php:177
+msgid "Panama"
+msgstr ""
+
+#: src/Stripe/data/countries.php:178
+msgid "Papua New Guinea"
+msgstr ""
+
+#: src/Stripe/data/countries.php:179
+msgid "Paraguay"
+msgstr ""
+
+#: src/Stripe/data/countries.php:180
+msgid "Peru"
+msgstr ""
+
+#: src/Stripe/data/countries.php:181
+msgid "Philippines"
+msgstr ""
+
+#: src/Stripe/data/countries.php:182
+msgid "Pitcairn"
+msgstr ""
+
+#: src/Stripe/data/countries.php:183
+msgid "Poland"
+msgstr ""
+
+#: src/Stripe/data/countries.php:184
+msgid "Portugal"
+msgstr ""
+
+#: src/Stripe/data/countries.php:185
+msgid "Puerto Rico"
+msgstr ""
+
+#: src/Stripe/data/countries.php:186
+msgid "Qatar"
+msgstr ""
+
+#: src/Stripe/data/countries.php:187
+msgid "Reunion"
+msgstr ""
+
+#: src/Stripe/data/countries.php:188
+msgid "Romania"
+msgstr ""
+
+#: src/Stripe/data/countries.php:189
+msgid "Russia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:190
+msgid "Rwanda"
+msgstr ""
+
+#: src/Stripe/data/countries.php:191
+msgid "Saint Barth&eacute;lemy"
+msgstr ""
+
+#: src/Stripe/data/countries.php:192
+msgid "Saint Helena"
+msgstr ""
+
+#: src/Stripe/data/countries.php:193
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#: src/Stripe/data/countries.php:194
+msgid "Saint Lucia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:195
+msgid "Saint Martin (French part)"
+msgstr ""
+
+#: src/Stripe/data/countries.php:196
+msgid "Saint Martin (Dutch part)"
+msgstr ""
+
+#: src/Stripe/data/countries.php:197
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+#: src/Stripe/data/countries.php:198
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#: src/Stripe/data/countries.php:199
+msgid "San Marino"
+msgstr ""
+
+#: src/Stripe/data/countries.php:200
+msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe"
+msgstr ""
+
+#: src/Stripe/data/countries.php:201
+msgid "Saudi Arabia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:202
+msgid "Senegal"
+msgstr ""
+
+#: src/Stripe/data/countries.php:203
+msgid "Serbia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:204
+msgid "Seychelles"
+msgstr ""
+
+#: src/Stripe/data/countries.php:205
+msgid "Sierra Leone"
+msgstr ""
+
+#: src/Stripe/data/countries.php:206
+msgid "Singapore"
+msgstr ""
+
+#: src/Stripe/data/countries.php:207
+msgid "Slovakia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:208
+msgid "Slovenia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:209
+msgid "Solomon Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:210
+msgid "Somalia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:211
+msgid "South Africa"
+msgstr ""
+
+#: src/Stripe/data/countries.php:212
+msgid "South Georgia/Sandwich Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:213
+msgid "South Korea"
+msgstr ""
+
+#: src/Stripe/data/countries.php:214
+msgid "South Sudan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:215
+msgid "Spain"
+msgstr ""
+
+#: src/Stripe/data/countries.php:216
+msgid "Sri Lanka"
+msgstr ""
+
+#: src/Stripe/data/countries.php:217
+msgid "Sudan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:218
+msgid "Suriname"
+msgstr ""
+
+#: src/Stripe/data/countries.php:219
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#: src/Stripe/data/countries.php:220
+msgid "Swaziland"
+msgstr ""
+
+#: src/Stripe/data/countries.php:221
+msgid "Sweden"
+msgstr ""
+
+#: src/Stripe/data/countries.php:222
+msgid "Switzerland"
+msgstr ""
+
+#: src/Stripe/data/countries.php:223
+msgid "Syria"
+msgstr ""
+
+#: src/Stripe/data/countries.php:224
+msgid "Taiwan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:225
+msgid "Tajikistan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:226
+msgid "Tanzania"
+msgstr ""
+
+#: src/Stripe/data/countries.php:227
+msgid "Thailand"
+msgstr ""
+
+#: src/Stripe/data/countries.php:228
+msgid "Timor-Leste"
+msgstr ""
+
+#: src/Stripe/data/countries.php:229
+msgid "Togo"
+msgstr ""
+
+#: src/Stripe/data/countries.php:230
+msgid "Tokelau"
+msgstr ""
+
+#: src/Stripe/data/countries.php:231
+msgid "Tonga"
+msgstr ""
+
+#: src/Stripe/data/countries.php:232
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: src/Stripe/data/countries.php:233
+msgid "Tunisia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:234
+msgid "Turkey"
+msgstr ""
+
+#: src/Stripe/data/countries.php:235
+msgid "Turkmenistan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:236
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: src/Stripe/data/countries.php:237
+msgid "Tuvalu"
+msgstr ""
+
+#: src/Stripe/data/countries.php:238
+msgid "Uganda"
+msgstr ""
+
+#: src/Stripe/data/countries.php:239
+msgid "Ukraine"
+msgstr ""
+
+#: src/Stripe/data/countries.php:240
+msgid "United Arab Emirates"
+msgstr ""
+
+#: src/Stripe/data/countries.php:241
+msgid "United Kingdom (UK)"
+msgstr ""
+
+#: src/Stripe/data/countries.php:242
+msgid "United States"
+msgstr ""
+
+#: src/Stripe/data/countries.php:243
+msgid "Uruguay"
+msgstr ""
+
+#: src/Stripe/data/countries.php:244
+msgid "Uzbekistan"
+msgstr ""
+
+#: src/Stripe/data/countries.php:245
+msgid "Vanuatu"
+msgstr ""
+
+#: src/Stripe/data/countries.php:246
+msgid "Vatican"
+msgstr ""
+
+#: src/Stripe/data/countries.php:247
+msgid "Venezuela"
+msgstr ""
+
+#: src/Stripe/data/countries.php:248
+msgid "Vietnam"
+msgstr ""
+
+#: src/Stripe/data/countries.php:249
+msgid "Wallis and Futuna"
+msgstr ""
+
+#: src/Stripe/data/countries.php:250
+msgid "Western Sahara"
+msgstr ""
+
+#: src/Stripe/data/countries.php:251
+msgid "Western Samoa"
+msgstr ""
+
+#: src/Stripe/data/countries.php:252
+msgid "Yemen"
+msgstr ""
+
+#: src/Stripe/data/countries.php:253
+msgid "Zambia"
+msgstr ""
+
+#: src/Stripe/data/countries.php:254
+msgid "Zimbabwe"
+msgstr ""
+
+#: src/Stripe/InvoiceRenderer.php:175
+msgid "Thanks — your payment is complete."
+msgstr ""
+
+#: src/Stripe/InvoiceRenderer.php:176
+msgid "Your order is being processed."
+msgstr ""
+
+#: src/Stripe/InvoiceRenderer.php:182
+msgid "Order ID:"
+msgstr ""
+
+#: src/Stripe/InvoiceRenderer.php:199
+msgid "Subtotal"
+msgstr ""
+
+#: src/Stripe/InvoiceRenderer.php:201
+msgid "Discount"
+msgstr ""
+
+#: src/Stripe/InvoiceRenderer.php:204
+msgid "Tax"
+msgstr ""
+
+#: src/Stripe/InvoiceRenderer.php:206
+msgid "Total"
+msgstr ""
+
+#: src/Stripe/InvoiceRenderer.php:219
+msgid "Manage your subscription"
+msgstr ""
+
+#: src/Updates/InPluginMessage.php:80
+msgid "Heads up:"
+msgstr ""
+
+#. translators: %s: new major version, e.g. 5.0
+#: src/Updates/InPluginMessage.php:84
+msgid "This is a major update (%s). Back up your database before upgrading. See the changelog for breaking changes."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Models/Button.php:128
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:306
+msgid "Dismiss"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:124
+msgid "Invalid nonce."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:128
+msgid "You must log in to perform this action."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:132
+msgid "You are not allowed to perform this action."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:136
+msgid "Missing required parameter: id."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/Ajax.php:140
+msgid "Unknown error."
+msgstr ""
+
+#. Translators: %s unread notification count.
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:210
+msgid "%s unread notification"
+msgid_plural "%s unread notifications"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:307
+msgid "Dismiss All"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:308
+#: src-js/shared/components/LinksApp.js:34
+msgid "All"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:309
+msgid "Unread"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:310
+msgid "Inbox"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:311
+msgid "Close"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:312
+msgid "You are all caught up!"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:313
+msgid "ago"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Credentials.php:123
+msgid "Cannot store credentials in database; found in environment variables or constants."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:391
+msgid "Security check failed."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:400
+msgid "Bad request."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:412
+msgid "Add-on not found."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:437
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:509
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:565
+msgid "Invalid add-on type."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:446
+msgid "Sorry, you don't have the necessary permission to perform this action."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:469
+msgid "Plugin activated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:470
+msgid "Theme activated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:476
+msgid "The add-on could not be activated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:499
+msgid "Themes cannot be deactivated. Activate a new theme instead."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:518
+msgid "Sorry, you don't have permission to deactivate addons."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:532
+msgid "The add-on could not be deactivated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:540
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:72
+msgid "Plugin deactivated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:541
+#: src-js/addons/index.js:196
+msgid "Add-on deactivated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:574
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:589
+msgid "Sorry, you don't have permission to install addons."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:615
+msgid "Invalid add-on URL."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:626
+msgid "The add-on was not installed successfully."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:652
+msgid "Plugin installed and activated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:653
+msgid "Theme installed and activated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:661
+msgid "Plugin installed."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:662
+msgid "Theme installed."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:677
+msgid "Please enter your license key to access add-ons."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:698
+msgid "There was an issue connecting with the API."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:747
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:786
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:80
+#: src-js/addons/index.js:18
+#: src-js/options/LicenseSection.js:132
+msgid "Active"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:751
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:789
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:80
+#: src-js/addons/index.js:48
+msgid "Deactivate"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:754
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:790
+msgid "Switch Themes"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:759
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:80
+#: src-js/addons/index.js:22
+msgid "Not Installed"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:760
+#: src-js/addons/index.js:45
+msgid "Install Add-on"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:764
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:787
+#: src-js/addons/index.js:20
+msgid "Inactive"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:791
+msgid "Processing..."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:792
+msgid "Could not install theme. Please download and install manually."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:796
+msgid "Could not install plugin. Please download and install manually."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:347
+msgid "Plugin update is prevented in development environment to avoid accidental overwrites."
+msgstr ""
+
+#. Translators: %1$s license key, %2$s product name.
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:424
+msgid "The license key %1$s has expired. Please renew your license to continue using %2$s."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:432
+msgid "This issue could have been caused by a change in the license's status or the site may have been disabled from your account dashboard."
+msgstr ""
+
+#. Translators: %s product name.
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:457
+msgid "During a recent %s license status check an error was encountered."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:464
+msgid "Visit Account Dashboard"
+msgstr ""
+
+#. Translators: %1$s site name, %2$s product name.
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:490
+msgid "[WARNING] Error with your %1$s license for %2$s"
+msgstr ""
+
+#. Translators: %1$s product name, %2$s site name, %3$s site URL.
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:498
+msgid "A recent %1$s license status check on %2$s (%3$s) has encountered an error."
+msgstr ""
+
+#. Translators: %s account dashboard URL.
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:508
+msgid "Visit Account Dashboard: %s"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:604
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:631
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:658
+msgid "Insufficient permissions"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:610
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:637
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:664
+msgid "Invalid nonce"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:614
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:641
+msgid "License key and domain are required"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:668
+msgid "License status verified successfully"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:671
+msgid "License could not be verified"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:682
+msgid "Operation completed successfully"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:683
+msgid "An error occurred during the operation"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:788
+msgid "License activated successfully"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:820
+msgid "License deactivated successfully"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:998
+msgid "Insufficient permissions to install plugin"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1002
+msgid "Invalid download URL"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1017
+msgid "Plugin installation failed"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1020
+msgid "Plugin installed successfully"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1060
+msgid "License activated and plugin updated successfully"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/check-status-form.php:20
+msgid "Check License Status"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-form.php:19
+#: src-js/options/LicenseSection.js:198
+msgid "Activate License"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-form.php:19
+#: src-js/options/LicenseSection.js:167
+msgid "Deactivate License"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-form.php:31
+msgid "License Key: "
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:15
+msgid "Available Add-ons"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:19
+#: src-js/addons/index.js:224
+msgid "Refresh Add-ons"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:23
+#: src-js/addons/index.js:291
+msgid "Search add-ons"
+msgstr ""
+
+#. Translators: %s: add-on status label.
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:62
+msgid "Status: %s"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:89
+msgid "There were no Add-ons found for your License Key."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-resque/Cleaner.php:182
+msgid "Resque Jobs Cleanup"
+msgstr ""
+
+#. Translators: %s job class name.
+#: vendor-prefixed/caseproof/ground-level-resque/Models/Job.php:342
+msgid "Job class was not found for %s"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-resque/Models/Job.php:347
+msgid "Cannot fetch a job as instance of the base Job class. A job must be an instance of a subclass."
+msgstr ""
+
+#. Translators: %s job class name.
+#: vendor-prefixed/caseproof/ground-level-resque/Models/Job.php:362
+msgid "%s is not a valid job object."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-resque/Worker.php:178
+msgid "Resque Jobs Worker"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-resque/Worker.php:242
+msgid "No class was specified in the job config"
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:50
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:169
+msgid "Growth Tools"
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:80
+msgid "Installed"
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/App.php:80
+msgid "Install"
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:22
+msgid "Could not activate addon. Please check user permissions."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:31
+msgid "Addon activated."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:36
+msgid "Could not activate addon. Please activate from the Plugins page."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:41
+msgid "Could not activate addon. Please refresh page and try again."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:59
+msgid "Could not deactivate addon. Please check user permissions."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:64
+msgid "Could not deactivate the theme. Please deactivate from the theme page."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:74
+msgid "Could not deactivate the addon. Please deactivate from the Plugins page."
+msgstr ""
+
+#: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:97
+msgid "Could not install addon. Please check user permissions."
+msgstr ""
+
+#: src-js/add-new/index.js:81
+#: src-js/add-new/index.js:110
+msgid "Unable to load link."
+msgstr ""
+
+#: src-js/add-new/index.js:150
+msgid "Edit PrettyPay™ Link"
+msgstr ""
+
+#: src-js/add-new/index.js:151
+msgid "Add New PrettyPay™ Link"
+msgstr ""
+
+#: src-js/add-new/index.js:160
+msgid "Update the Stripe-backed PrettyPay™ Link and save your changes."
+msgstr ""
+
+#: src-js/add-new/index.js:164
+msgid "Accept Stripe payments before redirecting — set your products and checkout options below."
+msgstr ""
+
+#: src-js/add-new/index.js:170
+msgid "Update this link and save your changes."
+msgstr ""
+
+#: src-js/add-new/index.js:171
+msgid "Shorten a URL and start tracking clicks immediately."
+msgstr ""
+
+#: src-js/add-new/index.js:181
+#: src-js/add-new/index.js:264
+msgid "Back to links"
+msgstr ""
+
+#: src-js/add-new/index.js:204
+msgid "WordPress permalinks need updating."
+msgstr ""
+
+#. translators: %postname% is a literal WordPress permalink tag and must not be translated.
+#: src-js/add-new/index.js:212
+msgid "Pretty Links can’t create or serve short links while your site is set to the \"Plain\" permalink structure. Switch to \"Post name\" (/%postname%/) for the cleanest URLs — it’s the recommended setting."
+msgstr ""
+
+#: src-js/add-new/index.js:222
+msgid "Open permalink settings"
+msgstr ""
+
+#: src-js/add-new/index.js:261
+msgid "Link not found"
+msgstr ""
+
+#: src-js/add-new/index.js:278
+msgid "Link updated"
+msgstr ""
+
+#: src-js/add-new/index.js:279
+msgid "Link created"
+msgstr ""
+
+#: src-js/add-new/index.js:281
+msgid "Your changes are live — the pretty URL below reflects the latest settings."
+msgstr ""
+
+#: src-js/add-new/index.js:285
+msgid "Share this pretty link anywhere — clicks are now being tracked."
+msgstr ""
+
+#: src-js/add-new/index.js:314
+msgid "Copy pretty URL"
+msgstr ""
+
+#: src-js/add-new/index.js:332
+msgid "Continue editing"
+msgstr ""
+
+#: src-js/add-new/index.js:350
+msgid "Add another"
+msgstr ""
+
+#: src-js/add-new/index.js:362
+msgid "Visit link"
+msgstr ""
+
+#. translators: %s: link slug or name.
+#: src-js/add-new/index.js:375
+msgid "Editing: %s"
+msgstr ""
+
+#: src-js/add-new/index.js:378
+msgid "Link details"
+msgstr ""
+
+#: src-js/add-new/index.js:381
+msgid "Changes take effect immediately once you save."
+msgstr ""
+
+#: src-js/add-new/index.js:382
+msgid "Fill in the target, give it a memorable name, and click Create."
+msgstr ""
+
+#: src-js/add-new/index.js:405
+#: src-js/add-new/index.js:416
+msgid "Save changes"
+msgstr ""
+
+#: src-js/add-new/index.js:406
+msgid "Create PrettyPay™ Link"
+msgstr ""
+
+#: src-js/add-new/index.js:417
+msgid "Create link"
+msgstr ""
+
+#: src-js/addons/index.js:139
+msgid "Could not load add-ons."
+msgstr ""
+
+#: src-js/addons/index.js:177
+msgid "Something went wrong. Try again."
+msgstr ""
+
+#: src-js/addons/index.js:189
+msgid "Add-on activated."
+msgstr ""
+
+#: src-js/addons/index.js:203
+msgid "Add-on installed."
+msgstr ""
+
+#: src-js/addons/index.js:240
+msgid "No add-ons available right now."
+msgstr ""
+
+#: src-js/addons/index.js:241
+msgid "Activate your Pretty Links license on the Options page to unlock premium add-ons, or click Refresh Add-ons above to try again."
+msgstr ""
+
+#: src-js/addons/index.js:252
+msgid "Go to License"
+msgstr ""
+
+#: src-js/addons/index.js:278
+msgid "Extend Pretty Links with premium features."
+msgstr ""
+
+#: src-js/clicks/index.js:161
+msgid "Link"
+msgstr ""
+
+#: src-js/clicks/index.js:163
+msgid "IP"
+msgstr ""
+
+#: src-js/clicks/index.js:165
+msgid "Browser"
+msgstr ""
+
+#: src-js/clicks/index.js:167
+msgid "OS"
+msgstr ""
+
+#: src-js/clicks/index.js:169
+msgid "Device"
+msgstr ""
+
+#: src-js/clicks/index.js:171
+msgid "Country"
+msgstr ""
+
+#: src-js/clicks/index.js:173
+msgid "Visitor"
+msgstr ""
+
+#: src-js/clicks/index.js:175
+msgid "Timestamp"
+msgstr ""
+
+#: src-js/clicks/index.js:177
+msgid "Host"
+msgstr ""
+
+#: src-js/clicks/index.js:179
+msgid "URI"
+msgstr ""
+
+#: src-js/clicks/index.js:181
+msgid "Referrer"
+msgstr ""
+
+#: src-js/clicks/index.js:588
+msgid "Unable to load clicks."
+msgstr ""
+
+#: src-js/clicks/index.js:672
+#: src-js/options/ToolsSection.js:429
+msgid "Export cancelled."
+msgstr ""
+
+#: src-js/clicks/index.js:674
+msgid "No clicks to export."
+msgstr ""
+
+#. translators: %s: number of click rows exported.
+#: src-js/clicks/index.js:679
+msgid "Exported %s clicks"
+msgstr ""
+
+#: src-js/clicks/index.js:686
+msgid "Unable to export clicks."
+msgstr ""
+
+#. translators: %s: IP address.
+#: src-js/clicks/index.js:734
+msgid "Showing clicks from IP: %s"
+msgstr ""
+
+#. translators: %s: visitor unique id.
+#: src-js/clicks/index.js:741
+msgid "Showing clicks for visitor: %s"
+msgstr ""
+
+#: src-js/clicks/index.js:757
+msgid "No clicks match these filters."
+msgstr ""
+
+#: src-js/clicks/index.js:758
+msgid "Try widening the date range, clearing search, or removing the link filter."
+msgstr ""
+
+#: src-js/clicks/index.js:770
+msgid "Browse, filter, and export every recorded click."
+msgstr ""
+
+#: src-js/clicks/index.js:790
+#: src-js/shared/components/LinksApp.js:1024
+msgid "Columns"
+msgstr ""
+
+#: src-js/clicks/index.js:797
+#: src-js/shared/components/LinksApp.js:1031
+msgid "Show columns"
+msgstr ""
+
+#: src-js/clicks/index.js:828
+msgid "Exporting…"
+msgstr ""
+
+#: src-js/clicks/index.js:829
+msgid "Export CSV"
+msgstr ""
+
+#: src-js/clicks/index.js:840
+msgid "See breakdowns by country, device, and referrer — and route clicks based on them — with Pretty Links Pro."
+msgstr ""
+
+#. translators: %1$s processed clicks, %2$s total clicks.
+#: src-js/clicks/index.js:853
+msgid "Exported %1$s of %2$s clicks…"
+msgstr ""
+
+#: src-js/clicks/index.js:889
+msgid "Click history view"
+msgstr ""
+
+#: src-js/clicks/index.js:922
+msgid "Table"
+msgstr ""
+
+#: src-js/clicks/index.js:949
+#: src-js/clicks/index.js:960
+#: src-js/options/index.js:39
+#: src-js/shared/components/LinksApp.js:99
+msgid "Links"
+msgstr ""
+
+#: src-js/clicks/index.js:956
+msgid "Search links…"
+msgstr ""
+
+#: src-js/clicks/index.js:970
+#: src-js/shared/components/LinksApp.js:1083
+#: src-js/shared/components/LinksApp.js:1102
+#: src-js/shared/components/TaxonomyApp.js:371
+msgid "Search"
+msgstr ""
+
+#: src-js/clicks/index.js:976
+msgid "IP, host, referrer, URL, link name…"
+msgstr ""
+
+#: src-js/clicks/index.js:985
+msgid "Unique visitors only"
+msgstr ""
+
+#: src-js/clicks/index.js:1005
+msgid "Clear filter"
+msgstr ""
+
+#. translators: %s: total click count.
+#: src-js/clicks/index.js:1016
+msgid "%s clicks"
+msgstr ""
+
+#: src-js/clicks/index.js:1280
+#: src-js/shared/components/LinksApp.js:1297
+msgid "Per page"
+msgstr ""
+
+#: src-js/clicks/index.js:1315
+#: src-js/options/ToolsSection.js:973
+msgid "Large export"
+msgstr ""
+
+#. translators: %s: number of clicks to export.
+#: src-js/clicks/index.js:1318
+msgid "This export contains %s clicks. The download may be slow and could use a lot of memory in your browser. Continue?"
+msgstr ""
+
+#: src-js/clicks/index.js:1324
+#: src-js/options/ToolsSection.js:982
+msgid "Export anyway"
+msgstr ""
+
+#: src-js/dashboard/index.js:89
+#: src-js/dashboard/index.js:684
+msgid "Unable to load dashboard."
+msgstr ""
+
+#: src-js/dashboard/index.js:126
+msgid "Overview of your Pretty Links activity."
+msgstr ""
+
+#: src-js/dashboard/index.js:134
+#: src-js/dashboard/index.js:290
+#: src-js/dashboard/index.js:721
+#: src-js/dashboard/index.js:873
+#: src-js/shared/components/LinksApp.js:105
+msgid "Add new link"
+msgstr ""
+
+#: src-js/dashboard/index.js:160
+#: src-js/dashboard/index.js:767
+msgid "Total clicks"
+msgstr ""
+
+#: src-js/dashboard/index.js:167
+#: src-js/dashboard/index.js:189
+#: src-js/shared/components/DateRangeControl.js:14
+msgid "Last 30 days"
+msgstr ""
+
+#: src-js/dashboard/index.js:182
+msgid "Unique visitors"
+msgstr ""
+
+#: src-js/dashboard/index.js:198
+#: src-js/dashboard/index.js:786
+msgid "Total links"
+msgstr ""
+
+#: src-js/dashboard/index.js:220
+#: src-js/dashboard/index.js:239
+#: src-js/dashboard/index.js:803
+#: src-js/dashboard/index.js:822
+msgid "Top link"
+msgstr ""
+
+#: src-js/dashboard/index.js:229
+#: src-js/dashboard/index.js:334
+#: src-js/dashboard/index.js:453
+#: src-js/dashboard/index.js:461
+#: src-js/dashboard/index.js:812
+#: src-js/dashboard/index.js:917
+#: src-js/dashboard/index.js:1002
+#: src-js/shared/components/LinksApp.js:508
+#: src-js/shared/components/TaxonomyApp.js:238
+msgid "Untitled"
+msgstr ""
+
+#: src-js/dashboard/index.js:244
+msgid "No data yet"
+msgstr ""
+
+#: src-js/dashboard/index.js:258
+#: src-js/dashboard/index.js:841
+msgid "Recent links"
+msgstr ""
+
+#: src-js/dashboard/index.js:259
+#: src-js/dashboard/index.js:842
+msgid "Your newest additions."
+msgstr ""
+
+#: src-js/dashboard/index.js:266
+#: src-js/dashboard/index.js:372
+#: src-js/dashboard/index.js:518
+#: src-js/dashboard/index.js:849
+#: src-js/dashboard/index.js:953
+msgid "View all"
+msgstr ""
+
+#: src-js/dashboard/index.js:274
+#: src-js/dashboard/index.js:857
+#: src-js/shared/components/LinksApp.js:100
+msgid "No links yet."
+msgstr ""
+
+#: src-js/dashboard/index.js:278
+#: src-js/dashboard/index.js:861
+msgid "Create your first pretty link to start tracking clicks."
+msgstr ""
+
+#: src-js/dashboard/index.js:311
+#: src-js/dashboard/index.js:315
+#: src-js/dashboard/index.js:894
+#: src-js/dashboard/index.js:898
+#: src-js/editor/InlineLinkUI.js:496
+#: src-js/shared/components/LinksApp.js:514
+#: src-js/shared/components/LinksApp.js:515
+msgid "Edit link"
+msgstr ""
+
+#: src-js/dashboard/index.js:361
+#: src-js/dashboard/index.js:942
+msgid "Top performing links"
+msgstr ""
+
+#: src-js/dashboard/index.js:365
+msgid "Most clicks in the last 30 days."
+msgstr ""
+
+#: src-js/dashboard/index.js:380
+msgid "No click data yet."
+msgstr ""
+
+#: src-js/dashboard/index.js:384
+msgid "Click data will appear here once visitors start clicking your links."
+msgstr ""
+
+#: src-js/dashboard/index.js:421
+#: src-js/dashboard/index.js:425
+#: src-js/dashboard/index.js:560
+#: src-js/dashboard/index.js:564
+#: src-js/shared/components/LinksApp.js:697
+#: src-js/shared/components/LinksApp.js:701
+msgid "View clicks"
+msgstr ""
+
+#: src-js/dashboard/index.js:513
+msgid "Recent clicks"
+msgstr ""
+
+#: src-js/dashboard/index.js:514
+msgid "Latest activity."
+msgstr ""
+
+#: src-js/dashboard/index.js:526
+msgid "No recent clicks."
+msgstr ""
+
+#: src-js/dashboard/index.js:530
+msgid "Clicks will appear here as visitors engage with your links."
+msgstr ""
+
+#: src-js/dashboard/index.js:713
+msgid "Simple tracking mode is on — showing per-link click totals."
+msgstr ""
+
+#: src-js/dashboard/index.js:741
+msgid "Simple tracking mode is enabled."
+msgstr ""
+
+#: src-js/dashboard/index.js:746
+msgid "Only per-link click counters are recorded — no dates, visitors, referrers, or breakdowns. Switch to Normal or Extended to unlock the full dashboard and Reports."
+msgstr ""
+
+#: src-js/dashboard/index.js:754
+msgid "Tracking settings"
+msgstr ""
+
+#: src-js/dashboard/index.js:774
+msgid "Across all links, all time"
+msgstr ""
+
+#: src-js/dashboard/index.js:827
+msgid "No clicks yet"
+msgstr ""
+
+#: src-js/dashboard/index.js:946
+msgid "Ranked by total click count."
+msgstr ""
+
+#: src-js/dashboard/index.js:962
+msgid "No clicks recorded yet."
+msgstr ""
+
+#: src-js/dashboard/index.js:966
+msgid "Once your links start receiving clicks, the leaderboard will appear here."
+msgstr ""
+
+#: src-js/editor/index.js:81
+msgid "Remove Pretty Link"
+msgstr ""
+
+#: src-js/editor/InlineLinkUI.js:366
+msgid "Pretty Link created."
+msgstr ""
+
+#: src-js/editor/InlineLinkUI.js:429
+msgid "Search Pretty Links"
+msgstr ""
+
+#: src-js/options/index.js:42
+msgid "Reporting"
+msgstr ""
+
+#: src-js/options/index.js:47
+msgid "Payments"
+msgstr ""
+
+#: src-js/options/index.js:59
+msgid "Tools"
+msgstr ""
+
+#: src-js/options/index.js:64
+msgid "Defaults applied to every new pretty link you create."
+msgstr ""
+
+#: src-js/options/index.js:68
+msgid "Control click tracking, storage, and privacy."
+msgstr ""
+
+#: src-js/options/index.js:72
+msgid "Connect Stripe and set defaults for your PrettyPay™ Links."
+msgstr ""
+
+#: src-js/options/index.js:76
+msgid "Activate your Pretty Links license to receive updates and premium add-ons."
+msgstr ""
+
+#: src-js/options/index.js:80
+msgid "Import, export, and configure performance tooling."
+msgstr ""
+
+#: src-js/options/index.js:90
+msgid "URL formatting"
+msgstr ""
+
+#: src-js/options/index.js:91
+msgid "Controls what the generated pretty link URL looks like on your site."
+msgstr ""
+
+#: src-js/options/index.js:97
+msgid "Default redirect"
+msgstr ""
+
+#: src-js/options/index.js:98
+msgid "Default HTTP status for new links. 301 is permanent — aggressively cached by browsers and search engines. 302 is temporary and passes referrer data more reliably. You can still override this per link on its edit screen."
+msgstr ""
+
+#: src-js/options/index.js:114
+msgid "Slug character count"
+msgstr ""
+
+#: src-js/options/index.js:115
+msgid "Number of random characters in each auto-generated slug. Minimum 2."
+msgstr ""
+
+#: src-js/options/index.js:139
+msgid "Slug rules"
+msgstr ""
+
+#: src-js/options/index.js:140
+msgid "Block specific slug patterns from being created. Built-in protection for WordPress core paths (wp-admin, wp-json, admin-ajax, etc.) is always on; this list is for site-specific additions (other plugin permalinks, sensitive page slugs, etc.)."
+msgstr ""
+
+#: src-js/options/index.js:146
+msgid "Reserved slug patterns"
+msgstr ""
+
+#: src-js/options/index.js:147
+msgid "Patterns to block, one per line or comma-separated. Wildcards (*) are supported — e.g. \"*wp-admin*\" also blocks \"my-wp-admin-thing\"."
+msgstr ""
+
+#: src-js/options/index.js:163
+msgid "Allow admins to bypass reserved slugs"
+msgstr ""
+
+#: src-js/options/index.js:167
+msgid "When enabled, administrators can create links with any slug, including patterns in the list above. When disabled, the patterns apply to admin-created links too. Pattern checks always apply to non-admin sources (front-end user dashboards and public-link forms) regardless of this setting."
+msgstr ""
+
+#: src-js/options/index.js:179
+msgid "Default attributes"
+msgstr ""
+
+#: src-js/options/index.js:180
+msgid "Applied to every new pretty link. You can still override these per link."
+msgstr ""
+
+#: src-js/options/index.js:186
+msgid "Default nofollow"
+msgstr ""
+
+#: src-js/options/index.js:187
+msgid "Adds rel=\"nofollow\" to every pretty link in your content, telling search engines not to pass ranking authority to the destination. Recommended for affiliate and outbound links — most affiliate programs and Google's guidelines expect it."
+msgstr ""
+
+#: src-js/options/index.js:195
+msgid "Default sponsored"
+msgstr ""
+
+#: src-js/options/index.js:196
+msgid "Adds rel=\"sponsored\" to every pretty link, declaring to search engines that the link is paid, affiliated, or part of a sponsorship. Google recommends this on top of (or instead of) nofollow for affiliate and ad links."
+msgstr ""
+
+#: src-js/options/index.js:274
+#: src-js/options/index.js:314
+msgid "Normal"
+msgstr ""
+
+#: src-js/options/index.js:275
+msgid "Extended"
+msgstr ""
+
+#: src-js/options/index.js:276
+msgid "Simple"
+msgstr ""
+
+#: src-js/options/index.js:282
+msgid "Click tracking"
+msgstr ""
+
+#: src-js/options/index.js:283
+msgid "What data Pretty Links records on every click."
+msgstr ""
+
+#: src-js/options/index.js:289
+msgid "Track clicks on all links by default"
+msgstr ""
+
+#: src-js/options/index.js:293
+msgid "Master switch for click tracking. When off, Pretty Links stops recording clicks site-wide and the Reports page shows zeros. Individual links can still opt into tracking on their own edit screen even while this is disabled."
+msgstr ""
+
+#: src-js/options/index.js:301
+msgid "Tracking mode"
+msgstr ""
+
+#: src-js/options/index.js:302
+msgid "Normal stores a row per click with raw fields (IP, referrer, country, timestamp) — fast and covers most reports. Extended also parses the user agent to populate browser, device, and OS breakdowns, at extra cost on every redirect. Simple only increments a per-link counter — fastest, smallest database, but disables every report except total clicks."
+msgstr ""
+
+#: src-js/options/index.js:318
+msgid "Extended (parse browser + device)"
+msgstr ""
+
+#: src-js/options/index.js:325
+msgid "Simple (count only)"
+msgstr ""
+
+#: src-js/options/index.js:338
+msgid "Switching tracking mode deletes all click data"
+msgstr ""
+
+#: src-js/options/index.js:344
+msgid "Switching to Simple mode will permanently delete every recorded click row, reset every link’s click and uniques counters to zero, and remove all Reports history. Nothing can be recovered. Continue?"
+msgstr ""
+
+#: src-js/options/index.js:348
+msgid "Switching away from Simple mode will permanently delete every link’s static click counter and reset Reports to zero. Nothing can be recovered. Continue?"
+msgstr ""
+
+#: src-js/options/index.js:363
+msgid "Last chance — delete all click data?"
+msgstr ""
+
+#. translators: %1$s = current mode, %2$s = target mode.
+#: src-js/options/index.js:369
+msgid "You’re about to switch tracking from %1$s to %2$s. This will erase ALL click history across every link immediately and cannot be undone. Are you absolutely sure?"
+msgstr ""
+
+#: src-js/options/index.js:376
+msgid "Delete all click data and switch"
+msgstr ""
+
+#: src-js/options/index.js:389
+msgid "Retention"
+msgstr ""
+
+#: src-js/options/index.js:390
+msgid "How long click data is kept in the database before trimming."
+msgstr ""
+
+#: src-js/options/index.js:396
+msgid "Auto-delete click data older than"
+msgstr ""
+
+#: src-js/options/index.js:400
+msgid "Warning: this permanently deletes raw click records — deleted data cannot be recovered. A nightly background job removes click rows older than the selected window. Date-range reports past this window will show no data."
+msgstr ""
+
+#: src-js/options/index.js:416
+msgid "Keep forever"
+msgstr ""
+
+#: src-js/options/index.js:420
+msgid "30 days"
+msgstr ""
+
+#: src-js/options/index.js:424
+msgid "90 days (recommended)"
+msgstr ""
+
+#: src-js/options/index.js:431
+msgid "180 days"
+msgstr ""
+
+#: src-js/options/index.js:435
+msgid "1 year"
+msgstr ""
+
+#: src-js/options/index.js:439
+msgid "2 years"
+msgstr ""
+
+#: src-js/options/index.js:449
+msgid "Warning: enabling auto-delete will permanently remove click records older than the selected window. This cannot be undone. Continue?"
+msgstr ""
+
+#: src-js/options/index.js:474
+msgid "Privacy"
+msgstr ""
+
+#: src-js/options/index.js:475
+msgid "Scrubs personally-identifiable data before it lands in the database."
+msgstr ""
+
+#: src-js/options/index.js:481
+msgid "Anonymize IP addresses"
+msgstr ""
+
+#: src-js/options/index.js:482
+msgid "Zeroes the last octet of each visitor's IP (192.168.1.42 → 192.168.1.0) before it's stored. Recommended by GDPR, CCPA, and LGPD. City-level geo accuracy in reports drops; country-level stays intact."
+msgstr ""
+
+#: src-js/options/index.js:493
+msgid "Bot & IP filtering"
+msgstr ""
+
+#: src-js/options/index.js:494
+msgid "Stop low-signal traffic from distorting your click counts."
+msgstr ""
+
+#: src-js/options/index.js:500
+msgid "Filter bots from click counts"
+msgstr ""
+
+#: src-js/options/index.js:504
+msgid "When on, Pretty Link blocks 70+ known crawlers and AI scrapers (Googlebot, GPTBot, ClaudeBot, etc.) plus matches custom patterns + CDN bot signals. When off, every hit counts as a real click — useful for security monitoring or comparing pre/post-filter numbers."
+msgstr ""
+
+#: src-js/options/index.js:513
+msgid "Blocked bot user-agent patterns"
+msgstr ""
+
+#: src-js/options/index.js:517
+msgid "Custom patterns layered on top of the built-in bot list. One pattern per line. Matching is case-insensitive substring against the User-Agent header."
+msgstr ""
+
+#: src-js/options/index.js:531
+msgid "Blocked IP addresses"
+msgstr ""
+
+#: src-js/options/index.js:532
+msgid "Traffic from these IPs is silently ignored and never counted as a click. One IP address or CIDR range per line (e.g. 10.0.0.0/8). Useful for filtering out office, staging, or test traffic."
+msgstr ""
+
+#: src-js/options/index.js:546
+msgid "Allowed IP addresses"
+msgstr ""
+
+#: src-js/options/index.js:547
+msgid "The bot detector will occasionally flag legitimate traffic as bots (privacy-focused browsers, screen readers, spoofed user agents). IPs listed here bypass that check and always count as real visitors. One IP per line."
+msgstr ""
+
+#: src-js/options/index.js:684
+msgid "Stripe connected."
+msgstr ""
+
+#: src-js/options/index.js:685
+msgid "Stripe credentials refreshed."
+msgstr ""
+
+#: src-js/options/index.js:686
+msgid "Stripe disconnected."
+msgstr ""
+
+#: src-js/options/index.js:729
+msgid "Configure how Pretty Links behaves on your site."
+msgstr ""
+
+#: src-js/options/index.js:743
+msgid "Options sections"
+msgstr ""
+
+#: src-js/options/LicenseSection.js:32
+msgid "Could not load license status."
+msgstr ""
+
+#: src-js/options/LicenseSection.js:62
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: src-js/options/LicenseSection.js:76
+msgid "Enter your license key to activate."
+msgstr ""
+
+#: src-js/options/LicenseSection.js:90
+msgid "License deactivated."
+msgstr ""
+
+#: src-js/options/LicenseSection.js:99
+msgid "Edge updates enabled."
+msgstr ""
+
+#: src-js/options/LicenseSection.js:100
+msgid "Edge updates disabled."
+msgstr ""
+
+#: src-js/options/LicenseSection.js:123
+msgid "License status"
+msgstr ""
+
+#: src-js/options/LicenseSection.js:130
+msgid "Status:"
+msgstr ""
+
+#: src-js/options/LicenseSection.js:138
+msgid "License:"
+msgstr ""
+
+#: src-js/options/LicenseSection.js:146
+msgid "Expires:"
+msgstr ""
+
+#: src-js/options/LicenseSection.js:153
+msgid "Key:"
+msgstr ""
+
+#: src-js/options/LicenseSection.js:175
+msgid "Your Pretty Links Pro license key, found in your Caseproof account under Purchases. Activating the key unlocks Pro features on this site and enables automatic updates and Pro support."
+msgstr ""
+
+#: src-js/options/LicenseSection.js:206
+msgid "Update channel"
+msgstr ""
+
+#: src-js/options/LicenseSection.js:208
+msgid "Edge updates (bleeding-edge releases)"
+msgstr ""
+
+#: src-js/options/LicenseSection.js:212
+msgid "Opts this site into pre-release builds as soon as they ship — ideal for staging and development environments where you want to try new features early. Production sites should leave this off and stick with stable releases."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:49
+msgid "Unable to load Stripe settings."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:75
+msgid "Couldn’t save payment settings."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:94
+#: src-js/options/PaymentsSection.js:100
+msgid "Unable to start Stripe Connect."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:111
+msgid "Disconnect this site from Stripe?"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:123
+msgid "Disconnect failed."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:136
+msgid "Refresh failed."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:157
+msgid "Stripe Customer Portal configured. Subscribers can now manage their subscription."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:165
+msgid "Unable to configure the Stripe Customer Portal."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:196
+msgid "The Stripe-powered paid-links feature. Turning this off hides the PrettyPay menu entry, the \"+ New PrettyPay™ Link\" admin-bar shortcut, and the settings below. Existing PrettyPay links keep working — only the admin UI is hidden."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:202
+msgid "Enable PrettyPay™"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:216
+msgid "Enabled"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:217
+msgid "Disabled"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:226
+msgid "Stripe connection"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:245
+msgid "Configure the Stripe Customer Portal"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:251
+msgid "You have at least one recurring PrettyPay™ Link. Customers will need the Stripe Customer Portal to manage their subscription."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:273
+msgid "Open Stripe Dashboard"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:283
+msgid "Customer Portal URL"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:287
+msgid "Share this link with subscribers so they can manage their recurring PrettyPay™ Link subscriptions. It redirects to your configured Stripe Customer Portal."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:301
+#: src-js/shared/components/LinkForm.js:579
+#: src-js/shared/components/PayLinkForm.js:384
+msgid "Copy URL"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:312
+msgid "Checkout defaults"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:313
+msgid "Applied to every PrettyPay™ Link unless overridden individually."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:319
+#: src-js/options/PaymentsSection.js:329
+msgid "Global thank-you page"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:323
+msgid "Default page shown after a successful checkout (order confirmation, thank-you page, etc.). Individual PrettyPay™ Links can override this — the setting here is the fallback used whenever a link doesn't specify its own redirect. Leave empty to send customers to the site homepage."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:345
+msgid "Default currency"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:346
+msgid "The currency pre-selected when creating a new Stripe product or PrettyPay™ Link. You can still change the currency on individual products. Must be a currency your Stripe account is configured to accept."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:403
+msgid "Connected to Stripe"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:410
+msgid "Stripe account linked."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:412
+msgid "Test mode"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:417
+msgid "Accept one-time payments and subscriptions before redirecting — no custom checkout to build."
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:431
+msgid "Refresh Stripe Credentials"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:444
+msgid "Disconnect"
+msgstr ""
+
+#: src-js/options/PaymentsSection.js:457
+msgid "Connect with Stripe"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:140
+msgid "Field count does not match the header row."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:144
+msgid "PrettyPay™ links cannot be imported via CSV."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:148
+msgid "No existing link with that ID."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:149
+msgid "URL is required."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:150
+msgid "URL is not valid."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:151
+msgid "Slug is reserved by Pretty Links or WordPress."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:155
+msgid "Slug is already in use by another link."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:159
+msgid "Slug is not valid."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:160
+msgid "Database insert failed."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:161
+msgid "Database update failed."
+msgstr ""
+
+#. translators: %1$s: number created, %2$s: number updated, %3$s: number skipped, %4$s: number of errors.
+#: src-js/options/ToolsSection.js:178
+msgid "Done — %1$s created, %2$s updated, %3$s skipped, %4$s error(s)."
+msgstr ""
+
+#. translators: %1$s: current row number, %2$s: total number of rows.
+#: src-js/options/ToolsSection.js:189
+msgid "Processing row %1$s of %2$s…"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:197
+msgid "Failed rows:"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:202
+msgid "Row"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:203
+msgid "Slug / ID"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:204
+msgid "Reason"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:240
+msgid "Pretty Links cookies registered with CookieYes."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:244
+msgid "Pretty Links cookies removed from CookieYes."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:252
+msgid "Unable to update CookieYes integration."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:272
+msgid "CookieYes integration"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:275
+msgid "Automatically register the cookies Pretty Links uses for click tracking with the CookieYes plugin so they appear in your consent banner. Cookies are added under the Analytics and Functional categories."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:283
+msgid "Install and activate the CookieYes plugin to enable this integration."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:291
+msgid "Register Pretty Links cookies with CookieYes"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:361
+msgid "Please select a .csv file."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:431
+msgid "No data to export."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:433
+msgid "Export ready."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:437
+msgid "Unable to export."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:480
+msgid "Select a CSV file first."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:488
+msgid "Could not read the file."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:495
+msgid "No importable rows found in the CSV."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:545
+msgid "Import failed."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:576
+msgid "Clear all clicks?"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:577
+msgid "This permanently deletes every click record for every link. Link totals will reset to zero. This cannot be undone."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:581
+#: src-js/options/ToolsSection.js:901
+msgid "Clear all clicks"
+msgstr ""
+
+#. translators: %d is the day threshold.
+#: src-js/options/ToolsSection.js:589
+msgid "Clear clicks older than %d days?"
+msgstr ""
+
+#. translators: %d is the day threshold.
+#: src-js/options/ToolsSection.js:594
+msgid "This permanently deletes click records older than %d days. Recent clicks remain intact. This cannot be undone."
+msgstr ""
+
+#. translators: %d is the day threshold.
+#: src-js/options/ToolsSection.js:602
+msgid "Clear clicks older than %d days"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:622
+msgid "Clicks cleared."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:646
+msgid "Clearing clicks in the background. This keeps running even if you leave this page."
+msgstr ""
+
+#. translators: %s is a formatted click count.
+#: src-js/options/ToolsSection.js:663
+msgid "Deleted %s clicks."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:670
+msgid "Unable to clear clicks."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:687
+#: src-js/options/ToolsSection.js:788
+msgid "Import links"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:692
+msgid "Upload a CSV file to bulk-import links. Rows are matched by ID (if provided) or slug — existing links are updated, new ones are created."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:701
+msgid "View sample CSV"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:713
+msgid "Choose CSV file"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:738
+msgid "Drop a CSV file here, or click to browse"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:756
+msgid "Remove file"
+msgstr ""
+
+#. translators: %s is a comma-separated list of column names.
+#: src-js/options/ToolsSection.js:770
+msgid "This file contains Pro-only column(s): %s. They will be ignored on this Lite site — install Pretty Links Pro to import them."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:820
+msgid "Import another file"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:840
+msgid "Export links"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:843
+msgid "Download all links as a CSV file for backup or migration. Includes link metadata, redirect settings, and SEO flags."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:857
+msgid "Download CSV"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:884
+msgid "Trim clicks"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:887
+msgid "Delete old click records to keep the database lean. Link totals are recalculated from what remains. These actions cannot be undone."
+msgstr ""
+
+#: src-js/options/ToolsSection.js:914
+msgid "Clear clicks older than 30 days"
+msgstr ""
+
+#: src-js/options/ToolsSection.js:927
+msgid "Clear clicks older than 90 days"
+msgstr ""
+
+#. translators: %s: number of links to export.
+#: src-js/options/ToolsSection.js:976
+msgid "This export contains %s links. The download may be slow and could use a lot of memory in your browser. Continue?"
+msgstr ""
+
+#: src-js/shared/components/ChipPicker.js:162
+#: src-js/shared/components/LinksApp.js:1363
+msgid "Type to search…"
+msgstr ""
+
+#: src-js/shared/components/ChipPicker.js:171
+#: src-js/shared/components/StripeProductPicker.js:208
+msgid "Searching…"
+msgstr ""
+
+#: src-js/shared/components/ConfirmDialog.js:18
+msgid "Are you sure?"
+msgstr ""
+
+#: src-js/shared/components/ConfirmDialog.js:45
+#: src-js/shared/components/LinksApp.js:1397
+msgid "Confirm"
+msgstr ""
+
+#: src-js/shared/components/CopyButton.js:50
+msgid "Copied"
+msgstr ""
+
+#: src-js/shared/components/CopyButton.js:51
+msgid "Copy"
+msgstr ""
+
+#: src-js/shared/components/DataTable.js:103
+msgid "Select all"
+msgstr ""
+
+#: src-js/shared/components/DataTable.js:176
+msgid "No items found."
+msgstr ""
+
+#: src-js/shared/components/DataTable.js:202
+msgid "Select row"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:13
+msgid "Last 7 days"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:15
+msgid "Last 3 months"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:16
+msgid "Last 12 months"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:19
+msgid "Last 2 years"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:20
+msgid "All time (slow)"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:21
+msgid "Custom range"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:52
+msgid "Range"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:64
+msgid "From"
+msgstr ""
+
+#: src-js/shared/components/DateRangeControl.js:85
+msgid "To"
+msgstr ""
+
+#. translators: %1$s processed rows, %2$s total rows.
+#: src-js/shared/components/ExportProgress.js:24
+msgid "Exported %1$s of %2$s rows…"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:53
+msgid "Link Attributes"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:207
+#: src-js/shared/components/PayLinkForm.js:127
+msgid "Unable to generate slug."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:251
+msgid "Target URL is required."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:261
+msgid "Target URL must start with http:// or https://."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:271
+#: src-js/shared/components/PayLinkForm.js:155
+msgid "Slug is required."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:286
+msgid "Please fix the highlighted errors."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:300
+msgid "Link created."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:301
+msgid "Link saved."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:306
+#: src-js/shared/components/LinkForm.js:314
+msgid "Unable to create link."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:307
+#: src-js/shared/components/LinkForm.js:315
+msgid "Unable to save link."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:387
+msgid "Link settings"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:444
+#: src-js/shared/components/LinkForm.js:449
+msgid "Link name"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:454
+msgid "Destination"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:457
+#: src-js/shared/components/LinkForm.js:470
+#: src-js/shared/components/LinkIndicators.js:35
+#: src-js/shared/components/LinksApp.js:1112
+msgid "Redirect type"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:461
+msgid "The HTTP status used when redirecting."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:505
+msgid "Where the pretty link redirects visitors."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:526
+msgid "Short path appended to the home URL."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:564
+#: src-js/shared/components/PayLinkForm.js:375
+msgid "Generate"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:592
+msgid "Attributes"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:595
+msgid "Apply nofollow"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:599
+msgid "Add rel=\"nofollow\" to this link's anchor tag when used in shortcodes / Pretty Bar. Tells search engines not to pass ranking authority to the destination."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:609
+msgid "Apply sponsored"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:613
+msgid "Add rel=\"sponsored\" to mark this link as paid or affiliate content. Google's preferred signal for monetised links since 2019; usually used together with nofollow."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:640
+msgid "Tracking"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:643
+msgid "Track clicks"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:647
+msgid "Record every click on this link in the Reports section. Disable for links you don't want to count (e.g. internal navigation, test links)."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:658
+msgid "Forward query parameters"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:662
+msgid "Pass through ?key=value params to the target URL. 99.9% of users won’t need this, and should leave it off."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:684
+#: src-js/shared/components/LinkForm.js:687
+#: src-js/shared/components/LinkForm.js:696
+#: src-js/shared/components/PayLinkForm.js:392
+#: src-js/shared/components/PayLinkForm.js:401
+msgid "Notes"
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:688
+msgid "Private notes about this link — not shown publicly."
+msgstr ""
+
+#: src-js/shared/components/LinkForm.js:739
+#: src-js/shared/components/TaxonomyApp.js:534
+msgid "Save"
+msgstr ""
+
+#: src-js/shared/components/LinkIndicators.js:49
+#: src-js/shared/components/LinkIndicators.js:50
+msgid "Nofollow enabled"
+msgstr ""
+
+#: src-js/shared/components/LinkIndicators.js:63
+#: src-js/shared/components/LinkIndicators.js:64
+msgid "Sponsored attribute enabled"
+msgstr ""
+
+#: src-js/shared/components/LinkIndicators.js:80
+#: src-js/shared/components/LinkIndicators.js:84
+msgid "Parameter forwarding enabled"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:37
+msgid "Trashed"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:49
+msgid "Bulk actions"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:52
+msgid "Move to trash"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:53
+msgid "move to trash"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:57
+msgid "Restore"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:58
+msgid "restore"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:62
+msgid "Delete permanently"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:63
+msgid "permanently delete"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:67
+msgid "Enable nofollow"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:68
+msgid "enable nofollow on"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:72
+msgid "Disable nofollow"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:73
+msgid "disable nofollow on"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:77
+msgid "Enable sponsored"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:78
+msgid "enable sponsored on"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:82
+msgid "Disable sponsored"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:83
+msgid "disable sponsored on"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:87
+msgid "Enable tracking"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:88
+msgid "enable click tracking on"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:92
+msgid "Disable tracking"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:93
+msgid "disable click tracking on"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:101
+msgid "Your links will appear here. Add your first pretty link to start tracking clicks."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:106
+#: src-js/shared/hooks/useLinks.js:68
+msgid "Unable to load links."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:110
+msgid "No PrettyPay™ Links yet."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:111
+msgid "PrettyPay™ Links accept payment via Stripe before redirecting. Add one to get started."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:115
+msgid "Add new PrettyPay™ Link"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:116
+msgid "Unable to load PrettyPay™ Links."
+msgstr ""
+
+#. translators: %d: number of links.
+#: src-js/shared/components/LinksApp.js:261
+msgid "Bulk action applied to %d link(s)."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:274
+msgid "Unable to complete bulk action."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:284
+msgid "Select an action and at least one link."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:299
+msgid "Unable to load options for this action."
+msgstr ""
+
+#. translators: 1: action verb, 2: link count.
+#: src-js/shared/components/LinksApp.js:312
+msgid "Are you sure you want to %1$s %2$d link(s)?"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:338
+msgid "Clone this link? A copy will be created and opened for editing."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:350
+msgid "Move this link to the trash?"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:362
+msgid "Permanently delete this link? This cannot be undone."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:373
+msgid "Link restored."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:378
+msgid "Unable to restore link."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:393
+msgid "Link moved to trash."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:398
+msgid "Link permanently deleted."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:410
+msgid "Link duplicated."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:416
+msgid "Unable to complete action."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:494
+#: src-js/shared/components/PayLinkForm.js:333
+#: src-js/shared/components/PayLinkForm.js:343
+#: src-js/shared/components/StripeAddProductDialog.js:97
+#: src-js/shared/components/TaxonomyApp.js:230
+#: src-js/shared/components/TaxonomyApp.js:436
+msgid "Name"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:557
+msgid "Copy Pretty Link URL"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:571
+msgid "Target"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:590
+msgid "Open target URL"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:605
+#: src-js/shared/components/LinksApp.js:606
+msgid "Tracking disabled for this link"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:618
+msgid "Clicks"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:636
+msgid "Uniques"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:655
+msgid "Created"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:662
+msgid "Trashed on"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:664
+msgid "Trashed:"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:675
+msgid "Actions"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:729
+#: src-js/shared/components/LinksApp.js:733
+msgid "Duplicate link"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:746
+#: src-js/shared/components/LinksApp.js:750
+msgid "Trash link"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:766
+#: src-js/shared/components/LinksApp.js:770
+msgid "Restore link"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:786
+#: src-js/shared/components/LinksApp.js:790
+msgid "Delete forever"
+msgstr ""
+
+#. translators: the "3%" here is a literal percentage, not a sprintf placeholder.
+#: src-js/shared/components/LinksApp.js:1058
+msgid "A 3% platform fee applies to every PrettyPay™ checkout"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1062
+msgid "Upgrade to Pretty Links Pro and remove the platform fee — you keep every dollar after Stripe's own processing fees."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1066
+#: src-js/shared/components/PayLinkForm.js:326
+msgid "Remove the fee"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1085
+msgid "Search name, slug, or URL…"
+msgstr ""
+
+#. translators: %s: total result count for the current filters.
+#: src-js/shared/components/LinksApp.js:1096
+#: src-js/shared/components/TaxonomyApp.js:384
+msgid "%s Results"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1132
+msgid "Status filter"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1213
+#: src-js/shared/components/LinksApp.js:1214
+msgid "Clear filters"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1230
+msgid "Items left in trash can be restored until you delete them permanently."
+msgstr ""
+
+#. translators: %d: number of selected links.
+#: src-js/shared/components/LinksApp.js:1243
+msgid "%d selected"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1266
+msgid "Clear selection"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1286
+msgid "No links match the current filters."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1350
+msgid "No options exist yet for this action."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:1373
+msgid "Confirm bulk action"
+msgstr ""
+
+#: src-js/shared/components/NoticeStrip.js:44
+msgid "Installing…"
+msgstr ""
+
+#: src-js/shared/components/NoticeStrip.js:54
+msgid "Install failed. Please try again."
+msgstr ""
+
+#: src-js/shared/components/NoticeStrip.js:68
+msgid "Notices"
+msgstr ""
+
+#: src-js/shared/components/NoticeStrip.js:105
+#: src-js/shared/components/ReviewAskNotice.js:196
+msgid "Dismiss notice"
+msgstr ""
+
+#. translators: %d: page ID
+#: src-js/shared/components/PageSearchPicker.js:73
+msgid "Page #%d"
+msgstr ""
+
+#: src-js/shared/components/PageSearchPicker.js:123
+msgid "Search for a page…"
+msgstr ""
+
+#: src-js/shared/components/PageSearchPicker.js:129
+msgid "No matching pages."
+msgstr ""
+
+#: src-js/shared/components/PageSearchPicker.js:130
+msgid "Type to search pages…"
+msgstr ""
+
+#: src-js/shared/components/Pagination.js:20
+msgid "Pagination"
+msgstr ""
+
+#. translators: 1: current page, 2: total pages
+#: src-js/shared/components/Pagination.js:25
+msgid "Page %1$d of %2$d"
+msgstr ""
+
+#: src-js/shared/components/Pagination.js:34
+#: src-js/shared/components/Pagination.js:35
+msgid "Previous page"
+msgstr ""
+
+#: src-js/shared/components/Pagination.js:44
+#: src-js/shared/components/Pagination.js:45
+msgid "Next page"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:104
+msgid "Unable to load Stripe data."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:160
+msgid "Select at least one Stripe product to sell with this PrettyPay™ Link."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:174
+msgid "Select at least one shipping country."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:203
+msgid "PrettyPay™ Link created."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:204
+msgid "PrettyPay™ Link saved."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:209
+#: src-js/shared/components/PayLinkForm.js:223
+msgid "Unable to create PrettyPay™ Link."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:213
+#: src-js/shared/components/PayLinkForm.js:227
+msgid "Unable to save PrettyPay™ Link."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:307
+msgid "Stripe is not connected. Connect Stripe in Options → Payments before PrettyPay™ Links can accept payments."
+msgstr ""
+
+#. translators: the "3%" is a literal percentage, not a placeholder.
+#: src-js/shared/components/PayLinkForm.js:318
+msgid "A 3% platform fee applies to every checkout"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:322
+msgid "Pretty Links Pro removes the platform fee — you keep every dollar after Stripe's own processing fees."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:331
+msgid "Basics"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:334
+msgid "Internal label that shows in your dashboard."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:393
+msgid "Private notes — not shown on the checkout."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:410
+msgid "Products"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:411
+msgid "Required. Pick at least one Stripe product to sell with this PrettyPay™ Link."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:426
+msgid "Checkout options"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:429
+msgid "Collect tax automatically"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:433
+msgid "Requires Stripe Tax to be enabled on your connected account."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:441
+msgid "Collect customer addresses"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:453
+msgid "Also collect shipping address"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:469
+msgid "Allowed shipping countries"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:492
+msgid "Require phone number"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:499
+msgid "Allow promotion codes"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:506
+msgid "Allow business customers to provide tax IDs"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:517
+msgid "Save payment details for future use"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:530
+msgid "Include a free trial"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:541
+#: src-js/shared/components/PayLinkForm.js:550
+msgid "Trial period (days)"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:569
+msgid "Messaging"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:571
+#: src-js/shared/components/PayLinkForm.js:581
+msgid "Checkout submit message"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:572
+msgid "Displayed next to the Stripe Checkout submit button (up to 1000 characters)."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:592
+#: src-js/shared/components/PayLinkForm.js:599
+msgid "Thank-you page override"
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:593
+msgid "Where customers land after a successful checkout. Leave empty to use the global thank-you page setting."
+msgstr ""
+
+#: src-js/shared/components/PayLinkForm.js:622
+msgid "Save PrettyPay™ Link"
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:8
+msgid "Bulletproof Payments"
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:9
+msgid "Bank-grade security your customers actually trust."
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:16
+msgid "Sell Everywhere"
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:17
+msgid "135+ currencies, instant global reach. Paris, Tokyo, Topeka — take their money."
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:24
+msgid "One Link. Any Channel."
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:25
+msgid "Drop it in emails, Instagram bios, TikToks, DMs — if it’s online, it’s selling."
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:32
+msgid "Cash in Your Pocket, Fast"
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:33
+msgid "Funds hit your account in days, not decades."
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:40
+msgid "See Every Sale"
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:41
+msgid "Rich tracking and analytics so you know exactly what’s crushing it."
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:48
+msgid "Zero Code Required"
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:49
+msgid "If you can click a button, you can start collecting."
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:67
+msgid "Turn Clicks Into Sales — Instantly."
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:73
+msgid "Stop waiting. Start selling. Connect Stripe to your PrettyPay™ links and every click becomes a chance to close — one-tap checkout, money in your account, zero friction between “interested” and “paid.”"
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:84
+msgid "Why Stripe + PrettyPay™ = Pure Profit Magic"
+msgstr ""
+
+#: src-js/shared/components/PayLinksEmptyState.js:112
+msgid "Flip the switch. Watch the sales roll in. Your next sale is one click away."
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:79
+msgid "Are you enjoying Pretty Links?"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:89
+msgid "Yes, I love it!"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:101
+msgid "Not really…"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:110
+msgid "That's awesome! Could you please give Pretty Links a 5-star rating on WordPress to help spread the word?"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:116
+msgid "~ Blair Williams, Founder & CEO of Pretty Links"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:128
+msgid "Okay, you deserve it!"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:141
+msgid "Nope, maybe later"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:153
+msgid "I already did"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:162
+msgid "We're sorry to hear that. We'd love a chance to improve — could you take a moment and share what we can do better?"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:174
+msgid "Give Feedback"
+msgstr ""
+
+#: src-js/shared/components/ReviewAskNotice.js:186
+msgid "No thanks"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:66
+#: src-js/shared/components/StripeAddProductDialog.js:71
+msgid "Could not add product."
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:89
+msgid "Add a new product"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:98
+msgid "Premium Plan, Sunglasses, etc."
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:109
+msgid "Price"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:117
+msgid "Currency"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:125
+msgid "Type"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:129
+msgid "One time"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:133
+msgid "Recurring"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:145
+msgid "Billing period"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:150
+msgid "Daily"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:154
+msgid "Weekly"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:158
+msgid "Monthly"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:162
+msgid "Every 3 months"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:169
+msgid "Every 6 months"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:176
+msgid "Yearly"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:180
+msgid "Custom"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:187
+msgid "every"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:196
+msgid "Interval count"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:208
+msgid "days"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:212
+msgid "weeks"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:216
+msgid "months"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:232
+msgid "Tax behavior"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:233
+msgid "Whether the price is tax-inclusive, tax-exclusive, or left unspecified."
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:241
+msgid "Default"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:245
+msgid "Price is inclusive of tax"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:252
+msgid "Price is exclusive of tax"
+msgstr ""
+
+#: src-js/shared/components/StripeAddProductDialog.js:274
+msgid "Add product"
+msgstr ""
+
+#: src-js/shared/components/StripeProductPicker.js:53
+msgid "Search failed."
+msgstr ""
+
+#: src-js/shared/components/StripeProductPicker.js:164
+msgid "Remove product"
+msgstr ""
+
+#: src-js/shared/components/StripeProductPicker.js:180
+msgid "Search Stripe products or prices…"
+msgstr ""
+
+#: src-js/shared/components/StripeProductPicker.js:197
+msgid "New product"
+msgstr ""
+
+#: src-js/shared/components/StripeProductPicker.js:218
+msgid "No products match that search."
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:116
+msgid "— None —"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:154
+msgid "Name is required."
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:172
+msgid "Saved."
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:175
+msgid "Created."
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:181
+msgid "Unable to save."
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:199
+msgid "Deleted."
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:204
+msgid "Unable to delete."
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:221
+#: src-js/shared/components/TaxonomyApp.js:222
+#: src-js/shared/components/TaxonomyApp.js:244
+#: src-js/shared/components/TaxonomyApp.js:245
+msgid "Edit"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:263
+#: src-js/shared/components/TaxonomyApp.js:483
+msgid "Description"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:276
+#: src-js/shared/components/TaxonomyApp.js:501
+msgid "Parent"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:287
+msgid "Count"
+msgstr ""
+
+#. translators: %s: taxonomy term name.
+#: src-js/shared/components/TaxonomyApp.js:304
+msgid "View links in %s"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:317
+#: src-js/shared/components/TaxonomyApp.js:325
+#: src-js/shared/components/TaxonomyApp.js:326
+msgid "Delete"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:373
+msgid "Search name, slug…"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:410
+msgid "No items match your search."
+msgstr ""
+
+#. translators: %s: item name.
+#: src-js/shared/components/TaxonomyApp.js:424
+msgid "Edit: %s"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:466
+msgid "Leave empty to generate from name."
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:535
+msgid "Create"
+msgstr ""
+
+#: src-js/shared/components/TaxonomyApp.js:543
+msgid "Confirm delete"
+msgstr ""
+
+#. translators: %s: item name.
+#: src-js/shared/components/TaxonomyApp.js:546
+msgid "Delete \"%s\"? Links assigned to it will be unassigned. This cannot be undone."
+msgstr ""
+
+#: src-js/shared/hooks/useAutosaveToasts.js:33
+msgid "Saved"
+msgstr ""
+
+#: src-js/shared/hooks/useOptions.js:51
+msgid "Unable to load options."
+msgstr ""
+
+#: src-js/shared/hooks/useOptions.js:131
+msgid "Unable to save options."
+msgstr ""
+
+#: src-js/shared/link-helpers.js:155
+msgid "All Redirect Types"
+msgstr ""
+
+#: src-js/shared/upsell/components.js:176
+msgid "Unlock with Pretty Links Pro"
+msgstr ""
+
+#: src-js/shared/upsell/components.js:278
+msgid "Pretty Links add-on"
+msgstr ""
+
+#: src-js/shared/upsell/components.js:281
+msgid "This add-on is installed on your site but currently deactivated."
+msgstr ""
+
+#: src-js/shared/upsell/components.js:315
+#: src-js/shared/upsell/components.js:320
+msgid "Could not activate the add-on."
+msgstr ""
+
+#: src-js/shared/upsell/components.js:351
+msgid "Activating…"
+msgstr ""
+
+#: src-js/shared/upsell/components.js:394
+#: src-js/shared/upsell/components.js:466
+msgid "Pretty Links Pro feature"
+msgstr ""
+
+#: src-js/shared/upsell/components.js:561
+msgid "Learn more"
+msgstr ""
+
+#: src-js/shared/upsell/components.js:568
+msgid "Dismiss tip"
+msgstr ""
+
+#: src-js/shared/upsell/locked-link-form-tabs.js:26
+msgid "Dynamic redirection"
+msgstr ""
+
+#: src-js/shared/upsell/locked-link-form-tabs.js:32
+msgid "Expiration"
+msgstr ""
+
+#: src-js/shared/upsell/locked-link-form-tabs.js:38
+#: src-js/shared/upsell/locked-option-sections.js:31
+msgid "Replacements"
+msgstr ""
+
+#: src-js/shared/upsell/locked-link-form-tabs.js:44
+msgid "UTM tracking"
+msgstr ""
+
+#: src-js/shared/upsell/locked-link-form-tabs.js:52
+msgid "QR code"
+msgstr ""
+
+#: src-js/shared/upsell/locked-option-sections.js:25
+msgid "Pretty Bar"
+msgstr ""
+
+#: src-js/shared/upsell/locked-option-sections.js:37
+msgid "Auto-Create"
+msgstr ""
+
+#: src-js/shared/upsell/locked-option-sections.js:43
+msgid "QR Codes"
+msgstr ""
+
+#: src-js/shared/upsell/locked-option-sections.js:49
+msgid "Link Health"
+msgstr ""
+
+#: src-js/shared/upsell/locked-option-sections.js:55
+msgid "Social Buttons"
+msgstr ""

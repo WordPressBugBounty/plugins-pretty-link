@@ -1,0 +1,841 @@
+{
+    "packages": {
+        "7": {
+            "name": "caseproof/ground-level-container",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-container.git",
+                "reference": "ce6e7f29b059b156f5b8394b8c36f4ceb9816e6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-container/zipball/ce6e7f29b059b156f5b8394b8c36f4ceb9816e6b",
+                "reference": "ce6e7f29b059b156f5b8394b8c36f4ceb9816e6b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "psr/container": "^2.0.1||^2.0.2"
+            },
+            "provide": {
+                "psr/container-implementation": "2.0"
+            },
+            "time": "2026-04-18T16:26:32+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\Container\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Container package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-container/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-container"
+        },
+        "8": {
+            "name": "caseproof/ground-level-database",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-database.git",
+                "reference": "42db5a8266b75ca9b978451c5c3ed1d8bca39df5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-database/zipball/42db5a8266b75ca9b978451c5c3ed1d8bca39df5",
+                "reference": "42db5a8266b75ca9b978451c5c3ed1d8bca39df5",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof/ground-level-query-builder": "^5.0.0",
+                "caseproof/ground-level-support": "^5.0.0",
+                "php": ">=7.4"
+            },
+            "time": "2026-04-20T18:53:46+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\Database\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Database package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-database/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-database"
+        },
+        "9": {
+            "name": "caseproof/ground-level-events",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-events.git",
+                "reference": "798c87cf1dcd19222afdb0305af1a42b0d6a4465"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-events/zipball/798c87cf1dcd19222afdb0305af1a42b0d6a4465",
+                "reference": "798c87cf1dcd19222afdb0305af1a42b0d6a4465",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof/ground-level-container": "^5.0.0",
+                "caseproof/ground-level-database": "^5.0.0",
+                "caseproof/ground-level-support": "^5.0.0",
+                "php": ">=7.4"
+            },
+            "time": "2026-04-20T18:53:46+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\Events\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Events package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-events/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-events"
+        },
+        "10": {
+            "name": "caseproof/ground-level-in-product-notifications",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-in-product-notifications.git",
+                "reference": "b13a1b4eb50346aa015a1aa4c3c768645ffce0fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/b13a1b4eb50346aa015a1aa4c3c768645ffce0fc",
+                "reference": "b13a1b4eb50346aa015a1aa4c3c768645ffce0fc",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof/ground-level-container": "^5.0.0",
+                "caseproof/ground-level-mothership": "^5.0.0",
+                "caseproof/ground-level-support": "^5.0.0",
+                "php": ">=7.4"
+            },
+            "time": "2026-04-20T18:59:04+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\InProductNotifications\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel In-Product Notifications package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-in-product-notifications"
+        },
+        "11": {
+            "name": "caseproof/ground-level-mothership",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-mothership.git",
+                "reference": "a897ad7c064bba506d0f39f3672082b4b3d5c826"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/a897ad7c064bba506d0f39f3672082b4b3d5c826",
+                "reference": "a897ad7c064bba506d0f39f3672082b4b3d5c826",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof/ground-level-container": "^5.0.0",
+                "caseproof/ground-level-support": "^5.0.0",
+                "php": ">=7.4"
+            },
+            "time": "2026-04-20T18:59:04+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\Mothership\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Mothership package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-mothership/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-mothership"
+        },
+        "12": {
+            "name": "caseproof/ground-level-package",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-package.git",
+                "reference": "34d49a76b49997eeafe828f991ec162aebf817a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-package/zipball/34d49a76b49997eeafe828f991ec162aebf817a0",
+                "reference": "34d49a76b49997eeafe828f991ec162aebf817a0",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof/ground-level-container": "^5.0.0",
+                "caseproof/ground-level-support": "^5.0.0",
+                "php": ">=7.4"
+            },
+            "time": "2026-04-20T18:53:46+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\Package\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Package package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-package/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-package"
+        },
+        "14": {
+            "name": "caseproof/ground-level-query-builder",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-query-builder.git",
+                "reference": "9bdb7cc2c704e7a7ca734504b86a09c7251d9275"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-query-builder/zipball/9bdb7cc2c704e7a7ca734504b86a09c7251d9275",
+                "reference": "9bdb7cc2c704e7a7ca734504b86a09c7251d9275",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "time": "2026-01-22T17:20:07+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\QueryBuilder\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel QueryBuilder package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-query-builder/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-query-builder"
+        },
+        "15": {
+            "name": "caseproof/ground-level-resque",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-resque.git",
+                "reference": "31b5d57e6b78a4e84258047e7ef724facd177194"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-resque/zipball/31b5d57e6b78a4e84258047e7ef724facd177194",
+                "reference": "31b5d57e6b78a4e84258047e7ef724facd177194",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof/ground-level-container": "^5.0.0",
+                "caseproof/ground-level-database": "^5.0.0",
+                "caseproof/ground-level-support": "^5.0.0",
+                "php": ">=7.4"
+            },
+            "time": "2026-04-20T18:59:04+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\Resque\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Resque package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-resque/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-resque"
+        },
+        "16": {
+            "name": "caseproof/ground-level-support",
+            "version": "5.0.0",
+            "version_normalized": "5.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-support.git",
+                "reference": "97a6d7a48f8d9005d99ee3a22168b0237b055073"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-support/zipball/97a6d7a48f8d9005d99ee3a22168b0237b055073",
+                "reference": "97a6d7a48f8d9005d99ee3a22168b0237b055073",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "time": "2026-03-13T15:55:23+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\GroundLevel\\Support\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "development@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Support package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-support/tree/5.0.0"
+            },
+            "install-path": "../caseproof/ground-level-support"
+        },
+        "17": {
+            "name": "caseproof/growth-tools",
+            "version": "1.6.0",
+            "version_normalized": "1.6.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/growth-tools.git",
+                "reference": "2c86e23b4333e518a30bec94ab02d0d049680da0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/growth-tools/zipball/2c86e23b4333e518a30bec94ab02d0d049680da0",
+                "reference": "2c86e23b4333e518a30bec94ab02d0d049680da0",
+                "shasum": ""
+            },
+            "require-dev": {
+                "caseproof/coding-standards-php": "^0.6.4",
+                "caseproof/ground-level-console": "^0.20.0",
+                "caseproof/ground-level-php-tests": "^0.8.2",
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "marcocesarato/php-conventional-changelog": "^1.17"
+            },
+            "suggest": {
+                "caseproof/ground-level-console": "A simple command line interface (CLI) based on the Symfony Console Component"
+            },
+            "time": "2026-01-15T11:53:05+00:00",
+            "bin": [
+                "bin/cspf-gt-i18n-replace"
+            ],
+            "type": "wordpress-plugin",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\Caseproof\\GrowthTools\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Caseproof\\GrowthTools\\Tests\\": "./tests"
+                }
+            },
+            "archive": {
+                "exclude": [
+                    "src/js",
+                    "src/styles",
+                    "tests",
+                    "public",
+                    "package.json",
+                    "package-lock.json",
+                    "phpunit.xml.dist",
+                    "*.config.js",
+                    "README.md"
+                ]
+            },
+            "scripts": {
+                "cs-check": [
+                    "./vendor/bin/phpcs"
+                ],
+                "ch-check-errors": [
+                    "@cs-check --error-severity=1 --warning-severity=6"
+                ],
+                "cs-fix": [
+                    "./vendor/bin/phpcbf"
+                ],
+                "install:wp": [
+                    "@tests-php install-wp"
+                ],
+                "tests-php": [
+                    "./vendor/bin/cspf-tests-php"
+                ],
+                "test": [
+                    "./vendor/bin/phpunit"
+                ],
+                "ground-level": [
+                    "./vendor/bin/ground-level"
+                ]
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "Feature plugin to provide Growth Tools to Caseproof distributed plugins.",
+            "support": {
+                "source": "https://github.com/caseproof/growth-tools/tree/1.6.0",
+                "issues": "https://github.com/caseproof/growth-tools/issues"
+            },
+            "install-path": "../caseproof/growth-tools"
+        },
+        "18": {
+            "name": "chillerlan/php-qrcode",
+            "version": "5.0.5",
+            "version_normalized": "5.0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chillerlan/php-qrcode.git",
+                "reference": "7b66282572fc14075c0507d74d9837dab25b38d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chillerlan/php-qrcode/zipball/7b66282572fc14075c0507d74d9837dab25b38d6",
+                "reference": "7b66282572fc14075c0507d74d9837dab25b38d6",
+                "shasum": ""
+            },
+            "require": {
+                "chillerlan/php-settings-container": "^2.1.6 || ^3.2.1",
+                "ext-mbstring": "*",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "chillerlan/php-authenticator": "^4.3.1 || ^5.2.1",
+                "ext-fileinfo": "*",
+                "phan/phan": "^5.5.2",
+                "phpcompatibility/php-compatibility": "10.x-dev",
+                "phpmd/phpmd": "^2.15",
+                "phpunit/phpunit": "^9.6",
+                "setasign/fpdf": "^1.8.2",
+                "slevomat/coding-standard": "^8.23.0",
+                "squizlabs/php_codesniffer": "^4.0.0"
+            },
+            "suggest": {
+                "chillerlan/php-authenticator": "Yet another Google authenticator! Also creates URIs for mobile apps.",
+                "setasign/fpdf": "Required to use the QR FPDF output.",
+                "simple-icons/simple-icons": "SVG icons that you can use to embed as logos in the QR Code"
+            },
+            "time": "2025-11-23T23:51:44+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\chillerlan\\QRCode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Kazuhiko Arase",
+                    "homepage": "https://github.com/kazuhikoarase/qrcode-generator"
+                },
+                {
+                    "name": "ZXing Authors",
+                    "homepage": "https://github.com/zxing/zxing"
+                },
+                {
+                    "name": "Ashot Khanamiryan",
+                    "homepage": "https://github.com/khanamiryan/php-qrcode-detector-decoder"
+                },
+                {
+                    "name": "Smiley",
+                    "email": "smiley@chillerlan.net",
+                    "homepage": "https://github.com/codemasher"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/chillerlan/php-qrcode/graphs/contributors"
+                }
+            ],
+            "description": "A QR Code generator and reader with a user-friendly API. PHP 7.4+",
+            "homepage": "https://github.com/chillerlan/php-qrcode",
+            "keywords": [
+                "phpqrcode",
+                "qr",
+                "qr code",
+                "qr-reader",
+                "qrcode",
+                "qrcode-generator",
+                "qrcode-reader"
+            ],
+            "support": {
+                "docs": "https://php-qrcode.readthedocs.io",
+                "issues": "https://github.com/chillerlan/php-qrcode/issues",
+                "source": "https://github.com/chillerlan/php-qrcode"
+            },
+            "funding": [
+                {
+                    "url": "https://ko-fi.com/codemasher",
+                    "type": "Ko-Fi"
+                }
+            ],
+            "install-path": "../chillerlan/php-qrcode"
+        },
+        "19": {
+            "name": "chillerlan/php-settings-container",
+            "version": "2.1.6",
+            "version_normalized": "2.1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chillerlan/php-settings-container.git",
+                "reference": "5553558bd381fce5108c6d0343c12e488cfec6bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chillerlan/php-settings-container/zipball/5553558bd381fce5108c6d0343c12e488cfec6bb",
+                "reference": "5553558bd381fce5108c6d0343c12e488cfec6bb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "^2.15",
+                "phpstan/phpstan": "^1.11",
+                "phpstan/phpstan-deprecation-rules": "^1.2",
+                "phpunit/phpunit": "^9.6",
+                "squizlabs/php_codesniffer": "^3.10"
+            },
+            "time": "2024-07-17T01:04:28+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\chillerlan\\Settings\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Smiley",
+                    "email": "smiley@chillerlan.net",
+                    "homepage": "https://github.com/codemasher"
+                }
+            ],
+            "description": "A container class for immutable settings objects. Not a DI container. PHP 7.4+",
+            "homepage": "https://github.com/chillerlan/php-settings-container",
+            "keywords": [
+                "PHP7",
+                "Settings",
+                "configuration",
+                "container",
+                "helper"
+            ],
+            "support": {
+                "issues": "https://github.com/chillerlan/php-settings-container/issues",
+                "source": "https://github.com/chillerlan/php-settings-container"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/donate?hosted_button_id=WLYUNAT9ZTJZ4",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://ko-fi.com/codemasher",
+                    "type": "ko_fi"
+                }
+            ],
+            "install-path": "../chillerlan/php-settings-container"
+        },
+        "42": {
+            "name": "matomo/device-detector",
+            "version": "6.5.0",
+            "version_normalized": "6.5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matomo-org/device-detector.git",
+                "reference": "e0fff2309dad83eb3cfb2564e524be715cfcf3cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/e0fff2309dad83eb3cfb2564e524be715cfcf3cf",
+                "reference": "e0fff2309dad83eb3cfb2564e524be715cfcf3cf",
+                "shasum": ""
+            },
+            "require": {
+                "mustangostang/spyc": "*",
+                "php": "^7.2|^8.0"
+            },
+            "replace": {
+                "piwik/device-detector": "self.version"
+            },
+            "require-dev": {
+                "matthiasmullie/scrapbook": "^1.4.7",
+                "mayflower/mo4-coding-standard": "^v9.0.0",
+                "phpstan/phpstan": "^1.10.44",
+                "phpunit/phpunit": "^8.5.2 || ^9 || ^10 || ^11 || ^12",
+                "psr/cache": "^1.0.1 || ^2.0 || ^3.0",
+                "psr/simple-cache": "^1.0.1 || ^2.0 || ^3.0",
+                "slevomat/coding-standard": "<8.16.0",
+                "symfony/yaml": "^5.1.7"
+            },
+            "suggest": {
+                "ext-yaml": "Necessary for using the Pecl YAML parser"
+            },
+            "time": "2026-01-21T07:53:39+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\DeviceDetector\\": ""
+                },
+                "exclude-from-classmap": [
+                    "Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "The Matomo Team",
+                    "email": "hello@matomo.org",
+                    "homepage": "https://matomo.org/team/"
+                }
+            ],
+            "description": "The Universal Device Detection library, that parses User Agents and detects devices (desktop, tablet, mobile, tv, cars, console, etc.), clients (browsers, media players, mobile apps, feed readers, libraries, etc), operating systems, devices, brands and models.",
+            "homepage": "https://matomo.org",
+            "keywords": [
+                "devicedetection",
+                "parser",
+                "useragent"
+            ],
+            "support": {
+                "forum": "https://forum.matomo.org/",
+                "issues": "https://github.com/matomo-org/device-detector/issues",
+                "source": "https://github.com/matomo-org/matomo",
+                "wiki": "https://dev.matomo.org/"
+            },
+            "install-path": "../matomo/device-detector"
+        },
+        "45": {
+            "name": "mustangostang/spyc",
+            "version": "0.6.3",
+            "version_normalized": "0.6.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mustangostang/spyc.git",
+                "reference": "4627c838b16550b666d15aeae1e5289dd5b77da0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mustangostang/spyc/zipball/4627c838b16550b666d15aeae1e5289dd5b77da0",
+                "reference": "4627c838b16550b666d15aeae1e5289dd5b77da0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.3.*@dev"
+            },
+            "time": "2019-09-10T13:16:29+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.5.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "Spyc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mustangostang",
+                    "email": "vlad.andersen@gmail.com"
+                }
+            ],
+            "description": "A simple YAML loader/dumper class for PHP",
+            "homepage": "https://github.com/mustangostang/spyc/",
+            "keywords": [
+                "spyc",
+                "yaml",
+                "yml"
+            ],
+            "support": {
+                "issues": "https://github.com/mustangostang/spyc/issues",
+                "source": "https://github.com/mustangostang/spyc/tree/0.6.3"
+            },
+            "install-path": "../mustangostang/spyc"
+        },
+        "65": {
+            "name": "psr/container",
+            "version": "2.0.2",
+            "version_normalized": "2.0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/c71ecc56dfe541dbd90c5360474fbc405f8d5963",
+                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.0"
+            },
+            "time": "2021-11-05T16:47:00+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "PrettyLinks\\Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/container/issues",
+                "source": "https://github.com/php-fig/container/tree/2.0.2"
+            },
+            "install-path": "../psr/container"
+        }
+    },
+    "dev": false,
+    "dev-package-names": []
+}
