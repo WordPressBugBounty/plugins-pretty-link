@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Links 4.0.1\n"
+"Project-Id-Version: Pretty Links 4.0.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-08T17:43:08+00:00\n"
+"POT-Creation-Date: 2026-07-09T00:15:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -193,11 +193,11 @@ msgid "You do not have permission to access this page."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:76
-msgid "Rebuilt admin experience"
+msgid "A rebuilt admin"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:77
-msgid "Every screen is a focused React app built on WordPress' own component system. Faster to load, easier to read, keyboard-navigable end to end."
+msgid "Every screen was rebuilt with WordPress' own interface components. Pages load faster, read more clearly, and you can get around the whole thing from the keyboard."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:81
@@ -205,15 +205,15 @@ msgid "Blazing-fast redirects"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:82
-msgid "A single prepared-statement lookup per request and a deferred click write so the redirect response goes out the door first — your visitors never wait on analytics."
+msgid "Each redirect does one quick database lookup and saves the click afterward, so visitors are on their way first and never wait on analytics."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:86
-msgid "Trash, restore, and safer deletes"
+msgid "Trash and restore"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:87
-msgid "Links move to a dedicated Trash view before they're removed for good. Restore anything you deleted by mistake — no database surgery required."
+msgid "Links move to a Trash view before they're gone for good, so you can bring back anything you removed by mistake. No database work required."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:91
@@ -221,7 +221,7 @@ msgid "Reserved-slug protection"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:92
-msgid "Pretty Links now blocks collisions with WordPress core paths, REST routes, and other plugin URLs before they happen — so a stray slug can't take down /wp-admin."
+msgid "Pretty Links now catches slugs that would clash with WordPress core paths, REST routes, and other plugins, so a stray link can't break /wp-admin."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:96
@@ -229,7 +229,7 @@ msgid "Configurable click retention"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:97
-msgid "Choose how long click history sticks around — 30 days through 2 years — and a scheduled task keeps the clicks table lean without manual purges."
+msgid "Choose how long to keep click history, anywhere from 30 days to 2 years, and a scheduled task tidies up old clicks for you."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:101
@@ -237,7 +237,7 @@ msgid "Privacy built in"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:102
-msgid "Optional IP anonymization, CDN-header geolocation (Cloudflare, Akamai, Google), and full support for WordPress' privacy export and erasure tools."
+msgid "Optional IP anonymization, geolocation from CDN headers (Cloudflare, Akamai, Google), and full support for WordPress' privacy export and erasure tools."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:106
@@ -245,7 +245,7 @@ msgid "Block editor & Classic integrations"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:107
-msgid "Insert and create pretty links without leaving the post editor. A dedicated Gutenberg block with typeahead search, plus a refreshed Classic editor button."
+msgid "Insert and create pretty links without leaving the post editor: a dedicated block with type-ahead search, plus a refreshed button for the Classic editor."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:111
@@ -253,7 +253,7 @@ msgid "Configurable link prefix"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:112
-msgid "New installs default to /go/<slug> so caching layers can cleanly exclude link traffic. Existing sites keep whatever prefix they had."
+msgid "New installs use a /go/ prefix by default so caching layers can skip link traffic cleanly. Existing sites keep the prefix they already have."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:116
@@ -261,7 +261,7 @@ msgid "PrettyPay™ Stripe links"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:117
-msgid "Collect a Stripe payment before the redirect with a dedicated Pay Link type — connect once and every checkout is wired up end to end."
+msgid "Collect a Stripe payment before the redirect with a dedicated Pay Link. Connect Stripe once and every checkout is ready to go."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:121
@@ -269,15 +269,15 @@ msgid "Bot & device detection"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:122
-msgid "Every click captures device type, browser, and a bot flag so reports reflect real visitors — not crawlers padding the numbers."
+msgid "Every click records device type, browser, and whether it looks like a bot, so your reports reflect real visitors instead of crawlers."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:126
-msgid "Powerful bulk actions & search"
+msgid "Bulk actions & search"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:127
-msgid "Search, sort, and filter thousands of links in milliseconds, then trash, restore, toggle nofollow, or flip tracking on dozens at once from the new Links table."
+msgid "Search, sort, and filter thousands of links in an instant, then trash, restore, toggle nofollow, or switch tracking on many at once from the new Links table."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:131
@@ -285,7 +285,7 @@ msgid "CSV import & click-history export"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:132
-msgid "Bulk-import hundreds of links from a spreadsheet and export full click history — with filters, date ranges, and Unicode-safe encoding — straight to CSV."
+msgid "Import hundreds of links from a spreadsheet, and export full click history to CSV with filters, date ranges, and Unicode-safe encoding."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:139
@@ -293,7 +293,7 @@ msgid "Split testing with reports"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:140
-msgid "Rotate visitors across multiple destinations and measure which one wins. Per-variant charts, conversion tracking, and winner detection."
+msgid "Send visitors across several destinations and see which one performs best, with per-variant charts, conversion tracking, and automatic winner detection."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:144
@@ -302,7 +302,7 @@ msgid "Smart targeting"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:145
-msgid "Send visitors to different destinations based on country, device, browser, or time of day — all without touching code."
+msgid "Send visitors to different destinations based on their country, device, browser, or the time of day, all without touching code."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:149
@@ -310,7 +310,7 @@ msgid "QR codes for every link"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:150
-msgid "Generate PNG or SVG QR codes on demand, with optional logo overlay and configurable size and colors."
+msgid "Generate a PNG or SVG QR code for any link on demand, with an optional logo overlay and your choice of size and colors."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:154
@@ -318,7 +318,7 @@ msgid "Pretty Bar interstitials"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:155
-msgid "Wrap any destination in a branded top bar, bottom bar, or floating pill — with your logo, your colors, and optional share buttons."
+msgid "Wrap any destination in a branded top bar, bottom bar, or floating pill, complete with your logo, your colors, and optional share buttons."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:159
@@ -326,7 +326,7 @@ msgid "Automatic affiliate linking"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:160
-msgid "Auto-linkify keywords across posts, pages, custom post types, WooCommerce and more, silently rewrite existing URLs through Pretty Links, and auto-create new pretty links from URL patterns in your content — turn published writing into affiliate revenue without manual edits."
+msgid "Turn keywords into links automatically across posts, pages, custom post types, WooCommerce, and more. Pretty Links can also rewrite existing URLs and create new links from patterns in your content, so your published writing earns without manual edits."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:164
@@ -335,7 +335,7 @@ msgid "Link health monitoring"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:165
-msgid "Scheduled health checks catch broken destinations before your visitors do, with optional email digests summarizing what needs attention."
+msgid "Scheduled checks catch broken destinations before your visitors do, with optional email digests of what needs attention."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:169
@@ -344,7 +344,7 @@ msgid "Link categories"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:170
-msgid "Organize hundreds or thousands of links with first-class categories. Filter the dashboard and reports by category at a glance."
+msgid "Organize hundreds or thousands of links into categories, then filter the dashboard and reports by category at a glance."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:174
@@ -353,7 +353,7 @@ msgid "Expiring links"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:175
-msgid "Set a date, time, or click count and let Pretty Links disable the link automatically when it hits the limit — ideal for limited-time promos."
+msgid "Set a date, time, or click count, and Pretty Links disables the link on its own once it's reached. Handy for limited-time promos."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:179
@@ -361,7 +361,7 @@ msgid "Cloaked & referrer-wiping redirects"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:180
-msgid "Go beyond 301/302/307 with cloak, JavaScript, and Pretty Bar redirects. Meta Refresh wipes the Referer header so merchants can't see the page your affiliate click came from — great for protecting your traffic sources."
+msgid "Go beyond 301/302/307 with cloak, JavaScript, and Pretty Bar redirects. Meta Refresh even clears the Referer header, so merchants can't see where your affiliate clicks came from and your traffic sources stay private."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:184
@@ -370,7 +370,7 @@ msgid "Redirect turbo mode"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:185
-msgid "Pro installs a tiny must-use plugin that answers pretty-link requests before the rest of WordPress loads — no theme, no plugins, no page builder in the hot path. Built for high-traffic affiliate sites."
+msgid "Pro installs a small must-use plugin that answers pretty-link requests before the rest of WordPress loads, skipping your theme, plugins, and page builder. Built for high-traffic affiliate sites."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:189
@@ -378,7 +378,7 @@ msgid "Custom reports & A/B conversion tracking"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:190
-msgid "Aggregate clicks across any set of pretty links into a single report and track real conversion goals via a one-line tracking pixel you drop on your thank-you or confirmation pages — see which split-test variant actually closes sales, not just which one gets the most clicks."
+msgid "Combine clicks from any group of links into one report, and track real conversions with a one-line pixel you add to your thank-you or confirmation pages. See which split-test variant actually makes sales, not just which gets the most clicks."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:194
@@ -386,7 +386,7 @@ msgid "Visual click history"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:195
-msgid "Pro adds KPI cards, an over-time line chart, a top-links list, and donut-chart breakdowns by country, referrer, device, and browser — all on the Click History page so you can spot trends without exporting to a spreadsheet."
+msgid "Pro adds summary cards, an over-time line chart, a top-links list, and breakdowns by country, referrer, device, and browser, right on the Click History page. Spot trends without exporting a spreadsheet."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:206
@@ -397,7 +397,7 @@ msgid "Link in Bio"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:207
-msgid "Publish a single page on your own domain that holds every link you want to share — perfect for the one-link-only field on Instagram, TikTok, and other social bios, with your branding instead of a third-party shortener."
+msgid "Publish one page on your own domain with all the links you want to share. Perfect for the single-link field on Instagram, TikTok, and other bios, branded as you instead of a third-party shortener."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:211
@@ -408,7 +408,7 @@ msgid "Developer Tools"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:212
-msgid "A documented REST API plus webhook events for link added, updated, trashed, restored, and removed — wire Pretty Links into your stack, sync with external systems, and automate workflows without touching the database."
+msgid "A documented REST API and webhook events for when links are added, updated, trashed, restored, or removed. Connect Pretty Links to your stack and automate workflows without touching the database."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:216
@@ -419,7 +419,7 @@ msgid "Splash Pages"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:217
-msgid "A new splash redirect type that shows visitors a branded interstitial — heading, image or video, and up to two pretty-link CTAs — before forwarding them to the destination. Comes with four templates, a per-link funnel report, and full visitor-correlation analytics."
+msgid "A new splash redirect that shows a branded page (heading, image or video, and up to two link buttons) before sending visitors on. Includes four templates and a per-link funnel report that ties CTA clicks back to each view."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:221
@@ -430,7 +430,7 @@ msgid "Product Displays"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:222
-msgid "Drop beautiful product and product-group display boxes into any post or page — image, price, and call-to-action button pulling through one of your pretty links so every click is tracked."
+msgid "Drop product and product-group display boxes into any post or page. Each one shows an image, price, and call-to-action button that links through your pretty links, so every click is tracked."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:226
@@ -439,7 +439,7 @@ msgid "UTMs"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:227
-msgid "Build Google Analytics UTM parameters (source, medium, campaign, content, term, ID) right on the link form — no manual URL editing, no broken tags, no copy-paste from a spreadsheet."
+msgid "Build Google Analytics UTM tags (source, medium, campaign, content, term, and ID) right on the link form. No hand-editing URLs, no broken tags, no copy-pasting from a spreadsheet."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:231
@@ -450,7 +450,7 @@ msgstr ""
 
 #. Translators: %1$s: opening MemberPress link anchor, %2$s: closing anchor.
 #: src/Admin/Pages/WhatsNew.php:234
-msgid "Drop a self-service pretty-link manager onto a front-end page so logged-in users create and manage their own shortlinks without ever touching wp-admin. Pair it with %1$sMemberPress%2$s to charge subscriptions for access and run your own branded URL-shortening service."
+msgid "Add a self-service link manager to a front-end page so logged-in users can create and manage their own short links without ever seeing wp-admin. Pair it with %1$sMemberPress%2$s to charge for access and run your own branded link-shortening service."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:262
@@ -458,7 +458,7 @@ msgid "What's new in Pretty Links 4.0"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:264
-msgid "A ground-up rewrite focused on speed, clarity, and the tools you use every day. Here's what changed."
+msgid "We rebuilt Pretty Links from scratch to make it faster and easier to use. Here's what's new."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:269
@@ -466,7 +466,7 @@ msgid "In every install"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:271
-msgid "The rewritten foundation that ships with Pretty Links Lite and Pro alike — faster, safer, and easier to live in every day."
+msgid "This is the new foundation under both the free and Pro versions. It's faster, safer, and easier to work in day to day."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:285
@@ -474,7 +474,7 @@ msgid "Unlock even more with Pro"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:288
-msgid "These features ship with Pretty Links Pro — the same rebuilt foundation, with power tools for serious affiliate marketers and content creators."
+msgid "Pro builds on the same foundation with extra tools for affiliate marketers and content creators."
 msgstr ""
 
 #. translators: suffix appended to Pro-locked options in the Lite dropdown.
@@ -493,7 +493,7 @@ msgstr ""
 
 #. Translators: %1$s: opening anchor to the add-ons page, %2$s: closing anchor.
 #: src/Admin/Pages/WhatsNew.php:319
-msgid "Six Pro %1$sadd-ons%2$s extend Pretty Links Pro — hosted bio pages, REST + webhook access, branded splash interstitials, rich product cards, an in-form UTM builder, and a front-end user dashboard. Link in Bio and Developer Tools are included on the Marketer plan; the rest unlock on Executive (Super Affiliate)."
+msgid "Six Pro %1$sadd-ons%2$s take Pretty Links further: hosted bio pages, REST and webhook access, branded splash pages, product cards, a UTM builder on the link form, and a front-end dashboard for your users. Link in Bio and Developer Tools come with the Marketer plan; the rest unlock on Executive (Super Affiliate)."
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:328

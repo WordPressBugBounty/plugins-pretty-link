@@ -98,6 +98,15 @@ class Resolver
         foreach ($ref->getProperties() as $prop) {
             $doc = $prop->getDocComment();
 
+            // PL strauss-fixup: opcache.save_comments=0 strips docblocks from the
+            // compiled class, so getDocComment() returns false and @inject-based DI
+            // silently breaks (fatal on required scalar params like Worker::$prefix
+            // on hosts such as Kinsta). Recover the annotation from the on-disk
+            // source, which opcache never rewrites.
+            if (false === $doc) {
+                $doc = self::injectDocFromSource($prop);
+            }
+
             if (false === $doc) {
                 continue;
             }
@@ -108,6 +117,49 @@ class Resolver
         }
 
         return $map;
+    }
+
+    /**
+     * PL strauss-fixup: recover a property's @inject annotation from the on-disk
+     * source when opcache.save_comments=0 has stripped it from the compiled class
+     * (ReflectionProperty::getDocComment() === false). The source file is never
+     * rewritten by opcache, so re-scanning it yields the original annotation.
+     * Cached per file.
+     *
+     * @param  \ReflectionProperty $prop The property whose annotation to recover.
+     * @return string|false A synthetic "@inject <value>" docblock, or false.
+     */
+    private static function injectDocFromSource(\ReflectionProperty $prop)
+    {
+        static $cache = [];
+
+        $file = $prop->getDeclaringClass()->getFileName();
+        if (false === $file || !is_file($file)) {
+            return false;
+        }
+
+        if (!isset($cache[$file])) {
+            $cache[$file] = [];
+            $contents     = (string) file_get_contents($file);
+            // Pair each "@inject <value>" with the property declaration that
+            // immediately follows its docblock.
+            if (
+                preg_match_all(
+                    '/@inject\s+(\S+).*?\*\/\s*(?:public|protected|private)[^;$]*\$(\w+)/s',
+                    $contents,
+                    $matches,
+                    PREG_SET_ORDER
+                )
+            ) {
+                foreach ($matches as $pair) {
+                    $cache[$file][$pair[2]] = $pair[1];
+                }
+            }
+        }
+
+        $name = $prop->getName();
+
+        return isset($cache[$file][$name]) ? '@inject ' . $cache[$file][$name] : false;
     }
 
     /**

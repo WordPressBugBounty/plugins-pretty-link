@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.0
+Stable Tag: 4.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,15 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.3 =
+* Fixed a fatal error on hosts that run OPcache with doc-comments disabled (opcache.save_comments=0), such as Kinsta.
+
+= 4.0.2 =
+* Refreshed the "What's New in 4.0" page copy.
+
+= 4.0.1 =
+* Maintenance: distribution packaging cleanup; no functional changes.
 
 = 4.0.0 =
 * Complete rewrite — brand-new React-based admin UI, REST-first API, and custom-table data model
