@@ -38,10 +38,16 @@ class PluginRow
     /**
      * Replace the admin footer text with a review prompt on our screens.
      *
-     * @param  string $text Current admin footer text.
-     * @return string
+     * Hooked to `admin_footer_text`, which fires on every admin page. The
+     * incoming value is intentionally untyped: another plugin or a host
+     * mu-plugin can pass null (or a non-string), and a strict `string` type
+     * hint would fatal with a TypeError on every admin screen before our own
+     * scope check runs. Non-Pretty Links screens are passed through untouched.
+     *
+     * @param  mixed $text Current admin footer text (may be null).
+     * @return mixed
      */
-    public static function footerText(string $text): string
+    public static function footerText($text)
     {
         if (!self::onPrettyLinksScreen()) {
             return $text;
