@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.4
+Stable Tag: 4.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,10 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.5 =
+* Pro: Restored QR code downloads (PNG and SVG) from the Links list and link editor, added logo support to SVG QR codes, and improved scannability for codes that include a logo.
+* Pro: The per-link QR code preview now encodes the link's own pretty URL.
 
 = 4.0.4 =
 * Fixed a fatal error (TypeError) in the admin footer text when another plugin or host sets it to a non-string value.
