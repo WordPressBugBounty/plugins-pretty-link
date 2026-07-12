@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.5
+Stable Tag: 4.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,14 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.6 =
+* Pro: Fixed geo targeting never matching on hosts without CDN country headers — country resolution now falls back to IP geolocation like v3, so country rules work everywhere.
+* Pro: When the visitor's country can't be determined, country rules no longer match and the link's normal target URL is used.
+* Geo lookups are now cached per network block (up to a month when the geolocation database confirms the whole block shares one country), greatly reducing lookup calls on busy links.
+* The IP anonymization setting is now honored by all geolocation caching; nothing derived from the full IP is stored when it's enabled.
+* Fixed IPv4-mapped IPv6 addresses (dual-stack servers) being anonymized down to an unusable value in click records.
+* Cloudflare's "XX" unknown-country pseudo-code is no longer treated as a real country by geo rules.
 
 = 4.0.5 =
 * Pro: Restored QR code downloads (PNG and SVG) from the Links list and link editor, added logo support to SVG QR codes, and improved scannability for codes that include a logo.

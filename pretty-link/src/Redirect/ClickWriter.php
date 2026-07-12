@@ -433,22 +433,16 @@ class ClickWriter
     }
 
     /**
-     * Resolve the client IP from CDN headers, with optional anonymization
-     * and the `pl_get_current_client_ip` override filter.
+     * Resolve the client IP for click storage: the shared Geo::rawIp()
+     * ladder, then optional anonymization, then the
+     * `pl_get_current_client_ip` firing so hook consumers see the value
+     * as stored.
      *
      * @return string The resolved client IP, or '' if none.
      */
     private function resolveIp(): string
     {
-        $ip = '';
-        // Honor CDN headers first.
-        foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'] as $key) {
-            if (!empty($_SERVER[$key])) {
-                $val = (string) $_SERVER[$key];
-                $ip  = trim((string) strtok($val, ','));
-                break;
-            }
-        }
+        $ip = Geo::rawIp();
         if ($ip !== '' && (bool) $this->options->get('anonymize_ips', false)) {
             $ip = IpUtil::anonymize($ip);
         }
