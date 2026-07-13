@@ -6,6 +6,7 @@ namespace PrettyLinks\Repositories;
 
 use PrettyLinks\GroundLevel\Events\Models\Event;
 use PrettyLinks\Options\Store as OptionsStore;
+use PrettyLinks\Redirect\Engine;
 use PrettyLinks\Redirect\ReservedSlugs;
 use PrettyLinks\Slug\Generator as SlugGenerator;
 
@@ -1093,7 +1094,7 @@ class Links
 
     /**
      * Coerce a user-supplied slug into the engine-safe alphabet used by the
-     * dispatcher (see Redirect\Engine::extractSlug — `[A-Za-z0-9_\-]+`).
+     * dispatcher (see Redirect\Engine::SLUG_CHAR_CLASS).
      * Whitespace and separators become dashes; invalid chars are stripped.
      *
      * @param  string $url URL to validate.
@@ -1117,12 +1118,15 @@ class Links
         if ($slug === '') {
             return '';
         }
-        // Replace runs of whitespace with a single dash, then strip
-        // anything outside the engine alphabet. `/` is allowed so users can
-        // type multi-segment slugs like `go/abc`; the prefix feature bakes
-        // such slashes into stored slugs at creation time.
+        // Replace runs of whitespace with a single dash, then strip anything
+        // outside the engine alphabet. The allowed set (Engine::SLUG_CHAR_CLASS)
+        // is the RFC 3986 path-character set v3 accepted — including `.`, `=`,
+        // `~` and `+` — so slugs like `hp-x32.exe=latest` survive the save and
+        // still resolve. `/` is allowed so users can type multi-segment slugs
+        // like `go/abc`; the prefix feature bakes such slashes into stored
+        // slugs at creation time.
         $slug = (string) preg_replace('/\s+/', '-', $slug);
-        $slug = (string) preg_replace('#[^A-Za-z0-9_\-/]#', '', $slug);
+        $slug = (string) preg_replace('#[^' . Engine::SLUG_CHAR_CLASS . ']#', '', $slug);
         $slug = (string) preg_replace('#/+#', '/', $slug);
         $slug = (string) preg_replace('/-+/', '-', $slug);
         return trim($slug, '-/');

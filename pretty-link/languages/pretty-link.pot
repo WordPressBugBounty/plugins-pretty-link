@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Links 4.0.6\n"
+"Project-Id-Version: Pretty Links 4.0.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-12T01:51:20+00:00\n"
+"POT-Creation-Date: 2026-07-13T22:10:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -175,7 +175,7 @@ msgstr ""
 
 #: src/Admin/Pages/PayLinks.php:37
 #: src/Admin/Pages/PayLinks.php:38
-#: src-js/shared/components/LinksApp.js:109
+#: src-js/shared/components/LinksApp.js:113
 msgid "PrettyPay™ Links"
 msgstr ""
 
@@ -790,7 +790,7 @@ msgstr ""
 
 #: src/Editor/ClassicEditor.php:106
 #: src-js/editor/InlineLinkUI.js:481
-#: src-js/shared/components/LinksApp.js:1260
+#: src-js/shared/components/LinksApp.js:1315
 msgid "Apply"
 msgstr ""
 
@@ -835,7 +835,7 @@ msgstr ""
 #: src/Editor/ClassicEditor.php:114
 #: src-js/editor/InlineLinkUI.js:570
 #: src-js/shared/components/LinkForm.js:525
-#: src-js/shared/components/LinksApp.js:533
+#: src-js/shared/components/LinksApp.js:566
 #: src-js/shared/components/PayLinkForm.js:348
 #: src-js/shared/components/TaxonomyApp.js:254
 #: src-js/shared/components/TaxonomyApp.js:465
@@ -858,7 +858,7 @@ msgid "Could not create link. The slug may already be in use."
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:118
-#: src-js/shared/components/ChipPicker.js:161
+#: src-js/shared/components/ChipPicker.js:185
 msgid "No matches."
 msgstr ""
 
@@ -1266,7 +1266,7 @@ msgstr ""
 
 #: src/Onboarding/views/paylinks.php:64
 #: src-js/options/PaymentsSection.js:404
-#: src-js/shared/components/LinksApp.js:970
+#: src-js/shared/components/LinksApp.js:1025
 msgid "Connect Stripe"
 msgstr ""
 
@@ -3085,12 +3085,12 @@ msgid "Browse, filter, and export every recorded click."
 msgstr ""
 
 #: src-js/clicks/index.js:790
-#: src-js/shared/components/LinksApp.js:1024
+#: src-js/shared/components/LinksApp.js:1079
 msgid "Columns"
 msgstr ""
 
 #: src-js/clicks/index.js:797
-#: src-js/shared/components/LinksApp.js:1031
+#: src-js/shared/components/LinksApp.js:1086
 msgid "Show columns"
 msgstr ""
 
@@ -3122,7 +3122,7 @@ msgstr ""
 #: src-js/clicks/index.js:949
 #: src-js/clicks/index.js:960
 #: src-js/options/index.js:39
-#: src-js/shared/components/LinksApp.js:99
+#: src-js/shared/components/LinksApp.js:103
 msgid "Links"
 msgstr ""
 
@@ -3131,8 +3131,8 @@ msgid "Search links…"
 msgstr ""
 
 #: src-js/clicks/index.js:970
-#: src-js/shared/components/LinksApp.js:1083
-#: src-js/shared/components/LinksApp.js:1102
+#: src-js/shared/components/LinksApp.js:1138
+#: src-js/shared/components/LinksApp.js:1157
 #: src-js/shared/components/TaxonomyApp.js:371
 msgid "Search"
 msgstr ""
@@ -3155,7 +3155,7 @@ msgid "%s clicks"
 msgstr ""
 
 #: src-js/clicks/index.js:1280
-#: src-js/shared/components/LinksApp.js:1297
+#: src-js/shared/components/LinksApp.js:1352
 msgid "Per page"
 msgstr ""
 
@@ -3187,7 +3187,7 @@ msgstr ""
 #: src-js/dashboard/index.js:290
 #: src-js/dashboard/index.js:721
 #: src-js/dashboard/index.js:873
-#: src-js/shared/components/LinksApp.js:105
+#: src-js/shared/components/LinksApp.js:109
 msgid "Add new link"
 msgstr ""
 
@@ -3225,7 +3225,7 @@ msgstr ""
 #: src-js/dashboard/index.js:812
 #: src-js/dashboard/index.js:917
 #: src-js/dashboard/index.js:1002
-#: src-js/shared/components/LinksApp.js:508
+#: src-js/shared/components/LinksApp.js:541
 #: src-js/shared/components/TaxonomyApp.js:238
 msgid "Untitled"
 msgstr ""
@@ -3254,7 +3254,7 @@ msgstr ""
 
 #: src-js/dashboard/index.js:274
 #: src-js/dashboard/index.js:857
-#: src-js/shared/components/LinksApp.js:100
+#: src-js/shared/components/LinksApp.js:104
 msgid "No links yet."
 msgstr ""
 
@@ -3268,8 +3268,8 @@ msgstr ""
 #: src-js/dashboard/index.js:894
 #: src-js/dashboard/index.js:898
 #: src-js/editor/InlineLinkUI.js:496
-#: src-js/shared/components/LinksApp.js:514
-#: src-js/shared/components/LinksApp.js:515
+#: src-js/shared/components/LinksApp.js:547
+#: src-js/shared/components/LinksApp.js:548
 msgid "Edit link"
 msgstr ""
 
@@ -3294,8 +3294,8 @@ msgstr ""
 #: src-js/dashboard/index.js:425
 #: src-js/dashboard/index.js:560
 #: src-js/dashboard/index.js:564
-#: src-js/shared/components/LinksApp.js:697
-#: src-js/shared/components/LinksApp.js:701
+#: src-js/shared/components/LinksApp.js:730
+#: src-js/shared/components/LinksApp.js:734
 msgid "View clicks"
 msgstr ""
 
@@ -4087,12 +4087,12 @@ msgstr ""
 msgid "This export contains %s links. The download may be slow and could use a lot of memory in your browser. Continue?"
 msgstr ""
 
-#: src-js/shared/components/ChipPicker.js:162
-#: src-js/shared/components/LinksApp.js:1363
+#: src-js/shared/components/ChipPicker.js:186
+#: src-js/shared/components/LinksApp.js:1418
 msgid "Type to search…"
 msgstr ""
 
-#: src-js/shared/components/ChipPicker.js:171
+#: src-js/shared/components/ChipPicker.js:195
 #: src-js/shared/components/StripeProductPicker.js:208
 msgid "Searching…"
 msgstr ""
@@ -4102,7 +4102,7 @@ msgid "Are you sure?"
 msgstr ""
 
 #: src-js/shared/components/ConfirmDialog.js:45
-#: src-js/shared/components/LinksApp.js:1397
+#: src-js/shared/components/LinksApp.js:1452
 msgid "Confirm"
 msgstr ""
 
@@ -4227,7 +4227,7 @@ msgstr ""
 #: src-js/shared/components/LinkForm.js:457
 #: src-js/shared/components/LinkForm.js:470
 #: src-js/shared/components/LinkIndicators.js:35
-#: src-js/shared/components/LinksApp.js:1112
+#: src-js/shared/components/LinksApp.js:1167
 msgid "Redirect type"
 msgstr ""
 
@@ -4324,166 +4324,178 @@ msgstr ""
 msgid "Trashed"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:49
+#: src-js/shared/components/LinksApp.js:53
 msgid "Bulk actions"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:52
+#: src-js/shared/components/LinksApp.js:56
 msgid "Move to trash"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:53
+#: src-js/shared/components/LinksApp.js:57
 msgid "move to trash"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:57
+#: src-js/shared/components/LinksApp.js:61
 msgid "Restore"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:58
+#: src-js/shared/components/LinksApp.js:62
 msgid "restore"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:62
+#: src-js/shared/components/LinksApp.js:66
 msgid "Delete permanently"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:63
+#: src-js/shared/components/LinksApp.js:67
 msgid "permanently delete"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:67
+#: src-js/shared/components/LinksApp.js:71
 msgid "Enable nofollow"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:68
+#: src-js/shared/components/LinksApp.js:72
 msgid "enable nofollow on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:72
+#: src-js/shared/components/LinksApp.js:76
 msgid "Disable nofollow"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:73
+#: src-js/shared/components/LinksApp.js:77
 msgid "disable nofollow on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:77
+#: src-js/shared/components/LinksApp.js:81
 msgid "Enable sponsored"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:78
+#: src-js/shared/components/LinksApp.js:82
 msgid "enable sponsored on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:82
+#: src-js/shared/components/LinksApp.js:86
 msgid "Disable sponsored"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:83
+#: src-js/shared/components/LinksApp.js:87
 msgid "disable sponsored on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:87
+#: src-js/shared/components/LinksApp.js:91
 msgid "Enable tracking"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:88
+#: src-js/shared/components/LinksApp.js:92
 msgid "enable click tracking on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:92
+#: src-js/shared/components/LinksApp.js:96
 msgid "Disable tracking"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:93
+#: src-js/shared/components/LinksApp.js:97
 msgid "disable click tracking on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:101
+#: src-js/shared/components/LinksApp.js:105
 msgid "Your links will appear here. Add your first pretty link to start tracking clicks."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:106
+#: src-js/shared/components/LinksApp.js:110
 #: src-js/shared/hooks/useLinks.js:68
 msgid "Unable to load links."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:110
+#: src-js/shared/components/LinksApp.js:114
 msgid "No PrettyPay™ Links yet."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:111
+#: src-js/shared/components/LinksApp.js:115
 msgid "PrettyPay™ Links accept payment via Stripe before redirecting. Add one to get started."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:115
+#: src-js/shared/components/LinksApp.js:119
 msgid "Add new PrettyPay™ Link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:116
+#: src-js/shared/components/LinksApp.js:120
 msgid "Unable to load PrettyPay™ Links."
 msgstr ""
 
 #. translators: %d: number of links.
-#: src-js/shared/components/LinksApp.js:261
+#: src-js/shared/components/LinksApp.js:265
 msgid "Bulk action applied to %d link(s)."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:274
+#: src-js/shared/components/LinksApp.js:278
 msgid "Unable to complete bulk action."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:284
+#: src-js/shared/components/LinksApp.js:288
 msgid "Select an action and at least one link."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:299
+#: src-js/shared/components/LinksApp.js:303
 msgid "Unable to load options for this action."
 msgstr ""
 
 #. translators: 1: action verb, 2: link count.
-#: src-js/shared/components/LinksApp.js:312
+#: src-js/shared/components/LinksApp.js:316
 msgid "Are you sure you want to %1$s %2$d link(s)?"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:338
+#: src-js/shared/components/LinksApp.js:342
 msgid "Clone this link? A copy will be created and opened for editing."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:350
+#: src-js/shared/components/LinksApp.js:354
 msgid "Move this link to the trash?"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:362
-msgid "Permanently delete this link? This cannot be undone."
-msgstr ""
-
-#: src-js/shared/components/LinksApp.js:373
-msgid "Link restored."
+#: src-js/shared/components/LinksApp.js:366
+msgid "Reset all click statistics for this link? This permanently deletes its click history and sets its counters back to zero. This cannot be undone."
 msgstr ""
 
 #: src-js/shared/components/LinksApp.js:378
+msgid "Permanently delete this link? This cannot be undone."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:389
+msgid "Link restored."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:394
 msgid "Unable to restore link."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:393
+#: src-js/shared/components/LinksApp.js:409
 msgid "Link moved to trash."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:398
+#: src-js/shared/components/LinksApp.js:414
 msgid "Link permanently deleted."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:410
+#: src-js/shared/components/LinksApp.js:423
+msgid "Resetting click statistics in the background. This keeps running even if you leave this page."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:430
+msgid "Link click statistics reset."
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:443
 msgid "Link duplicated."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:416
+#: src-js/shared/components/LinksApp.js:449
 msgid "Unable to complete action."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:494
+#: src-js/shared/components/LinksApp.js:527
 #: src-js/shared/components/PayLinkForm.js:333
 #: src-js/shared/components/PayLinkForm.js:343
 #: src-js/shared/components/StripeAddProductDialog.js:97
@@ -4492,122 +4504,127 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:557
+#: src-js/shared/components/LinksApp.js:590
 msgid "Copy Pretty Link URL"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:571
+#: src-js/shared/components/LinksApp.js:604
 msgid "Target"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:590
+#: src-js/shared/components/LinksApp.js:623
 msgid "Open target URL"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:605
-#: src-js/shared/components/LinksApp.js:606
+#: src-js/shared/components/LinksApp.js:638
+#: src-js/shared/components/LinksApp.js:639
 msgid "Tracking disabled for this link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:618
+#: src-js/shared/components/LinksApp.js:651
 msgid "Clicks"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:636
+#: src-js/shared/components/LinksApp.js:669
 msgid "Uniques"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:655
+#: src-js/shared/components/LinksApp.js:688
 msgid "Created"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:662
+#: src-js/shared/components/LinksApp.js:695
 msgid "Trashed on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:664
+#: src-js/shared/components/LinksApp.js:697
 msgid "Trashed:"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:675
+#: src-js/shared/components/LinksApp.js:708
 msgid "Actions"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:729
-#: src-js/shared/components/LinksApp.js:733
+#: src-js/shared/components/LinksApp.js:765
+#: src-js/shared/components/LinksApp.js:769
+msgid "Reset clicks"
+msgstr ""
+
+#: src-js/shared/components/LinksApp.js:784
+#: src-js/shared/components/LinksApp.js:788
 msgid "Duplicate link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:746
-#: src-js/shared/components/LinksApp.js:750
+#: src-js/shared/components/LinksApp.js:801
+#: src-js/shared/components/LinksApp.js:805
 msgid "Trash link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:766
-#: src-js/shared/components/LinksApp.js:770
+#: src-js/shared/components/LinksApp.js:821
+#: src-js/shared/components/LinksApp.js:825
 msgid "Restore link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:786
-#: src-js/shared/components/LinksApp.js:790
+#: src-js/shared/components/LinksApp.js:841
+#: src-js/shared/components/LinksApp.js:845
 msgid "Delete forever"
 msgstr ""
 
 #. translators: the "3%" here is a literal percentage, not a sprintf placeholder.
-#: src-js/shared/components/LinksApp.js:1058
+#: src-js/shared/components/LinksApp.js:1113
 msgid "A 3% platform fee applies to every PrettyPay™ checkout"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1062
+#: src-js/shared/components/LinksApp.js:1117
 msgid "Upgrade to Pretty Links Pro and remove the platform fee — you keep every dollar after Stripe's own processing fees."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1066
+#: src-js/shared/components/LinksApp.js:1121
 #: src-js/shared/components/PayLinkForm.js:326
 msgid "Remove the fee"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1085
+#: src-js/shared/components/LinksApp.js:1140
 msgid "Search name, slug, or URL…"
 msgstr ""
 
 #. translators: %s: total result count for the current filters.
-#: src-js/shared/components/LinksApp.js:1096
+#: src-js/shared/components/LinksApp.js:1151
 #: src-js/shared/components/TaxonomyApp.js:384
 msgid "%s Results"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1132
+#: src-js/shared/components/LinksApp.js:1187
 msgid "Status filter"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1213
-#: src-js/shared/components/LinksApp.js:1214
+#: src-js/shared/components/LinksApp.js:1268
+#: src-js/shared/components/LinksApp.js:1269
 msgid "Clear filters"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1230
+#: src-js/shared/components/LinksApp.js:1285
 msgid "Items left in trash can be restored until you delete them permanently."
 msgstr ""
 
 #. translators: %d: number of selected links.
-#: src-js/shared/components/LinksApp.js:1243
+#: src-js/shared/components/LinksApp.js:1298
 msgid "%d selected"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1266
+#: src-js/shared/components/LinksApp.js:1321
 msgid "Clear selection"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1286
+#: src-js/shared/components/LinksApp.js:1341
 msgid "No links match the current filters."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1350
+#: src-js/shared/components/LinksApp.js:1405
 msgid "No options exist yet for this action."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1373
+#: src-js/shared/components/LinksApp.js:1428
 msgid "Confirm bulk action"
 msgstr ""
 

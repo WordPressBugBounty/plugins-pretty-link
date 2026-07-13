@@ -22,6 +22,33 @@ use wpdb;
 class Engine
 {
     /**
+     * Characters permitted in a resolvable slug, as the body of a regex
+     * character class (the part inside `[...]`). This is the full RFC 3986
+     * path-segment set — "unreserved" (`A-Za-z0-9` plus `-._~`), sub-delims
+     * (`!$&'()*+,;=`), `:` and `@`, plus the path separator `/`.
+     *
+     * This reproduces what Pretty Links 3.x accepted. v3 matched incoming
+     * requests with `([^\?]*)` (see legacy PrliLink::is_pretty_link) — i.e.
+     * any character except `?` — and stored slugs via sanitize_text_field(),
+     * which preserves every printable character except tags, `%`-octets and
+     * whitespace. The realizable overlap is exactly the URL-path character
+     * set above. The v4 rewrite had narrowed this to `[A-Za-z0-9_\-/]`, so any
+     * v3 link containing `.`, `=`, `~`, `+`, etc. began returning a 404.
+     *
+     * Only the true delimiters are excluded: `?` and `#` (query/fragment —
+     * they can never appear in the path wp_parse_url() hands us) and `%`
+     * (percent-encoding is decoded before matching; v3's sanitizer stripped
+     * literal `%` too). Slugs are only ever used as prepared-statement lookup
+     * keys, so this is an input allow-list, not an escaping boundary. Kept in
+     * sync with Repositories\Links::sanitizeSlug() (strips anything outside
+     * this set on save) and the inlined copy in
+     * pro/src/Redirect/mu-plugin-template.php.stub.
+     *
+     * @var string
+     */
+    public const SLUG_CHAR_CLASS = 'A-Za-z0-9_\-/.~!$&\'()*+,;=:@';
+
+    /**
      * WordPress database handle.
      *
      * @var wpdb
@@ -313,8 +340,14 @@ class Engine
         if ($path === '' || $path === '/') {
             return null;
         }
-        $path      = rawurldecode($path);
-        $trim      = trim($path, '/');
+        $path = rawurldecode($path);
+        $trim = $this->stripHomePath(trim($path, '/'));
+        // Strip an `index.php/` prefix (almost-pretty permalinks) for parity
+        // with extractSlug(), so `/index.php/{slug}/gen_qr_png` — and its
+        // subdirectory form — resolves the special route too.
+        if (strpos($trim, 'index.php/') === 0) {
+            $trim = substr($trim, strlen('index.php/'));
+        }
         $lastSlash = strrpos($trim, '/');
         if ($lastSlash === false) {
             return null;
@@ -327,7 +360,7 @@ class Engine
         if (!in_array($route, $allowedRoutes, true)) {
             return null;
         }
-        if ($slug === '' || !preg_match('#^[A-Za-z0-9_\-/]+$#', $slug)) {
+        if ($slug === '' || !preg_match('#^[' . self::SLUG_CHAR_CLASS . ']+$#', $slug)) {
             return null;
         }
         return [
@@ -399,7 +432,7 @@ class Engine
         }
         $path = rawurldecode($path);
 
-        $slug = trim($path, '/');
+        $slug = $this->stripHomePath(trim($path, '/'));
         if ($slug === '') {
             return null;
         }
@@ -417,10 +450,43 @@ class Engine
         }
 
         // Slugs can contain slashes (e.g. `go/abcd`), so `/` is valid here.
-        if (!preg_match('#^[A-Za-z0-9_\-/]+$#', $slug)) {
+        if (!preg_match('#^[' . self::SLUG_CHAR_CLASS . ']+$#', $slug)) {
             return null;
         }
 
+        return $slug;
+    }
+
+    /**
+     * Strip the WordPress subdirectory base path from an already-trimmed
+     * request path. On a site installed at `example.com/blog`, `home_url()`
+     * carries a `/blog` path segment that WP's own request parser removes
+     * before matching; the engine bypasses that parser, so it must remove the
+     * same segment itself or every slug lookup on a subdirectory install
+     * fails. Only the single leading occurrence is removed, so a legitimate
+     * slug that repeats the base segment (e.g. `blog/blog`) still resolves.
+     * Collapses to a no-op on root installs, where the base path is empty.
+     *
+     * @param string $slug Trimmed request path (no surrounding slashes).
+     *
+     * @return string
+     */
+    private function stripHomePath(string $slug): string
+    {
+        // Decode the home path to match $slug, which the callers have already
+        // decoded: a home path like `/my%20site` must compare against the
+        // decoded request path `my site`.
+        $homePath = trim(rawurldecode((string) wp_parse_url((string) home_url(), PHP_URL_PATH)), '/');
+        if ($homePath === '') {
+            return $slug;
+        }
+        if ($slug === $homePath) {
+            return '';
+        }
+        $prefix = $homePath . '/';
+        if (strpos($slug, $prefix) === 0) {
+            return substr($slug, strlen($prefix));
+        }
         return $slug;
     }
 

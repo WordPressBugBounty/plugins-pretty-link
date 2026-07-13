@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.6
+Stable Tag: 4.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,14 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.7 =
+* Fixed every Pretty Link returning a 404 on WordPress installs located in a subdirectory (for example, a site at example.com/blog) — the redirect engine now correctly accounts for the site's base path.
+* Fixed Pretty Links whose slug contains characters such as ".", "=", "~" or "+" returning a 404 — the full range of slug characters supported in 3.x works again, and those characters are no longer stripped when you save a link.
+* New: added a per-link "Reset clicks" action to the Links list, available in every tracking mode.
+* Pro: you can now paste a whole list of countries into a geo targeting rule (comma-, space-, or bracket-separated country codes or names) instead of adding them one at a time.
+* Pro: expiring links can now be set to move to the Trash on their first expired visit, in addition to the existing "redirect to another URL" option.
+* Pro: clarified the compound targeting rule label to "All conditions match (AND)" so it's clear every condition must be met.
 
 = 4.0.6 =
 * Pro: Fixed geo targeting never matching on hosts without CDN country headers — country resolution now falls back to IP geolocation like v3, so country rules work everywhere.
