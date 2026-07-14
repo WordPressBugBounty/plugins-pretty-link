@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.7
+Stable Tag: 4.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,9 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.8 =
+* Pro: Fixed licensed Pro installs being silently replaced by the free build during an update when the license couldn't be verified at that moment (a brief connection hiccup, or right after a major update) — which locked every Pro feature even though the license still showed Active. Updates now stay on your licensed Pro build, and the free build can no longer overwrite it; a wrong-edition install still shows the reinstall prompt on the Plugins screen.
 
 = 4.0.7 =
 * Fixed every Pretty Link returning a 404 on WordPress installs located in a subdirectory (for example, a site at example.com/blog) — the redirect engine now correctly accounts for the site's base path.
