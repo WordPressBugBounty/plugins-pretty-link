@@ -60,7 +60,7 @@ abstract class ChunkedCsvExporter
     /**
      * Per-cell formatter. Default returns the raw value as a string;
      * concrete classes can override to add escaping (e.g. CSV-injection
-     * `'`-prefix in Clicks export).
+     * `'`-prefix in Clicks export via `self::escapeCell()`).
      *
      * @param string               $col Column name.
      * @param array<string, mixed> $row Row data keyed by column name.
@@ -68,6 +68,28 @@ abstract class ChunkedCsvExporter
     protected function formatCell(string $col, array $row): string
     {
         return (string) ($row[$col] ?? '');
+    }
+
+    /**
+     * Prefix cells that begin with a spreadsheet formula trigger with a
+     * single quote so Excel / Google Sheets treat them as text instead of
+     * evaluating them (CSV-injection defense). Shared by every exporter
+     * that emits user-controlled strings — Clicks, Custom Reports, and
+     * Split Test all route their string cells through this.
+     *
+     * @param  string $value Raw cell value.
+     * @return string The escaped cell value.
+     */
+    protected static function escapeCell(string $value): string
+    {
+        if ($value === '') {
+            return $value;
+        }
+        $first = $value[0];
+        if (in_array($first, ['=', '+', '-', '@', "\t", "\r", "\n"], true)) {
+            return "'" . $value;
+        }
+        return $value;
     }
 
     /**

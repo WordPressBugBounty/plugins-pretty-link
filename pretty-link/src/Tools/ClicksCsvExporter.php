@@ -129,7 +129,7 @@ class ClicksCsvExporter extends ChunkedCsvExporter
         fputcsv($fh, $columns);
         foreach ($rows as $row) {
             fputcsv($fh, array_map(
-                static fn (string $col): string => self::escSpreadsheetCell((string) ($row[$col] ?? '')),
+                static fn (string $col): string => self::escapeCell((string) ($row[$col] ?? '')),
                 $columns
             ));
         }
@@ -224,7 +224,7 @@ class ClicksCsvExporter extends ChunkedCsvExporter
      */
     protected function formatCell(string $col, array $row): string
     {
-        return self::escSpreadsheetCell((string) ($row[$col] ?? ''));
+        return self::escapeCell((string) ($row[$col] ?? ''));
     }
 
     /**
@@ -298,23 +298,5 @@ class ClicksCsvExporter extends ChunkedCsvExporter
             $where ? 'WHERE ' . implode(' AND ', $where) : '',
             $params,
         ];
-    }
-
-    /**
-     * Prefix cells that begin with a formula trigger to prevent CSV injection.
-     *
-     * @param  string $value Raw cell value.
-     * @return string The escaped cell value.
-     */
-    private static function escSpreadsheetCell(string $value): string
-    {
-        if ($value === '') {
-            return $value;
-        }
-        $first = $value[0];
-        if (in_array($first, ['=', '+', '-', '@', "\t", "\r", "\n"], true)) {
-            return "'" . $value;
-        }
-        return $value;
     }
 }

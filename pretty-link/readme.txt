@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.8
+Stable Tag: 4.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,13 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.9 =
+* Pro: Fixed link categories and tags appearing blank in the admin after upgrading from 3.x, even though the assignments still existed — an automatic one-time repair restores them (and their link counts) on the next admin load, with no manual re-tagging needed.
+* Pro: New — you can now export Custom Reports and Split Test results to CSV.
+* Pro: Fixed cloaked links falling back to a visible redirect for destinations that actually allow framing, so more links stay cloaked. The framing check is now also cached per destination (24 hours by default), so repeat cloak and Pretty Bar visits skip the extra lookup and load faster.
+* Pro: Link Health — "Force check now" now re-checks every link, and checks fall back to a GET request when a destination rejects the lighter HEAD request, reducing false "broken link" results.
+* Pro: Link Health — fixed a scheduled recheck occasionally overwriting a more recent "Force check now" result.
 
 = 4.0.8 =
 * Pro: Fixed licensed Pro installs being silently replaced by the free build during an update when the license couldn't be verified at that moment (a brief connection hiccup, or right after a major update) — which locked every Pro feature even though the license still showed Active. Updates now stay on your licensed Pro build, and the free build can no longer overwrite it; a wrong-edition install still shows the reinstall prompt on the Plugins screen.
