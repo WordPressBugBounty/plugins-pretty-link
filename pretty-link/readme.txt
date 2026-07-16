@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.9
+Stable Tag: 4.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,12 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.10 =
+* Fixed a fatal error ("Class PrettyLinks\Bootstrap not found") when WordPress is loaded outside the site root — for example MemberPress protected downloads (`lock.php`) or membership PayPal IPN callbacks — by anchoring the plugin entry-file includes to the plugin directory again, matching 3.x.
+* Fixed pretty links whose slug contains a space returning a 404 after upgrading from 3.x — those links resolve again. New slugs still convert spaces to dashes; sites that already used spaces get an option under Pretty Links → Options → Links to keep them.
+* Pro: Fixed link categories, tags, and groups still showing blank after upgrading from 3.x on sites whose database used a different text collation — a collation mismatch was silently stopping the 4.0.9 repair from writing the assignments. The repair is now collation-safe and re-runs automatically on the next load, restoring categories, tags, and groups (and their link counts) with no manual re-tagging.
+* Pro: Fixed pretty links returning a 404 when your Alternate Domain includes a path (for example `https://example.com/klik/`) — links served under that path now resolve again, matching 3.x. Nothing stored is changed.
 
 = 4.0.9 =
 * Pro: Fixed link categories and tags appearing blank in the admin after upgrading from 3.x, even though the assignments still existed — an automatic one-time repair restores them (and their link counts) on the next admin load, with no manual re-tagging needed.

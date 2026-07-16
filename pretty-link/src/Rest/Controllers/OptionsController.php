@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PrettyLinks\Rest\Controllers;
 
 use PrettyLinks\Options\Store;
+use PrettyLinks\Repositories\Links;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -81,7 +82,15 @@ class OptionsController extends BaseController
      */
     private function buildPayload(array $liteAll): array
     {
-        $payload = ['lite' => $liteAll];
+        // UI hint (not persisted): the Options screen only surfaces the
+        // `allow_slug_spaces` toggle when the site actually has space-containing
+        // slugs — or already opted in — so it stays hidden for everyone else.
+        $payload = [
+            'lite'  => $liteAll,
+            'flags' => [
+                'hasSpaceSlugs' => Links::hasSpaceSlug() || !empty($liteAll['allow_slug_spaces']),
+            ],
+        ];
         /**
          * Filtered options response payload.
          *

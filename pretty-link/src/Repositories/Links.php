@@ -30,6 +30,11 @@ use PrettyLinks\Slug\Generator as SlugGenerator;
 class Links
 {
     /**
+     * Transient caching whether any stored slug contains a literal space.
+     */
+    private const SPACE_SLUG_TRANSIENT = 'prli_has_space_slug';
+
+    /**
      * Reason the most recent soft/hard delete was blocked by the
      * `prli_pre_link_trash` filter, or '' if nothing was blocked.
      * Static so REST controllers can read it after a failed delete
@@ -47,6 +52,34 @@ class Links
     public static function lastTrashBlockReason(): string
     {
         return self::$lastTrashBlockReason;
+    }
+
+    /**
+     * Whether any stored link slug contains a literal space — the signal that a
+     * site relied on v3's space-in-slug behaviour (spaces can only enter the
+     * table via a v3 upgrade or an import; v4 saves normalise them unless the
+     * compat toggle is on). Drives the Options UI visibility of the
+     * `allow_slug_spaces` toggle and the migrator's one-time default. Cached
+     * for an hour — an anchored `LIKE '% %'` can't use the slug index, so it's
+     * a scan; staleness only delays the toggle appearing and never affects
+     * slug resolution or the stored setting.
+     *
+     * @return boolean
+     */
+    public static function hasSpaceSlug(): bool
+    {
+        $cached = get_transient(self::SPACE_SLUG_TRANSIENT);
+        if ($cached === '1' || $cached === '0') {
+            return $cached === '1';
+        }
+        global $wpdb;
+        $table = $wpdb->prefix . 'prli_links';
+        // Active links only — a site whose space-slug links are all trashed is
+        // not "still using" spaces, so it should stay on the default (toggle
+        // hidden/off). Resolution is unconditional regardless.
+        $found = (bool) $wpdb->get_var("SELECT 1 FROM {$table} WHERE slug LIKE '% %' AND deleted_at IS NULL LIMIT 1");
+        set_transient(self::SPACE_SLUG_TRANSIENT, $found ? '1' : '0', HOUR_IN_SECONDS);
+        return $found;
     }
 
     /**
@@ -1118,18 +1151,25 @@ class Links
         if ($slug === '') {
             return '';
         }
-        // Replace runs of whitespace with a single dash, then strip anything
-        // outside the engine alphabet. The allowed set (Engine::SLUG_CHAR_CLASS)
-        // is the RFC 3986 path-character set v3 accepted — including `.`, `=`,
-        // `~` and `+` — so slugs like `hp-x32.exe=latest` survive the save and
-        // still resolve. `/` is allowed so users can type multi-segment slugs
-        // like `go/abc`; the prefix feature bakes such slashes into stored
-        // slugs at creation time.
-        $slug = (string) preg_replace('/\s+/', '-', $slug);
-        $slug = (string) preg_replace('#[^' . Engine::SLUG_CHAR_CLASS . ']#', '', $slug);
-        $slug = (string) preg_replace('#/+#', '/', $slug);
-        $slug = (string) preg_replace('/-+/', '-', $slug);
-        return trim($slug, '-/');
+        // Normalise runs of whitespace, then strip anything outside the engine
+        // alphabet. The allowed set (Engine::SLUG_CHAR_CLASS) is the RFC 3986
+        // path-character set v3 accepted — including `.`, `=`, `~` and `+` — so
+        // slugs like `hp-x32.exe=latest` survive the save and still resolve.
+        // `/` is allowed so users can type multi-segment slugs like `go/abc`;
+        // the prefix feature bakes such slashes into stored slugs at creation.
+        //
+        // Whitespace normally collapses to a single dash. When the v3-parity
+        // `allow_slug_spaces` toggle is on (#751 — surfaced only for sites that
+        // already have space-containing slugs), it collapses to a single space
+        // instead, so those sites can keep editing/creating slugs with spaces
+        // exactly as v3 did. The space is in SLUG_CHAR_CLASS either way, so the
+        // resolver matches it regardless of this setting.
+        $whitespaceTo = (new OptionsStore())->get('allow_slug_spaces') ? ' ' : '-';
+        $slug         = (string) preg_replace('/\s+/', $whitespaceTo, $slug);
+        $slug         = (string) preg_replace('#[^' . Engine::SLUG_CHAR_CLASS . ']#', '', $slug);
+        $slug         = (string) preg_replace('#/+#', '/', $slug);
+        $slug         = (string) preg_replace('/-+/', '-', $slug);
+        return trim($slug, '-/ ');
     }
 
     /**

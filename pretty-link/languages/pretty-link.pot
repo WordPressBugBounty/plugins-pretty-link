@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Links 4.0.9\n"
+"Project-Id-Version: Pretty Links 4.0.10\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-15T04:42:34+00:00\n"
+"POT-Creation-Date: 2026-07-16T22:47:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -168,8 +168,8 @@ msgstr ""
 
 #: src/Admin/Pages/Options.php:22
 #: src/Admin/Pages/Options.php:23
-#: src-js/options/index.js:713
-#: src-js/options/index.js:728
+#: src-js/options/index.js:727
+#: src-js/options/index.js:742
 msgid "Options"
 msgstr ""
 
@@ -800,8 +800,8 @@ msgstr ""
 
 #: src/Editor/ClassicEditor.php:108
 #: src-js/clicks/index.js:867
-#: src-js/options/index.js:354
-#: src-js/options/index.js:380
+#: src-js/options/index.js:367
+#: src-js/options/index.js:393
 #: src-js/options/ToolsSection.js:807
 #: src-js/options/ToolsSection.js:866
 #: src-js/shared/components/ConfirmDialog.js:34
@@ -987,7 +987,7 @@ msgstr ""
 #: src/Onboarding/views/finish.php:102
 #: src/Onboarding/views/license.php:58
 #: src/Onboarding/views/paylinks.php:68
-#: src-js/options/index.js:353
+#: src-js/options/index.js:366
 msgid "Continue"
 msgstr ""
 
@@ -3419,241 +3419,249 @@ msgstr ""
 msgid "Number of random characters in each auto-generated slug. Minimum 2."
 msgstr ""
 
+#: src-js/options/index.js:138
+msgid "Allow spaces in slugs"
+msgstr ""
+
 #: src-js/options/index.js:139
+msgid "Keep literal spaces in link slugs instead of converting them to dashes when you save. Your site has links whose slugs contain spaces (carried over from Pretty Links 3.x), so this is on to keep those URLs working. Turn it off to normalize spaces to dashes on future edits — existing links keep working either way. A space shows up as %20 in the URL."
+msgstr ""
+
+#: src-js/options/index.js:152
 msgid "Slug rules"
 msgstr ""
 
-#: src-js/options/index.js:140
+#: src-js/options/index.js:153
 msgid "Block specific slug patterns from being created. Built-in protection for WordPress core paths (wp-admin, wp-json, admin-ajax, etc.) is always on; this list is for site-specific additions (other plugin permalinks, sensitive page slugs, etc.)."
 msgstr ""
 
-#: src-js/options/index.js:146
+#: src-js/options/index.js:159
 msgid "Reserved slug patterns"
 msgstr ""
 
-#: src-js/options/index.js:147
+#: src-js/options/index.js:160
 msgid "Patterns to block, one per line or comma-separated. Wildcards (*) are supported — e.g. \"*wp-admin*\" also blocks \"my-wp-admin-thing\"."
 msgstr ""
 
-#: src-js/options/index.js:163
+#: src-js/options/index.js:176
 msgid "Allow admins to bypass reserved slugs"
 msgstr ""
 
-#: src-js/options/index.js:167
+#: src-js/options/index.js:180
 msgid "When enabled, administrators can create links with any slug, including patterns in the list above. When disabled, the patterns apply to admin-created links too. Pattern checks always apply to non-admin sources (front-end user dashboards and public-link forms) regardless of this setting."
 msgstr ""
 
-#: src-js/options/index.js:179
+#: src-js/options/index.js:192
 msgid "Default attributes"
 msgstr ""
 
-#: src-js/options/index.js:180
+#: src-js/options/index.js:193
 msgid "Applied to every new pretty link. You can still override these per link."
 msgstr ""
 
-#: src-js/options/index.js:186
+#: src-js/options/index.js:199
 msgid "Default nofollow"
 msgstr ""
 
-#: src-js/options/index.js:187
+#: src-js/options/index.js:200
 msgid "Adds rel=\"nofollow\" to every pretty link in your content, telling search engines not to pass ranking authority to the destination. Recommended for affiliate and outbound links — most affiliate programs and Google's guidelines expect it."
 msgstr ""
 
-#: src-js/options/index.js:195
+#: src-js/options/index.js:208
 msgid "Default sponsored"
 msgstr ""
 
-#: src-js/options/index.js:196
+#: src-js/options/index.js:209
 msgid "Adds rel=\"sponsored\" to every pretty link, declaring to search engines that the link is paid, affiliated, or part of a sponsorship. Google recommends this on top of (or instead of) nofollow for affiliate and ad links."
 msgstr ""
 
-#: src-js/options/index.js:274
-#: src-js/options/index.js:314
+#: src-js/options/index.js:287
+#: src-js/options/index.js:327
 msgid "Normal"
 msgstr ""
 
-#: src-js/options/index.js:275
+#: src-js/options/index.js:288
 msgid "Extended"
 msgstr ""
 
-#: src-js/options/index.js:276
+#: src-js/options/index.js:289
 msgid "Simple"
 msgstr ""
 
-#: src-js/options/index.js:282
+#: src-js/options/index.js:295
 msgid "Click tracking"
 msgstr ""
 
-#: src-js/options/index.js:283
+#: src-js/options/index.js:296
 msgid "What data Pretty Links records on every click."
 msgstr ""
 
-#: src-js/options/index.js:289
+#: src-js/options/index.js:302
 msgid "Track clicks on all links by default"
 msgstr ""
 
-#: src-js/options/index.js:293
+#: src-js/options/index.js:306
 msgid "Master switch for click tracking. When off, Pretty Links stops recording clicks site-wide and the Reports page shows zeros. Individual links can still opt into tracking on their own edit screen even while this is disabled."
 msgstr ""
 
-#: src-js/options/index.js:301
+#: src-js/options/index.js:314
 msgid "Tracking mode"
 msgstr ""
 
-#: src-js/options/index.js:302
+#: src-js/options/index.js:315
 msgid "Normal stores a row per click with raw fields (IP, referrer, country, timestamp) — fast and covers most reports. Extended also parses the user agent to populate browser, device, and OS breakdowns, at extra cost on every redirect. Simple only increments a per-link counter — fastest, smallest database, but disables every report except total clicks."
 msgstr ""
 
-#: src-js/options/index.js:318
+#: src-js/options/index.js:331
 msgid "Extended (parse browser + device)"
 msgstr ""
 
-#: src-js/options/index.js:325
+#: src-js/options/index.js:338
 msgid "Simple (count only)"
 msgstr ""
 
-#: src-js/options/index.js:338
+#: src-js/options/index.js:351
 msgid "Switching tracking mode deletes all click data"
 msgstr ""
 
-#: src-js/options/index.js:344
+#: src-js/options/index.js:357
 msgid "Switching to Simple mode will permanently delete every recorded click row, reset every link’s click and uniques counters to zero, and remove all Reports history. Nothing can be recovered. Continue?"
 msgstr ""
 
-#: src-js/options/index.js:348
+#: src-js/options/index.js:361
 msgid "Switching away from Simple mode will permanently delete every link’s static click counter and reset Reports to zero. Nothing can be recovered. Continue?"
 msgstr ""
 
-#: src-js/options/index.js:363
+#: src-js/options/index.js:376
 msgid "Last chance — delete all click data?"
 msgstr ""
 
 #. translators: %1$s = current mode, %2$s = target mode.
-#: src-js/options/index.js:369
+#: src-js/options/index.js:382
 msgid "You’re about to switch tracking from %1$s to %2$s. This will erase ALL click history across every link immediately and cannot be undone. Are you absolutely sure?"
 msgstr ""
 
-#: src-js/options/index.js:376
+#: src-js/options/index.js:389
 msgid "Delete all click data and switch"
 msgstr ""
 
-#: src-js/options/index.js:389
+#: src-js/options/index.js:402
 msgid "Retention"
 msgstr ""
 
-#: src-js/options/index.js:390
+#: src-js/options/index.js:403
 msgid "How long click data is kept in the database before trimming."
 msgstr ""
 
-#: src-js/options/index.js:396
+#: src-js/options/index.js:409
 msgid "Auto-delete click data older than"
 msgstr ""
 
-#: src-js/options/index.js:400
+#: src-js/options/index.js:413
 msgid "Warning: this permanently deletes raw click records — deleted data cannot be recovered. A nightly background job removes click rows older than the selected window. Date-range reports past this window will show no data."
 msgstr ""
 
-#: src-js/options/index.js:416
+#: src-js/options/index.js:429
 msgid "Keep forever"
 msgstr ""
 
-#: src-js/options/index.js:420
+#: src-js/options/index.js:433
 msgid "30 days"
 msgstr ""
 
-#: src-js/options/index.js:424
+#: src-js/options/index.js:437
 msgid "90 days (recommended)"
 msgstr ""
 
-#: src-js/options/index.js:431
+#: src-js/options/index.js:444
 msgid "180 days"
 msgstr ""
 
-#: src-js/options/index.js:435
+#: src-js/options/index.js:448
 msgid "1 year"
 msgstr ""
 
-#: src-js/options/index.js:439
+#: src-js/options/index.js:452
 msgid "2 years"
 msgstr ""
 
-#: src-js/options/index.js:449
+#: src-js/options/index.js:462
 msgid "Warning: enabling auto-delete will permanently remove click records older than the selected window. This cannot be undone. Continue?"
 msgstr ""
 
-#: src-js/options/index.js:474
+#: src-js/options/index.js:487
 msgid "Privacy"
 msgstr ""
 
-#: src-js/options/index.js:475
+#: src-js/options/index.js:488
 msgid "Scrubs personally-identifiable data before it lands in the database."
 msgstr ""
 
-#: src-js/options/index.js:481
+#: src-js/options/index.js:494
 msgid "Anonymize IP addresses"
 msgstr ""
 
-#: src-js/options/index.js:482
+#: src-js/options/index.js:495
 msgid "Zeroes the last octet of each visitor's IP (192.168.1.42 → 192.168.1.0) before it's stored. Recommended by GDPR, CCPA, and LGPD. City-level geo accuracy in reports drops; country-level stays intact."
 msgstr ""
 
-#: src-js/options/index.js:493
+#: src-js/options/index.js:506
 msgid "Bot & IP filtering"
 msgstr ""
 
-#: src-js/options/index.js:494
+#: src-js/options/index.js:507
 msgid "Stop low-signal traffic from distorting your click counts."
 msgstr ""
 
-#: src-js/options/index.js:500
+#: src-js/options/index.js:513
 msgid "Filter bots from click counts"
 msgstr ""
 
-#: src-js/options/index.js:504
+#: src-js/options/index.js:517
 msgid "When on, Pretty Link blocks 70+ known crawlers and AI scrapers (Googlebot, GPTBot, ClaudeBot, etc.) plus matches custom patterns + CDN bot signals. When off, every hit counts as a real click — useful for security monitoring or comparing pre/post-filter numbers."
 msgstr ""
 
-#: src-js/options/index.js:513
+#: src-js/options/index.js:526
 msgid "Blocked bot user-agent patterns"
 msgstr ""
 
-#: src-js/options/index.js:517
+#: src-js/options/index.js:530
 msgid "Custom patterns layered on top of the built-in bot list. One pattern per line. Matching is case-insensitive substring against the User-Agent header."
 msgstr ""
 
-#: src-js/options/index.js:531
+#: src-js/options/index.js:544
 msgid "Blocked IP addresses"
 msgstr ""
 
-#: src-js/options/index.js:532
+#: src-js/options/index.js:545
 msgid "Traffic from these IPs is silently ignored and never counted as a click. One IP address or CIDR range per line (e.g. 10.0.0.0/8). Useful for filtering out office, staging, or test traffic."
 msgstr ""
 
-#: src-js/options/index.js:546
+#: src-js/options/index.js:559
 msgid "Allowed IP addresses"
 msgstr ""
 
-#: src-js/options/index.js:547
+#: src-js/options/index.js:560
 msgid "The bot detector will occasionally flag legitimate traffic as bots (privacy-focused browsers, screen readers, spoofed user agents). IPs listed here bypass that check and always count as real visitors. One IP per line."
 msgstr ""
 
-#: src-js/options/index.js:684
+#: src-js/options/index.js:698
 msgid "Stripe connected."
 msgstr ""
 
-#: src-js/options/index.js:685
+#: src-js/options/index.js:699
 msgid "Stripe credentials refreshed."
 msgstr ""
 
-#: src-js/options/index.js:686
+#: src-js/options/index.js:700
 msgid "Stripe disconnected."
 msgstr ""
 
-#: src-js/options/index.js:729
+#: src-js/options/index.js:743
 msgid "Configure how Pretty Links behaves on your site."
 msgstr ""
 
-#: src-js/options/index.js:743
+#: src-js/options/index.js:757
 msgid "Options sections"
 msgstr ""
 
@@ -5150,11 +5158,11 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: src-js/shared/hooks/useOptions.js:51
+#: src-js/shared/hooks/useOptions.js:52
 msgid "Unable to load options."
 msgstr ""
 
-#: src-js/shared/hooks/useOptions.js:131
+#: src-js/shared/hooks/useOptions.js:133
 msgid "Unable to save options."
 msgstr ""
 

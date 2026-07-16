@@ -48,6 +48,11 @@ class Store
             'activation_complete'          => false,
             // V3 slug generation options.
             'num_slug_chars'               => 4,
+            // Preserve literal spaces in slugs instead of normalising them to
+            // dashes on save — v3 parity (#751). Off by default; the migrator
+            // flips it on for sites that already have space-containing slugs,
+            // and the Options UI only surfaces the toggle for those sites.
+            'allow_slug_spaces'            => false,
             // Site-specific extra patterns the slug-validation pass blocks
             // on top of the WP-core defaults baked into ReservedSlugs.
             // Newline- or comma-separated; shell-style wildcards (`*`)

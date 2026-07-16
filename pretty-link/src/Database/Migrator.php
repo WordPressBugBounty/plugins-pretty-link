@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Database;
 
+use PrettyLinks\Options\Store;
+use PrettyLinks\Repositories\Links;
 use wpdb;
 
 /**
@@ -118,6 +120,7 @@ class Migrator
             // unique-count semantics (#676).
             'backfill_link_click_counts' => [$this, 'backfillLinkClickCounts'],
             'fix_source_column_type'     => [$this, 'fixSourceColumnType'],
+            'init_slug_space_compat'     => [$this, 'initSlugSpaceCompat'],
         ];
     }
 
@@ -416,5 +419,22 @@ class Migrator
             "ALTER TABLE {$this->db->prefix}prli_links
              MODIFY COLUMN source VARCHAR(16) NOT NULL DEFAULT 'admin'"
         );
+    }
+
+    /**
+     * Enable the v3-parity `allow_slug_spaces` toggle on sites that already
+     * have space-containing slugs (#751), so an upgrade keeps those slugs
+     * editable/creatable with spaces the way v3 allowed. Clean sites are left
+     * on the default (off) and never see the toggle. Runs once via its own
+     * step key; the resolver accepts spaces regardless, so this only governs
+     * save-time normalisation.
+     *
+     * @return void
+     */
+    private function initSlugSpaceCompat(): void
+    {
+        if (Links::hasSpaceSlug()) {
+            (new Store())->set('allow_slug_spaces', true);
+        }
     }
 }

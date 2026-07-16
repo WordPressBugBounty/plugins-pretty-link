@@ -30,10 +30,14 @@ class Engine
      * This reproduces what Pretty Links 3.x accepted. v3 matched incoming
      * requests with `([^\?]*)` (see legacy PrliLink::is_pretty_link) — i.e.
      * any character except `?` — and stored slugs via sanitize_text_field(),
-     * which preserves every printable character except tags, `%`-octets and
-     * whitespace. The realizable overlap is exactly the URL-path character
-     * set above. The v4 rewrite had narrowed this to `[A-Za-z0-9_\-/]`, so any
-     * v3 link containing `.`, `=`, `~`, `+`, etc. began returning a 404.
+     * which preserves every printable character except tags and `%`-octets.
+     * That INCLUDES a single space (`sanitize_text_field()` collapses runs of
+     * whitespace and trims the ends, but keeps internal spaces), so v3 links
+     * with spaces such as `O Neill Reactor 3/2 Neoprenanzug` were stored and
+     * resolved verbatim — hence the literal space (`\x20`) below (#751). The
+     * v4 rewrite had first narrowed this to `[A-Za-z0-9_\-/]` (any v3 link
+     * containing `.`, `=`, `~`, `+`, etc. began returning a 404), and even
+     * after that was widened the space was still missing.
      *
      * Only the true delimiters are excluded: `?` and `#` (query/fragment —
      * they can never appear in the path wp_parse_url() hands us) and `%`
@@ -42,11 +46,14 @@ class Engine
      * keys, so this is an input allow-list, not an escaping boundary. Kept in
      * sync with Repositories\Links::sanitizeSlug() (strips anything outside
      * this set on save) and the inlined copy in
-     * pro/src/Redirect/mu-plugin-template.php.stub.
+     * pro/src/Redirect/mu-plugin-template.php.stub. Note sanitizeSlug()
+     * normalises whitespace to `-` before that strip, so a stored slug only
+     * contains a space when it was migrated verbatim from v3 — new v4 slugs
+     * never do; the space here is purely to keep those legacy slugs resolvable.
      *
      * @var string
      */
-    public const SLUG_CHAR_CLASS = 'A-Za-z0-9_\-/.~!$&\'()*+,;=:@';
+    public const SLUG_CHAR_CLASS = 'A-Za-z0-9_\-/.~!$&\'()*+,;=:@\x20';
 
     /**
      * WordPress database handle.
@@ -94,12 +101,20 @@ class Engine
             return;
         }
 
+        // Unslash but do NOT sanitize_text_field() here: that strips `%NN`
+        // octets, which would delete the `%20` a browser sends for a slug with
+        // a space (#751) and mangle any other percent-encoding before we get to
+        // decode it. extractSpecialRouteSlug()/extractSlug() rawurldecode the
+        // path and validate it against the SLUG_CHAR_CLASS allow-list — that
+        // allow-list (plus the prepared-statement lookup) is the security
+        // boundary, so the raw URI is safe to parse. The stub dispatcher
+        // (mu-plugin-template) already reads REQUEST_URI raw for the same reason.
         $requestUri  = isset($_SERVER['REQUEST_URI'])
-            ? sanitize_text_field(wp_unslash((string) $_SERVER['REQUEST_URI']))
+            ? wp_unslash((string) $_SERVER['REQUEST_URI'])
             : '';
         $specialSlug = $this->extractSpecialRouteSlug($requestUri);
         if ($specialSlug !== null) {
-            $link = $this->resolve($specialSlug['slug']);
+            $link = $this->resolveWithAltDomainFallback($specialSlug['slug']);
             if ($link !== null) {
                 /**
                  * Filter: prli_handle_special_route
@@ -132,7 +147,7 @@ class Engine
             return;
         }
 
-        $link = $this->resolve($slug);
+        $link = $this->resolveWithAltDomainFallback($slug);
         if ($link === null) {
             return;
         }
@@ -515,6 +530,76 @@ class Engine
         $row                       = $this->db->get_row($sql, ARRAY_A);
         $this->resolveCache[$slug] = is_array($row) ? $row : null;
         return $this->resolveCache[$slug];
+    }
+
+    /**
+     * Resolve a slug verbatim, then — only on a miss — retry with the
+     * alternate-domain path prefix stripped.
+     *
+     * The pretty-link base (`prli_pretty_link_base`, honored by
+     * `Helpers\LinkUrl::build()` when rendering public URLs) can carry a path
+     * segment: Pro's "Alternate Domain" setting may point at
+     * `https://example.com/go/`, and some v3 sites used that path as a
+     * de-facto base-slug prefix. v3 stripped it at redirect time because a
+     * single `$prli_blogurl` drove both URL building and request matching; v4
+     * split those, so the path is prepended when rendering but not removed
+     * when resolving, and the public URL 404s. Restoring the symmetry here
+     * keeps verbatim lookups first (a slug genuinely stored as `go/abcd` still
+     * wins) and only falls back to the stripped form on a miss. See issue #752.
+     *
+     * @param string $slug Verbatim slug extracted from the request.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function resolveWithAltDomainFallback(string $slug): ?array
+    {
+        $link = $this->resolve($slug);
+        if ($link !== null) {
+            return $link;
+        }
+        $stripped = $this->stripAltDomainPath($slug);
+        if ($stripped !== null && $stripped !== $slug) {
+            return $this->resolve($stripped);
+        }
+        return $link;
+    }
+
+    /**
+     * Strip the alternate-domain path prefix from a slug, or null when there
+     * is nothing to strip.
+     *
+     * The home-subdirectory path is already removed by `stripHomePath()`
+     * before slugs reach resolution, so the alt-domain path is reduced to the
+     * segment(s) beyond the home path too (e.g. home `/blog`, alt-domain
+     * `/blog/go` → strip a leading `go/`). A no-op when the pretty-link base
+     * has no path, or its path is just the home path (the common case — no
+     * alt domain, or an alt domain at its own root).
+     *
+     * @param string $slug Slug whose verbatim lookup missed.
+     *
+     * @return string|null Stripped slug, or null when the prefix is absent.
+     */
+    private function stripAltDomainPath(string $slug): ?string
+    {
+        $base     = (string) apply_filters('prli_pretty_link_base', home_url());
+        $altPath  = trim(rawurldecode((string) wp_parse_url($base, PHP_URL_PATH)), '/');
+        $homePath = trim(rawurldecode((string) wp_parse_url((string) home_url(), PHP_URL_PATH)), '/');
+        if ($altPath === '' || $altPath === $homePath) {
+            return null;
+        }
+        // Reduce to the alt-domain path beyond the already-stripped home path.
+        if ($homePath !== '' && strpos($altPath . '/', $homePath . '/') === 0) {
+            $altPath = trim(substr($altPath, strlen($homePath)), '/');
+        }
+        if ($altPath === '') {
+            return null;
+        }
+        $needle = $altPath . '/';
+        if (strncmp($slug, $needle, strlen($needle)) !== 0) {
+            return null;
+        }
+        $stripped = substr($slug, strlen($needle));
+        return $stripped !== '' ? $stripped : null;
     }
 
     /**
