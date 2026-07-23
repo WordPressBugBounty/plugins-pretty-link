@@ -1155,9 +1155,10 @@ class Wizard
 
         // This runs in the activation path (Activator → shouldAutoLaunch).
         // On a fresh install the links table isn't created until the
-        // Migrator runs on the next request's plugins_loaded, so guard the
-        // existence query — querying a missing table throws. Mirrors v3,
-        // which also checked table_exists() before counting links.
+        // Migrator runs on the next request's after_setup_theme
+        // (Bootstrap::bootDeferred), so guard the existence query —
+        // querying a missing table throws. Mirrors v3, which also checked
+        // table_exists() before counting links.
         $found = $wpdb->get_var(
             $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($table))
         );

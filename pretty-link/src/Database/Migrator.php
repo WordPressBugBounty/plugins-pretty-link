@@ -11,13 +11,15 @@ use wpdb;
 /**
  * Idempotent 3.x → 4.0 schema installer for the free tier.
  *
- * Runs on `plugins_loaded` at priority 5. Guarded by an atomic add_option()
+ * Invoked from Bootstrap::bootDeferred() on `after_setup_theme` (priority 1),
+ * before `prli_loaded` fires. Guarded by an atomic add_option()
  * mutex (prli_migration_lock_lite) so concurrent requests never run the same
  * step twice. Progress is persisted in the `prli_migration_state` option;
  * every step is safe to re-enter.
  *
  * Owns only Lite's own tables — extensions that need additional tables
- * run their own migrator on the same `plugins_loaded` hook.
+ * run their own migrator on the `prli_loaded` action (which fires
+ * immediately after this migrator completes).
  */
 class Migrator
 {

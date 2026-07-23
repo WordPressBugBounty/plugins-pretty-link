@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Admin;
 
-use PrettyLinks\Admin\Pages\Addons as AddonsPage;
 use PrettyLinks\Admin\Pages\Options as OptionsPage;
 
 /**
@@ -27,7 +26,7 @@ class PluginRow
             'docs'     => '<a href="https://prettylinks.com/docs" target="_blank" rel="noopener noreferrer">'
                 . esc_html__('Docs', 'pretty-link')
                 . '</a>',
-            'license'  => '<a href="' . esc_url(admin_url('admin.php?page=' . AddonsPage::SLUG)) . '">'
+            'license'  => '<a href="' . esc_url(admin_url('admin.php?page=' . OptionsPage::SLUG . '#license')) . '">'
                 . esc_html__('Manage License', 'pretty-link')
                 . '</a>',
         ];

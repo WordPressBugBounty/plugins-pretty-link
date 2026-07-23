@@ -11,9 +11,10 @@ use PrettyLinks\Options\Store;
 /**
  * Runs when the plugin is activated. Idempotent.
  *
- * Heavy migration work lives in Database\Migrator::maybeRun() which runs synchronously
- * from Bootstrap::loaded() on every load — activation just primes defaults and marks
- * the plugin for a migration pass by clearing prli_migration_state.
+ * Heavy migration work lives in Database\Migrator::maybeRun() which runs from
+ * Bootstrap::bootDeferred() on `after_setup_theme` on every load — activation
+ * just primes defaults and marks the plugin for a migration pass by clearing
+ * prli_migration_state.
  */
 class Activator
 {

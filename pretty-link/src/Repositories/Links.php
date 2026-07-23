@@ -83,15 +83,18 @@ class Links
     }
 
     /**
-     * Search, filter, sort, and paginate links for the admin list-table.
+     * Build WHERE clauses + bound params for a links list/export query.
      *
-     * @param  array<string, mixed> $args Search/filter/sort/pagination args.
-     * @return array{items: array<int, array<string, mixed>>, total: int, pages: int}
+     * Shared by `search()` and `CsvExporter` so filtered CSV export matches
+     * the links list (including Pro `prli_links_query_clauses` filters such
+     * as Broken / Expired / Split).
+     *
+     * @param  array<string, mixed> $args Search / export args.
+     * @return array{0: string[], 1: mixed[]} [$where, $params]
      */
-    public function search(array $args): array
+    public function buildSearchClauses(array $args): array
     {
         global $wpdb;
-        $table  = $wpdb->prefix . 'prli_links';
         $where  = [];
         $params = [];
 
@@ -198,12 +201,6 @@ class Links
             $params[] = $tag;
         }
 
-        $orderby = self::safeOrderBy((string) ($args['orderby'] ?? 'created_at'));
-        $order   = strtolower((string) ($args['order'] ?? 'desc')) === 'asc' ? 'ASC' : 'DESC';
-        $perPage = (int) ($args['per_page'] ?? 20);
-        $page    = (int) ($args['page'] ?? 1);
-        $offset  = ($page - 1) * $perPage;
-
         /**
          * Filter: prli_links_query_clauses
          *
@@ -213,7 +210,27 @@ class Links
          * @param array{0: string[], 1: mixed[]} $clauses  [$where, $params]
          * @param array<string, mixed>           $args     Full search args.
          */
-        [$where, $params] = (array) apply_filters('prli_links_query_clauses', [$where, $params], $args);
+        return (array) apply_filters('prli_links_query_clauses', [$where, $params], $args);
+    }
+
+    /**
+     * Search, filter, sort, and paginate links for the admin list-table.
+     *
+     * @param  array<string, mixed> $args Search/filter/sort/pagination args.
+     * @return array{items: array<int, array<string, mixed>>, total: int, pages: int}
+     */
+    public function search(array $args): array
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'prli_links';
+
+        $orderby = self::safeOrderBy((string) ($args['orderby'] ?? 'created_at'));
+        $order   = strtolower((string) ($args['order'] ?? 'desc')) === 'asc' ? 'ASC' : 'DESC';
+        $perPage = (int) ($args['per_page'] ?? 20);
+        $page    = (int) ($args['page'] ?? 1);
+        $offset  = ($page - 1) * $perPage;
+
+        [$where, $params] = $this->buildSearchClauses($args);
 
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 

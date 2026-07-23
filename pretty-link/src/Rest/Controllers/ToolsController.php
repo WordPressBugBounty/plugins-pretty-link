@@ -87,6 +87,12 @@ class ToolsController extends BaseController
     /**
      * Exports links as CSV (count, chunked, or single-shot).
      *
+     * Accepts the same filter args as GET /links (search, status,
+     * prettypay, redirect_type, category, tag, plus Pro filters via
+     * `prli_links_index_args`) so the links-list Export CSV button can
+     * dump the current view. Omit filters for the legacy Tools
+     * "export everything" behaviour.
+     *
      * @param WP_REST_Request $request The incoming REST request.
      *
      * @return WP_REST_Response
@@ -94,12 +100,13 @@ class ToolsController extends BaseController
     public function export(WP_REST_Request $request): WP_REST_Response
     {
         $exporter = new CsvExporter();
+        $args     = $this->exportArgs($request);
 
         // Preflight: cheap row-count for the client's "large export"
         // warning. Returned before any rows are read so the warning
         // dialog can show without burning the first chunk's work.
         if ($request->get_param('count_only')) {
-            return new WP_REST_Response(['total' => $exporter->total([])]);
+            return new WP_REST_Response(['total' => $exporter->total($args)]);
         }
 
         // Chunked path: client orchestrates the loop with offset/limit and
@@ -109,11 +116,143 @@ class ToolsController extends BaseController
         if ($offsetParam !== null && $offsetParam !== '') {
             $offset = (int) $offsetParam;
             $limit  = (int) ($request->get_param('limit') ?: CsvExporter::DEFAULT_CHUNK_SIZE);
-            return new WP_REST_Response($exporter->chunk([], $offset, $limit));
+            return new WP_REST_Response($exporter->chunk($args, $offset, $limit));
         }
 
         // Single-shot path (back-compat).
-        return new WP_REST_Response(['csv' => $exporter->allLinks()]);
+        return new WP_REST_Response(['csv' => $exporter->fullCsv($args)]);
+    }
+
+    /**
+     * Build link-export filter args from the REST request.
+     *
+     * Mirrors `LinksController::index` so list filters and export stay in
+     * lockstep (including `prli_links_index_args`). When the post-filter
+     * args have no active filters, returns `[]` so `CsvExporter` keeps the
+     * legacy Tools "all live non-PrettyPay" scope.
+     *
+     * @param  WP_REST_Request $request The incoming REST request.
+     * @return array<string, mixed>
+     */
+    private function exportArgs(WP_REST_Request $request): array
+    {
+        // Match GET /links: omitted prettypay → null (no prettypay WHERE).
+        // List UI always sends prettypay=0|1; Tools sends nothing → [].
+        $prettypay = $request->get_param('prettypay');
+        $args      = [
+            // Cast only — do not use ?: here. PHP treats "0" as empty, and a
+            // list search for that string must survive into the CSV export
+            // the same way GET /links keeps it (LinksController::index).
+            'search'        => (string) $request->get_param('search'),
+            'status'        => (string) ($request->get_param('status') ?: 'any'),
+            'prettypay'     => ($prettypay === null || $prettypay === '') ? null : (int) $prettypay,
+            'source'        => (string) ($request->get_param('source') ?: ''),
+            'category'      => $request->get_param('category') ? (int) $request->get_param('category') : null,
+            'tag'           => $request->get_param('tag') ? (int) $request->get_param('tag') : null,
+            'redirect_type' => (string) ($request->get_param('redirect_type') ?: ''),
+        ];
+
+        /**
+         * Filter: prli_links_index_args
+         *
+         * Same extension point as GET /links — Pro injects health / expired /
+         * split_test without Lite knowing those param names. Applied before
+         * the legacy empty-args decision so extension-only filters still
+         * count as a filtered export.
+         *
+         * @param array<string, mixed> $args    Export filter args.
+         * @param WP_REST_Request      $request The current REST request.
+         */
+        $args = (array) apply_filters('prli_links_index_args', $args, $request);
+
+        if (!$this->hasExportFilters($args)) {
+            return [];
+        }
+
+        return $args;
+    }
+
+    /**
+     * True when export args carry an active list filter (core or extension).
+     *
+     * @param  array<string, mixed> $args Post-`prli_links_index_args` args.
+     * @return boolean
+     */
+    private function hasExportFilters(array $args): bool
+    {
+        if (($args['search'] ?? '') !== '') {
+            return true;
+        }
+        $status = (string) ($args['status'] ?? 'any');
+        if ($status !== '' && $status !== 'any') {
+            return true;
+        }
+        if (array_key_exists('prettypay', $args) && $args['prettypay'] !== null && $args['prettypay'] !== '') {
+            return true;
+        }
+        if (($args['source'] ?? '') !== '') {
+            return true;
+        }
+        if (!empty($args['category'])) {
+            return true;
+        }
+        if (!empty($args['tag'])) {
+            return true;
+        }
+        $redirectType = (string) ($args['redirect_type'] ?? '');
+        if ($redirectType !== '' && $redirectType !== 'all') {
+            return true;
+        }
+
+        // Extension-owned keys (health, expired, split_test, …).
+        $core = [
+            'search',
+            'status',
+            'prettypay',
+            'source',
+            'category',
+            'tag',
+            'redirect_type',
+            'orderby',
+            'order',
+            'per_page',
+            'page',
+            'include',
+        ];
+        foreach ($args as $key => $value) {
+            if (in_array($key, $core, true)) {
+                continue;
+            }
+            // Treat 0 / "0" as inactive — Pro flags like expired/split_test
+            // only apply on "1", and a default numeric zero must not force
+            // the filtered-export path (which skips legacy prettypay=0).
+            if ($this->isActiveExtensionFilterValue($value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether an extension-owned filter value should count as "active".
+     *
+     * @param  mixed $value Extension arg value.
+     * @return boolean
+     */
+    private function isActiveExtensionFilterValue($value): bool
+    {
+        if ($value === null || $value === '' || $value === false) {
+            return false;
+        }
+        if ($value === 0 || $value === '0') {
+            return false;
+        }
+        if (is_array($value) && $value === []) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

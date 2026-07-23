@@ -17,6 +17,7 @@ namespace PrettyLinks\Tools;
 // of truth for click/redirect data and must read-through. "meta_key"/"meta_value" here
 // refer to our own prli_link_metas table, not wp_postmeta.
 use PrettyLinks\Options\Store as OptionsStore;
+use PrettyLinks\Repositories\Links;
 
 /**
  * Lite link CSV export. Column order is back-compat with v3 (see
@@ -26,6 +27,11 @@ use PrettyLinks\Options\Store as OptionsStore;
  * Driven by the shared ChunkedCsvExporter base — see that class for the
  * chunking contract. The legacy `allLinks()` entry-point is retained for
  * back-compat and dispatches to `fullCsv()`.
+ *
+ * Filter args (search, status, prettypay, health, …) reuse
+ * `Links::buildSearchClauses()` so a links-list Export matches the
+ * current view. Empty args keep the legacy Tools semantics: every live
+ * non-PrettyPay link.
  */
 class CsvExporter extends ChunkedCsvExporter
 {
@@ -65,7 +71,20 @@ class CsvExporter extends ChunkedCsvExporter
      */
     public function allLinks(): string
     {
-        return $this->fullCsv();
+        return $this->fullCsv([]);
+    }
+
+    /**
+     * Escape spreadsheet-formula triggers in string cells (parity with
+     * {@see ClicksCsvExporter}).
+     *
+     * @param  string               $col Column name.
+     * @param  array<string, mixed> $row Row data keyed by column name.
+     * @return string
+     */
+    protected function formatCell(string $col, array $row): string
+    {
+        return self::escapeCell((string) ($row[$col] ?? ''));
     }
 
     /**
@@ -87,11 +106,12 @@ class CsvExporter extends ChunkedCsvExporter
     protected function totalRows(array $args): int
     {
         global $wpdb;
-        $count = (int) $wpdb->get_var(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}prli_links
-              WHERE deleted_at IS NULL AND prettypay_link = 0"
-        );
-        return $count;
+        $links            = $wpdb->prefix . 'prli_links';
+        [$where, $params] = (new Links())->buildSearchClauses($this->normalizeArgs($args));
+        $whereSql         = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        $sql              = "SELECT COUNT(*) FROM {$links} {$whereSql}";
+
+        return (int) ($params ? $wpdb->get_var($wpdb->prepare($sql, ...$params)) : $wpdb->get_var($sql));
     }
 
     /**
@@ -119,28 +139,25 @@ class CsvExporter extends ChunkedCsvExporter
         foreach (self::COLUMNS as $col) {
             if ($col === 'clicks' && $isCount) {
                 $select[] = '(SELECT COALESCE(CAST(meta_value AS UNSIGNED), 0) '
-                          . "FROM {$metas} WHERE link_id = li.id AND meta_key = 'static-clicks' LIMIT 1) AS clicks";
+                          . "FROM {$metas} WHERE link_id = {$links}.id "
+                          . "AND meta_key = 'static-clicks' LIMIT 1) AS clicks";
             } elseif ($col === 'uniques' && $isCount) {
                 $select[] = '(SELECT COALESCE(CAST(meta_value AS UNSIGNED), 0) '
-                          . "FROM {$metas} WHERE link_id = li.id AND meta_key = 'static-uniques' LIMIT 1) AS uniques";
+                          . "FROM {$metas} WHERE link_id = {$links}.id "
+                          . "AND meta_key = 'static-uniques' LIMIT 1) AS uniques";
             } else {
-                $select[] = "li.{$col}";
+                $select[] = "{$links}.{$col}";
             }
         }
         $baseCols = implode(',', $select);
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $baseCols is built from the COLUMNS whitelist; LIMIT/OFFSET are bound below.
-        $rows = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT {$baseCols} FROM {$links} li
-                  WHERE li.deleted_at IS NULL AND li.prettypay_link = 0
-                  ORDER BY li.id ASC
-                  LIMIT %d OFFSET %d",
-                $limit,
-                $offset
-            ),
-            ARRAY_A
-        ) ?: [];
+        [$where, $params] = (new Links())->buildSearchClauses($this->normalizeArgs($args));
+        $whereSql         = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        $sql              = "SELECT {$baseCols} FROM {$links} {$whereSql} ORDER BY {$links}.id ASC LIMIT %d OFFSET %d";
+        $bound            = array_merge($params, [$limit, $offset]);
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $baseCols is built from the COLUMNS whitelist; WHERE uses prepared placeholders from Links::buildSearchClauses.
+        $rows = $wpdb->get_results($wpdb->prepare($sql, ...$bound), ARRAY_A) ?: [];
 
         // Pre-fill any extra columns added via the columns filter so each
         // row has the key, then let the rows filter populate them.
@@ -167,5 +184,31 @@ class CsvExporter extends ChunkedCsvExporter
         $rows = (array) apply_filters('prli_csv_export_rows', $rows, $columns);
 
         return $rows;
+    }
+
+    /**
+     * Normalize export args. Empty args preserve legacy Tools semantics
+     * (all live non-PrettyPay links). Otherwise default `status` only —
+     * omitted `prettypay` stays unset so it matches GET /links (no
+     * prettypay WHERE). Callers that want non-PrettyPay only pass
+     * `prettypay=0` (list toolbar / Tools empty-args path above).
+     *
+     * @param  array<string, mixed> $args Raw export args.
+     * @return array<string, mixed>
+     */
+    private function normalizeArgs(array $args): array
+    {
+        if ($args === []) {
+            return [
+                'status'    => 'any',
+                'prettypay' => 0,
+            ];
+        }
+
+        if (!isset($args['status']) || $args['status'] === '' || $args['status'] === null) {
+            $args['status'] = 'any';
+        }
+
+        return $args;
     }
 }

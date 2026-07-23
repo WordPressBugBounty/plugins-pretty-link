@@ -320,16 +320,6 @@ class Bootstrap extends BaseBootstrap
     {
         $container = $this->container();
 
-        // Create/upgrade tables BEFORE firing prli_loaded. Extensions (Pro)
-        // hook prli_loaded to seed their own defaults and inspect link data;
-        // they can't be made to tolerate missing tables on a fresh install
-        // because the whole point of those checks is to read the state of
-        // the DB. Running the Migrator synchronously here means every
-        // subsequent code path in this request (and every future request)
-        // sees a fully installed schema. maybeRun() is guarded by an option
-        // version check so it no-ops on steady-state loads.
-        $container->get(Migrator::class)->maybeRun();
-
         Cleaner::ensureCronScheduled();
         ReservedSlugs::bootstrap();
         ShortcodesLoader::register();
@@ -367,12 +357,47 @@ class Bootstrap extends BaseBootstrap
 
         $this->loadBundledExtensions();
 
+        // The schema migration and the prli_loaded fan-out are deferred to
+        // after_setup_theme rather than run inline here. loaded() executes
+        // while the plugin file is still being included by wp-settings.php,
+        // which is before wp-includes/pluggable.php loads. Migrator::run()
+        // requires wp-admin/includes/upgrade.php for dbDelta, and core's
+        // upgrade.php includes the wp-content/install.php drop-in some hosts
+        // (e.g. SiteGround) ship, which calls pluggable functions such as
+        // get_user_by() and takes the whole site down. Any hook after
+        // pluggable.php and before init is safe from that fatal; we
+        // deliberately use after_setup_theme at priority 1 so the schema is
+        // installed before the redirect engine dispatches at init:1. See
+        // #766/#770. Extensions must hook prli_loaded (fired right after
+        // the migrator), never plugins_loaded.
+        add_action('after_setup_theme', [$this, 'bootDeferred'], 1);
+    }
+
+    /**
+     * Runs the schema migration, then fires prli_loaded for extensions.
+     *
+     * Deferred from loaded() to after_setup_theme:1 so it runs after
+     * pluggable.php is loaded; requiring wp-admin/includes/upgrade.php during
+     * plugin include crashes sites with a wp-content/install.php drop-in
+     * (#766). Any post-pluggable, pre-init hook would be safe; this one is
+     * the deliberate choice (#770). The Migrator runs before prli_loaded so
+     * extensions still see a fully installed schema — hook prli_loaded, never
+     * plugins_loaded.
+     *
+     * @return void
+     */
+    public function bootDeferred(): void
+    {
+        $container = $this->container();
+
+        $container->get(Migrator::class)->maybeRun();
+
         /**
          * Action: prli_loaded
          *
-         * Fires after Lite has wired itself up. Other plugins that extend
-         * Pretty Links register their hooks here — receives the DI
-         * container so services can be resolved.
+         * Fires after Lite has wired itself up and the schema is installed.
+         * Other plugins that extend Pretty Links register their hooks here,
+         * receiving the DI container so services can be resolved.
          *
          * @param \PrettyLinks\GroundLevel\Container\Container $container
          */

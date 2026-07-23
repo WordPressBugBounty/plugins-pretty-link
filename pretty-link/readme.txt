@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.10
+Stable Tag: 4.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,15 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.11 =
+* Added an "Export CSV" button to the Links list that downloads the links you are currently viewing — any search, category, tag, or status filters (including Broken links) carry over to the export. Large lists download in the background so the page stays responsive.
+* The edit button on the Links list is now a real link, so you can Ctrl/Cmd-click or middle-click it to open a link's edit screen in a new browser tab.
+* Fixed the Cancel button shown during a CSV export so it now actually stops an in-progress export instead of letting it run to completion.
+* Fixed the "Manage License" link on the WordPress Plugins page so it takes you to the Pretty Links license screen.
+* Fixed a load-order issue that could cause errors on some sites by running the database upgrade slightly later in WordPress's startup, after theme and pluggable functions are available.
+* Pro: Restored time-of-day support for date-range redirect rules — "between" date targeting rules again keep their start and end times, evaluated in your site's timezone.
+* Pro: Added a new `prli_targeting_countries` filter for developers, bringing back the ability to add custom aggregate regions (for example an "EU" option) to the geo-targeting country picker, matching 3.x's `plp_search_countries_list`.
 
 = 4.0.10 =
 * Fixed a fatal error ("Class PrettyLinks\Bootstrap not found") when WordPress is loaded outside the site root — for example MemberPress protected downloads (`lock.php`) or membership PayPal IPN callbacks — by anchoring the plugin entry-file includes to the plugin directory again, matching 3.x.
