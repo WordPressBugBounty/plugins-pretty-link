@@ -8,6 +8,7 @@ use PrettyLinks\Admin\AdminBar;
 use PrettyLinks\Admin\Assets as AdminAssets;
 use PrettyLinks\Admin\Dashboard as AdminDashboard;
 use PrettyLinks\Admin\Notices;
+use PrettyLinks\Admin\MigrationHealth;
 use PrettyLinks\Admin\ReviewNotice;
 use PrettyLinks\Admin\Page;
 use PrettyLinks\Admin\PluginRow;
@@ -32,6 +33,7 @@ use PrettyLinks\Database\Migrator;
 use PrettyLinks\Redirect\ReservedSlugs;
 use PrettyLinks\Editor\ClassicEditor;
 use PrettyLinks\Editor\GutenbergEditor;
+use PrettyLinks\I18n\ScriptTranslations;
 use PrettyLinks\GroundLevel\Container\Container;
 use PrettyLinks\GroundLevel\Database\DatabaseServiceProvider;
 use PrettyLinks\GroundLevel\Events\EventsServiceProvider;
@@ -221,6 +223,15 @@ class Bootstrap extends BaseBootstrap
             new Hook(Hook::TYPE_ACTION, 'in_admin_header', [AddonCompatibilityGuard::class, 'registerNotice'], 2),
             new Hook(Hook::TYPE_ACTION, 'init', [$container->get(RedirectEngine::class), 'dispatch'], 1),
             new Hook(Hook::TYPE_ACTION, 'rest_api_init', [$container->get(RestRouter::class), 'register']),
+            // Merge per-source JS translation JSON (Loco / WordPress.org) onto
+            // our built bundles — see ScriptTranslations for the why.
+            new Hook(Hook::TYPE_FILTER, 'pre_load_script_translations', [ScriptTranslations::class, 'merge'], 10, 4),
+            // Migration failure surfacing: a first-party notice (via Pretty
+            // Links' own notice queue), a Site Health panel, and the one-click
+            // retry handler.
+            new Hook(Hook::TYPE_FILTER, 'prli_notices_active', [MigrationHealth::class, 'injectNotice'], 10, 2),
+            new Hook(Hook::TYPE_FILTER, 'debug_information', [MigrationHealth::class, 'siteHealthInfo']),
+            new Hook(Hook::TYPE_ACTION, 'admin_post_' . MigrationHealth::RETRY_ACTION, [MigrationHealth::class, 'handleRetry']),
             new Hook(Hook::TYPE_ACTION, 'admin_menu', [Page::class, 'register']),
             // Top-level menu icon is painted via CSS mask attached to the
             // always-loaded `admin-menu` style handle so the sidebar shows

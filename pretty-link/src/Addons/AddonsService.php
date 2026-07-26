@@ -40,6 +40,12 @@ class AddonsService
 
         if ($force) {
             delete_site_transient($transient);
+            // A manual refresh should also force a fresh Plugins/Updates-screen
+            // check, not just refresh this catalog list. Deleting WP's own
+            // transient makes it regenerate (and re-run every add-on's
+            // `pre_set_site_transient_update_plugins` filter) on the very next
+            // admin page load.
+            delete_site_transient('update_plugins');
         }
 
         $cached = get_site_transient($transient);
@@ -70,6 +76,14 @@ class AddonsService
 
         $json = (string) wp_json_encode($addons);
         set_site_transient($transient, $json, HOUR_IN_SECONDS * 12);
+
+        if ($force) {
+            // Fired only once the refresh has actually completed, so
+            // `AddonUpdateChecker` listeners (which drop their own 12h
+            // `prli_update_info_{slug}` cache — see clearUpdateTransient())
+            // aren't reacting to a "refresh" that hasn't finished writing yet.
+            do_action('prli_addons_refreshed');
+        }
 
         return self::normalize(json_decode($json));
     }

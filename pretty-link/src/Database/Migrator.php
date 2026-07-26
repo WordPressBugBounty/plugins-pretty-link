@@ -33,6 +33,20 @@ class Migrator
     private const LOCK_TIMEOUT = 300;
 
     /**
+     * Transient that paces retries of a failed run so a persistently-failing
+     * step isn't re-attempted on every page load. Set only on a failed/
+     * incomplete run and cleared on full success, so maybeRun() honors it
+     * regardless of version (a failed upgrade keeps the stored version below
+     * target, so gating on version would skip it).
+     */
+    private const RETRY_BACKOFF_KEY = 'prli_migration_retry_after';
+
+    /**
+     * Seconds between retry attempts of a run that left failing steps.
+     */
+    private const RETRY_BACKOFF = 900;
+
+    /**
      * WordPress database handle.
      *
      * @var wpdb
@@ -72,10 +86,20 @@ class Migrator
      */
     public function maybeRun(): void
     {
-        $state   = (array) (get_option(self::OPTION_STATE, []) ?: []);
-        $done    = array_keys((array) ($state['steps'] ?? []));
-        $pending = array_diff(array_keys($this->steps()), $done);
-        if (($state['version'] ?? '') === $this->version && empty($state['pending']) && empty($pending)) {
+        $state          = (array) (get_option(self::OPTION_STATE, []) ?: []);
+        $done           = array_keys((array) ($state['steps'] ?? []));
+        $pending        = array_diff(array_keys($this->steps()), $done);
+        $versionMatches = ($state['version'] ?? '') === $this->version;
+        if ($versionMatches && empty($state['pending']) && empty($pending)) {
+            return;
+        }
+
+        // Pace retries whenever the backoff transient is set — it's set only on
+        // a failed/incomplete run and cleared on full success, so its presence
+        // means "recently attempted, not done" regardless of version. Gating on
+        // versionMatches skipped the backoff during a failed upgrade (stored
+        // version stays below target), so it re-ran on every request.
+        if (get_transient(self::RETRY_BACKOFF_KEY)) {
             return;
         }
 
@@ -137,22 +161,71 @@ class Migrator
 
         $steps = $this->steps();
 
-        $done = is_array($state['steps'] ?? null) ? (array) $state['steps'] : [];
+        $done     = is_array($state['steps'] ?? null) ? (array) $state['steps'] : [];
+        // Seed from persisted failures so each per-step write is accurate, and
+        // prune entries for step keys that no longer exist so a failure under a
+        // removed key can't linger forever.
+        $failures = is_array($state['failures'] ?? null) ? (array) $state['failures'] : [];
+        $failures = array_intersect_key($failures, $steps);
 
         foreach ($steps as $name => $callable) {
             if (!empty($done[$name])) {
                 continue;
             }
-            $callable();
-            $done[$name]      = true;
-            $state['steps']   = $done;
-            $state['version'] = $this->version;
+            // Record a step done only when it finishes without throwing and
+            // without leaving a SQL error. A silently-failed step (wpdb::query
+            // returns false but never throws) stays pending and is retried
+            // rather than being marked complete forever.
+            $this->db->last_error = '';
+            try {
+                $callable();
+                $error = (string) $this->db->last_error;
+            } catch (\Throwable $e) {
+                $error = $e->getMessage() !== '' ? $e->getMessage() : get_class($e);
+            }
+
+            if ($error !== '') {
+                // Un-done + persist the failure now (parity with Pro; accurate
+                // even if the run fatals before settlement).
+                unset($done[$name]);
+                $failures[$name]   = $error;
+                $state['steps']    = $done;
+                $state['failures'] = $failures;
+                update_option(self::OPTION_STATE, $state, false);
+                /**
+                 * Fires when a migration step fails, so the real database error
+                 * is captured instead of silently swallowed.
+                 *
+                 * @param string $name  Step key that failed.
+                 * @param string $error The DB/exception message.
+                 */
+                do_action('prli_migration_step_failed', $name, $error);
+                continue;
+            }
+
+            // Persist progress + clear any stale failure for this step. The
+            // target version is stamped only at settlement — never mid-run.
+            $done[$name] = true;
+            unset($failures[$name]);
+            $state['steps']    = $done;
+            $state['failures'] = $failures;
             update_option(self::OPTION_STATE, $state, false);
         }
 
-        $state['pending'] = false;
-        $state['version'] = $this->version;
+        $allDone           = empty(array_diff(array_keys($steps), array_keys($done)));
+        $state['steps']    = $done;
+        $state['pending']  = !$allDone;
+        $state['failures'] = $failures;
+        if ($allDone) {
+            $state['version'] = $this->version;
+        }
         update_option(self::OPTION_STATE, $state, false);
+
+        if ($allDone) {
+            delete_transient(self::RETRY_BACKOFF_KEY);
+        } else {
+            set_transient(self::RETRY_BACKOFF_KEY, time(), self::RETRY_BACKOFF);
+        }
     }
 
     /**
@@ -372,11 +445,23 @@ class Migrator
         $clicks = $this->db->prefix . 'prli_clicks';
         $links  = $this->db->prefix . 'prli_links';
 
+        // Aggregate prli_clicks ONCE in a derived table, then join. Two
+        // correlated subqueries against the same table are illegal on MySQL
+        // TEMPORARY tables ("Can't reopen table") — which the test suite uses —
+        // and are also just slower. LEFT JOIN + COALESCE keeps links with no
+        // clicks at 0. first_click = 1 matches v4's unique-count semantics (#676).
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $this->db->query(
-            "UPDATE {$links} SET
-                clicks  = (SELECT COUNT(*)    FROM {$clicks} WHERE link_id = {$links}.id),
-                uniques = (SELECT COUNT(*)    FROM {$clicks} WHERE link_id = {$links}.id AND first_click = 1)"
+            "UPDATE {$links} l
+             LEFT JOIN (
+                 SELECT link_id,
+                        COUNT(*) AS total_clicks,
+                        SUM(CASE WHEN first_click = 1 THEN 1 ELSE 0 END) AS unique_clicks
+                   FROM {$clicks}
+               GROUP BY link_id
+             ) agg ON agg.link_id = l.id
+                SET l.clicks  = COALESCE(agg.total_clicks, 0),
+                    l.uniques = COALESCE(agg.unique_clicks, 0)"
         );
     }
 

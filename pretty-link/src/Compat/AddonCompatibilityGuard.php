@@ -26,17 +26,22 @@ namespace PrettyLinks\Compat;
  *      this prevents the fatal on this request too — in every context (admin,
  *      front-end, AJAX, REST, cron), with no redirect.
  *
- * When anything is deactivated we persist the affected add-on names to an
- * option and surface a dismissible admin notice on every admin screen (not just
- * Pretty Links pages) telling the owner the add-on must be updated before it can
- * be reactivated.
+ * When anything is deactivated we persist the affected add-ons to an option
+ * and surface a dismissible admin notice on every admin screen (not just
+ * Pretty Links pages) telling the owner the add-on must be updated before it
+ * can be reactivated. Each run also re-checks every previously-flagged add-on
+ * on disk and drops it from the option once its version reports 4.0+ again,
+ * so the notice can't keep claiming an already-fixed add-on still needs
+ * updating.
  */
 class AddonCompatibilityGuard
 {
     /**
-     * Stores the display names of add-ons deactivated by the guard so the
-     * notice survives the next request (detection only fires while the add-on
-     * is still active). Cleared on dismiss.
+     * Stores a basename => display name map of add-ons deactivated by the
+     * guard so the notice survives the next request (detection only fires
+     * while the add-on is still active). Cleared automatically once every
+     * listed add-on's on-disk version reports 4.0+ again (see `enforce()`),
+     * or manually via the dismiss link.
      */
     private const NOTICE_OPTION = 'prli_incompatible_addons_deactivated';
 
@@ -81,7 +86,7 @@ class AddonCompatibilityGuard
 
     /**
      * Detect and deactivate incompatible add-ons. Hooked on `plugins_loaded`
-     * priority 1.
+     * priority `PHP_INT_MIN`.
      */
     public static function enforce(): void
     {
@@ -89,26 +94,42 @@ class AddonCompatibilityGuard
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
 
-        $incompatible = []; // Basename => display name.
-        foreach (self::knownAddons() as $basename) {
-            if (!is_plugin_active($basename)) {
-                continue;
-            }
+        // Read once, and remember whether a row actually existed — a healthy
+        // site (nothing ever flagged) must not fall through to delete_option()
+        // below, whose uncached SELECT would run on every plugins_loaded.
+        $stored       = get_option(self::NOTICE_OPTION, false);
+        $deactivated  = self::normalizeDeactivated($stored);
+        $incompatible = []; // Basename => display name, still incompatible this request.
 
+        foreach (self::knownAddons() as $basename) {
             $file = WP_PLUGIN_DIR . '/' . $basename;
             if (!is_readable($file)) {
+                // Gone from disk — nothing left to warn about.
+                unset($deactivated[$basename]);
                 continue;
             }
 
             $data    = get_file_data($file, [
-                'Name'    => 'Name',
+                'Name'    => 'Plugin Name',
                 'Version' => 'Version',
             ]);
             $version = isset($data['Version']) ? (string) $data['Version'] : '';
 
-            // No version header → can't prove it's incompatible, leave it alone.
-            if ($version === '' || version_compare($version, self::MIN_VERSION, '>=')) {
+            // No version header → can't prove compatible or incompatible,
+            // leave any existing notice entry untouched.
+            if ($version === '') {
                 continue;
+            }
+
+            if (version_compare($version, self::MIN_VERSION, '>=')) {
+                // Updated to a compatible build — the notice no longer
+                // applies, regardless of whether it's currently active.
+                unset($deactivated[$basename]);
+                continue;
+            }
+
+            if (!is_plugin_active($basename)) {
+                continue; // Still a pre-4.0 build, but not currently active.
             }
 
             $name                    = isset($data['Name']) && $data['Name'] !== ''
@@ -117,21 +138,55 @@ class AddonCompatibilityGuard
             $incompatible[$basename] = $name;
         }
 
-        if (empty($incompatible)) {
-            return;
+        if (!empty($incompatible)) {
+            // Silent: skip the add-on's own deactivation hooks, which may
+            // reference the same removed v3 code we're protecting against.
+            deactivate_plugins(array_keys($incompatible), true);
+
+            // Note: deactivate_plugins() only stops future requests; it does
+            // not unhook the callbacks the add-ons already registered this
+            // request. Strip those now — none have fired yet at PHP_INT_MIN —
+            // so the stale add-on can't fatal on this load.
+            self::neutralizeCurrentRequest(array_keys($incompatible));
+
+            $deactivated = array_merge($deactivated, $incompatible);
         }
 
-        // Silent: skip the add-on's own deactivation hooks, which may reference
-        // the same removed v3 code we're protecting against.
-        deactivate_plugins(array_keys($incompatible), true);
+        if (empty($deactivated)) {
+            // Only clear when a row actually exists — covers the legacy flat
+            // list (discarded above, self-healing the reported stuck state)
+            // and the case where every entry resolved to 4.0+ this run.
+            if ($stored !== false) {
+                delete_option(self::NOTICE_OPTION);
+            }
+        } else {
+            update_option(self::NOTICE_OPTION, $deactivated, false);
+        }
+    }
 
-        update_option(self::NOTICE_OPTION, array_values($incompatible), false);
+    /**
+     * Normalizes the persisted notice option into a basename => display name
+     * map. A pre-existing plain list of display names (the shape used before
+     * basenames were tracked) can't be matched back to a specific add-on for
+     * pruning, so it's discarded rather than misread.
+     *
+     * @param mixed $stored The raw stored option value.
+     *
+     * @return array<string, string>
+     */
+    private static function normalizeDeactivated($stored): array
+    {
+        if (!is_array($stored) || empty($stored)) {
+            return [];
+        }
 
-        // Note: deactivate_plugins() only stops future requests; it does not
-        // unhook the callbacks the add-ons already registered this request.
-        // Strip those now — none have fired yet at PHP_INT_MIN — so the stale
-        // add-on can't fatal on this load.
-        self::neutralizeCurrentRequest(array_keys($incompatible));
+        foreach (array_keys($stored) as $key) {
+            if (!is_string($key)) {
+                return [];
+            }
+        }
+
+        return $stored;
     }
 
     /**

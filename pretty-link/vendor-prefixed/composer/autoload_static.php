@@ -4,7 +4,7 @@
 
 namespace PrettyLinks\Composer\Autoload;
 
-class ComposerStaticInitfab788f2f6398dcab77344bc361b29f5
+class ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c
 {
     public static $files = array (
         '6381d01c0284a4425b18527a16135f70' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -102,6 +102,7 @@ class ComposerStaticInitfab788f2f6398dcab77344bc361b29f5
         'PrettyLinks\\Admin\\AdminBar' => __DIR__ . '/../..' . '/src/Admin/AdminBar.php',
         'PrettyLinks\\Admin\\Assets' => __DIR__ . '/../..' . '/src/Admin/Assets.php',
         'PrettyLinks\\Admin\\Dashboard' => __DIR__ . '/../..' . '/src/Admin/Dashboard.php',
+        'PrettyLinks\\Admin\\MigrationHealth' => __DIR__ . '/../..' . '/src/Admin/MigrationHealth.php',
         'PrettyLinks\\Admin\\Notices' => __DIR__ . '/../..' . '/src/Admin/Notices.php',
         'PrettyLinks\\Admin\\Page' => __DIR__ . '/../..' . '/src/Admin/Page.php',
         'PrettyLinks\\Admin\\Pages\\AddNew' => __DIR__ . '/../..' . '/src/Admin/Pages/AddNew.php',
@@ -288,6 +289,7 @@ class ComposerStaticInitfab788f2f6398dcab77344bc361b29f5
         'PrettyLinks\\GrowthTools\\Loader' => __DIR__ . '/../..' . '/src/GrowthTools/Loader.php',
         'PrettyLinks\\Helpers\\LinkUrl' => __DIR__ . '/../..' . '/src/Helpers/LinkUrl.php',
         'PrettyLinks\\Helpers\\PageTitle' => __DIR__ . '/../..' . '/src/Helpers/PageTitle.php',
+        'PrettyLinks\\I18n\\ScriptTranslations' => __DIR__ . '/../..' . '/src/I18n/ScriptTranslations.php',
         'PrettyLinks\\Install\\Activator' => __DIR__ . '/../..' . '/src/Install/Activator.php',
         'PrettyLinks\\Install\\Deactivator' => __DIR__ . '/../..' . '/src/Install/Deactivator.php',
         'PrettyLinks\\Install\\Uninstaller' => __DIR__ . '/../..' . '/src/Install/Uninstaller.php',
@@ -425,9 +427,9 @@ class ComposerStaticInitfab788f2f6398dcab77344bc361b29f5
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitfab788f2f6398dcab77344bc361b29f5::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitfab788f2f6398dcab77344bc361b29f5::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitfab788f2f6398dcab77344bc361b29f5::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c::$classMap;
 
         }, null, ClassLoader::class);
     }

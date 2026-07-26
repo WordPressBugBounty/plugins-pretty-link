@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.11
+Stable Tag: 4.0.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,13 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.12 =
+* Fixed translations not applying to the redesigned admin interface — the new screens now display in your site's language whenever a translation is available (for example one created with Loco Translate or a WordPress.org language pack), matching what already worked for the older menus.
+* Fixed add-on notices that kept showing after the problem they warned about had already been resolved.
+* Pro: Fixed automatic link creation firing for your Alternate Domain — auto-created links now correctly skip the alternate shortlink domain.
+* Pro: Fixed Link Health reporting working links as broken. Destinations that block automated checks (returning 403, 405, 429, and similar) are no longer flagged — only genuine "not found" responses (404 and 410) count as broken, and a link must fail two checks in a row before it's reported. Added a per-link "Exclude from link health checks" option for affiliate or cloaked links whose destinations block bots.
+* Pro: Fixed link categories and tags still appearing blank after upgrading from 3.x on some sites. The upgrade now detects a failed migration and retries it instead of silently giving up, re-runs once to heal affected sites, and — if it still can't finish — shows the exact error, with a Retry button, in the admin and under Tools &rarr; Site Health.
 
 = 4.0.11 =
 * Added an "Export CSV" button to the Links list that downloads the links you are currently viewing — any search, category, tag, or status filters (including Broken links) carry over to the export. Large lists download in the background so the page stays responsive.

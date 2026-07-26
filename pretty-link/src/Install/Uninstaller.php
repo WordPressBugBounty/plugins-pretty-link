@@ -35,12 +35,17 @@ class Uninstaller
      */
     private static function clearCron(): void
     {
-        foreach (['prli_link_health_check', 'prli_send_broken_link_emails', 'prli_auto_trim_clicks'] as $event) {
+        foreach (['prli_link_health_check', 'prli_link_health_check_now', 'prli_send_broken_link_emails', 'prli_auto_trim_clicks'] as $event) {
             $timestamp = wp_next_scheduled($event);
             if ($timestamp) {
                 wp_unschedule_event($timestamp, $event);
             }
             wp_clear_scheduled_hook($event);
+        }
+        // Link-health run transients (literal keys — Lite can't reference the
+        // Pro HealthChecker constants; kept in sync with pro/src/Health).
+        foreach (['prli_link_health_force_before', 'prli_link_health_running', 'prli_link_health_swept'] as $transient) {
+            delete_transient($transient);
         }
     }
 }
