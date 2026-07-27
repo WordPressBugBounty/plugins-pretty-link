@@ -73,7 +73,11 @@ class ScriptTranslations
             return self::$cache[$cacheKey];
         }
 
-        $dirs = [WP_LANG_DIR . '/plugins'];
+        $dirs = [
+            WP_LANG_DIR . '/plugins',
+            // Loco Translate's "Custom" save location.
+            WP_LANG_DIR . '/loco/plugins',
+        ];
         if (defined('PRLI_FILE')) {
             $dirs[] = plugin_dir_path(PRLI_FILE) . 'languages';
         }

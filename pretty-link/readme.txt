@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.12
+Stable Tag: 4.0.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,9 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.14 =
+* Fixed the redesigned admin interface still displaying in English even when a translation was installed — translations created with Loco Translate (or provided by WordPress.org) now load correctly on the new React-based screens, not just the classic menus.
 
 = 4.0.12 =
 * Fixed translations not applying to the redesigned admin interface — the new screens now display in your site's language whenever a translation is available (for example one created with Loco Translate or a WordPress.org language pack), matching what already worked for the older menus.

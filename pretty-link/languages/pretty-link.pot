@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Links 4.0.12\n"
+"Project-Id-Version: Pretty Links 4.0.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-26T14:50:01+00:00\n"
+"POT-Creation-Date: 2026-07-27T17:11:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: src/Admin/PluginRow.php:59
 #: src/Admin/TopBar.php:74
 #: src/Onboarding/Wizard.php:452
-#: src-js/shared/components/Header.js:17
+#: assets/js/build/shared.js
 msgid "Pretty Links"
 msgstr ""
 
@@ -46,8 +46,7 @@ msgstr ""
 
 #: src/Admin/AdminBar.php:35
 #: src/Onboarding/Wizard.php:468
-#: src-js/editor/index.js:82
-#: src-js/editor/index.js:110
+#: assets/js/build/editor.js
 msgid "Pretty Link"
 msgstr ""
 
@@ -107,8 +106,8 @@ msgstr ""
 #: src/Admin/Dashboard.php:127
 #: src/Editor/ClassicEditor.php:113
 #: src/Onboarding/views/first-link.php:34
-#: src-js/editor/InlineLinkUI.js:560
-#: src-js/shared/components/LinkForm.js:502
+#: assets/js/build/editor.js
+#: assets/js/build/shared.js
 msgid "Target URL"
 msgstr ""
 
@@ -149,9 +148,7 @@ msgstr ""
 #: src/Admin/Pages/WhatsNew.php:293
 #: src/Admin/Upsell/ProUpsell.php:547
 #: src/Licensing/PlanCatalog.php:218
-#: src-js/shared/upsell/components.js:125
-#: src-js/shared/upsell/components.js:461
-#: src-js/shared/upsell/locked-redirect-types.js:32
+#: assets/js/build/shared.js
 msgid "Pro"
 msgstr ""
 
@@ -200,13 +197,12 @@ msgid "You are not allowed to do this."
 msgstr ""
 
 #: src/Admin/Page.php:58
-#: src-js/dashboard/index.js:125
-#: src-js/dashboard/index.js:712
+#: assets/js/build/dashboard.js
 msgid "Dashboard"
 msgstr ""
 
 #: src/Admin/Pages/AddNew.php:21
-#: src-js/add-new/index.js:155
+#: assets/js/build/add-new.js
 msgid "Add New Link"
 msgstr ""
 
@@ -215,20 +211,20 @@ msgid "Add New"
 msgstr ""
 
 #: src/Admin/Pages/AddNew.php:52
-#: src-js/add-new/index.js:154
+#: assets/js/build/add-new.js
 msgid "Edit Link"
 msgstr ""
 
 #: src/Admin/Pages/Addons.php:22
 #: src/Admin/Pages/Addons.php:23
 #: src/Onboarding/views/features.php:91
-#: src-js/addons/index.js:277
+#: assets/js/build/addons.js
 msgid "Add-ons"
 msgstr ""
 
 #: src/Admin/Pages/Clicks.php:47
 #: src/Admin/Pages/Clicks.php:48
-#: src-js/clicks/index.js:769
+#: assets/js/build/clicks.js
 msgid "Click History"
 msgstr ""
 
@@ -243,14 +239,13 @@ msgstr ""
 
 #: src/Admin/Pages/Options.php:22
 #: src/Admin/Pages/Options.php:23
-#: src-js/options/index.js:727
-#: src-js/options/index.js:742
+#: assets/js/build/options.js
 msgid "Options"
 msgstr ""
 
 #: src/Admin/Pages/PayLinks.php:37
 #: src/Admin/Pages/PayLinks.php:38
-#: src-js/shared/components/LinksApp.js:125
+#: assets/js/build/shared.js
 msgid "PrettyPay™ Links"
 msgstr ""
 
@@ -489,7 +484,7 @@ msgstr ""
 #: src/Admin/Pages/WhatsNew.php:216
 #: src/Admin/Upsell/ProUpsell.php:202
 #: src/Licensing/PlanCatalog.php:108
-#: src-js/shared/upsell/locked-option-sections.js:72
+#: assets/js/build/shared.js
 msgid "Splash Pages"
 msgstr ""
 
@@ -519,7 +514,7 @@ msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:231
 #: src/Licensing/PlanCatalog.php:120
-#: src-js/shared/upsell/locked-option-sections.js:64
+#: assets/js/build/shared.js
 msgid "User Links"
 msgstr ""
 
@@ -608,7 +603,7 @@ msgid "PRO"
 msgstr ""
 
 #: src/Admin/Upsell/AddonMenuLocked.php:129
-#: src-js/shared/upsell/components.js:334
+#: assets/js/build/shared.js
 msgid "Already installed."
 msgstr ""
 
@@ -617,18 +612,18 @@ msgid "This add-on is on your site but currently deactivated. Activate it to sta
 msgstr ""
 
 #: src/Admin/Upsell/AddonMenuLocked.php:139
-#: src-js/shared/upsell/components.js:352
+#: assets/js/build/shared.js
 msgid "Activate add-on"
 msgstr ""
 
 #. translators: %s: add-on name.
 #: src/Admin/Upsell/AddonMenuLocked.php:152
-#: src-js/shared/upsell/components.js:197
+#: assets/js/build/shared.js
 msgid "%s is a Pretty Links add-on."
 msgstr ""
 
 #: src/Admin/Upsell/AddonMenuLocked.php:161
-#: src-js/shared/upsell/components.js:216
+#: assets/js/build/shared.js
 msgid "View add-ons"
 msgstr ""
 
@@ -643,7 +638,7 @@ msgid "Custom reports & conversions"
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:59
-#: src-js/shared/upsell/components.js:79
+#: assets/js/build/shared.js
 msgid "Upgrade to Pro"
 msgstr ""
 
@@ -805,7 +800,7 @@ msgid "Short-circuits redirects before the rest of WordPress loads via a must-us
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:343
-#: src-js/shared/upsell/components.js:480
+#: assets/js/build/shared.js
 msgid "Upgrade to Pretty Links Pro"
 msgstr ""
 
@@ -849,13 +844,13 @@ msgid "Insert Pretty Link"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:105
-#: src-js/editor/InlineLinkUI.js:420
+#: assets/js/build/editor.js
 msgid "Search Pretty Links…"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:106
-#: src-js/editor/InlineLinkUI.js:481
-#: src-js/shared/components/LinksApp.js:1480
+#: assets/js/build/editor.js
+#: assets/js/build/shared.js
 msgid "Apply"
 msgstr ""
 
@@ -864,67 +859,57 @@ msgid "Update"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:108
-#: src-js/clicks/index.js:867
-#: src-js/options/index.js:367
-#: src-js/options/index.js:393
-#: src-js/options/ToolsSection.js:801
-#: src-js/options/ToolsSection.js:860
-#: src-js/shared/components/ConfirmDialog.js:34
-#: src-js/shared/components/LinksApp.js:1269
-#: src-js/shared/components/StripeAddProductDialog.js:264
-#: src-js/shared/components/TaxonomyApp.js:525
+#: assets/js/build/clicks.js
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "Cancel"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:109
-#: src-js/editor/InlineLinkUI.js:513
+#: assets/js/build/editor.js
 msgid "Open in New Tab"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:110
-#: src-js/editor/InlineLinkUI.js:522
+#: assets/js/build/editor.js
 msgid "Nofollow"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:111
 #: src/Onboarding/views/features.php:73
 #: src/Onboarding/Wizard.php:864
-#: src-js/editor/InlineLinkUI.js:531
+#: assets/js/build/editor.js
 msgid "Sponsored"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:112
-#: src-js/editor/InlineLinkUI.js:542
+#: assets/js/build/editor.js
 msgid "Create New Pretty Link"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:114
-#: src-js/editor/InlineLinkUI.js:570
-#: src-js/shared/components/LinkForm.js:525
-#: src-js/shared/components/LinksApp.js:687
-#: src-js/shared/components/PayLinkForm.js:348
-#: src-js/shared/components/TaxonomyApp.js:254
-#: src-js/shared/components/TaxonomyApp.js:465
+#: assets/js/build/editor.js
+#: assets/js/build/shared.js
 msgid "Slug"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:115
-#: src-js/editor/InlineLinkUI.js:597
+#: assets/js/build/editor.js
 msgid "Create & Insert"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:116
-#: src-js/editor/InlineLinkUI.js:596
+#: assets/js/build/editor.js
 msgid "Creating…"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:117
-#: src-js/editor/InlineLinkUI.js:378
+#: assets/js/build/editor.js
 msgid "Could not create link. The slug may already be in use."
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:118
-#: src-js/shared/components/ChipPicker.js:185
+#: assets/js/build/shared.js
 msgid "No matches."
 msgstr ""
 
@@ -1053,7 +1038,7 @@ msgstr ""
 #: src/Onboarding/views/finish.php:102
 #: src/Onboarding/views/license.php:58
 #: src/Onboarding/views/paylinks.php:68
-#: src-js/options/index.js:366
+#: assets/js/build/options.js
 msgid "Continue"
 msgstr ""
 
@@ -1216,7 +1201,7 @@ msgstr ""
 
 #: src/Onboarding/views/finish.php:71
 #: src/Onboarding/Wizard.php:466
-#: src-js/options/index.js:38
+#: assets/js/build/options.js
 msgid "License"
 msgstr ""
 
@@ -1270,12 +1255,12 @@ msgid "Skip for now"
 msgstr ""
 
 #: src/Onboarding/views/license.php:19
-#: src-js/options/LicenseSection.js:124
+#: assets/js/build/options.js
 msgid "Activate your license"
 msgstr ""
 
 #: src/Onboarding/views/license.php:23
-#: src-js/options/LicenseSection.js:83
+#: assets/js/build/options.js
 msgid "License activated."
 msgstr ""
 
@@ -1293,7 +1278,7 @@ msgid "Activation failed. Double-check the key and try again."
 msgstr ""
 
 #: src/Onboarding/views/license.php:50
-#: src-js/options/LicenseSection.js:174
+#: assets/js/build/options.js
 msgid "License Key"
 msgstr ""
 
@@ -1301,7 +1286,7 @@ msgstr ""
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:765
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:788
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:80
-#: src-js/addons/index.js:51
+#: assets/js/build/addons.js
 msgid "Activate"
 msgstr ""
 
@@ -1331,8 +1316,8 @@ msgid "Connecting Stripe uses a secure Caseproof handoff — you'll enroll your 
 msgstr ""
 
 #: src/Onboarding/views/paylinks.php:64
-#: src-js/options/PaymentsSection.js:404
-#: src-js/shared/components/LinksApp.js:1146
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "Connect Stripe"
 msgstr ""
 
@@ -1358,8 +1343,8 @@ msgid "Features"
 msgstr ""
 
 #: src/Onboarding/Wizard.php:470
-#: src-js/options/PaymentsSection.js:195
-#: src-js/shared/components/PayLinksEmptyState.js:64
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "PrettyPay™"
 msgstr ""
 
@@ -1381,7 +1366,7 @@ msgid "Recommended"
 msgstr ""
 
 #: src/Onboarding/Wizard.php:830
-#: src-js/shared/components/InfoTooltip.js:27
+#: assets/js/build/shared.js
 msgid "More information"
 msgstr ""
 
@@ -1471,7 +1456,7 @@ msgid "Sorry, updating your credentials failed."
 msgstr ""
 
 #: src/Stripe/CustomerPortal.php:74
-#: src-js/options/PaymentsSection.js:262
+#: assets/js/build/options.js
 msgid "Configure Customer Portal"
 msgstr ""
 
@@ -2537,7 +2522,7 @@ msgid "Dismiss All"
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-in-product-notifications/Services/View.php:308
-#: src-js/shared/components/LinksApp.js:46
+#: assets/js/build/shared.js
 msgid "All"
 msgstr ""
 
@@ -2617,7 +2602,7 @@ msgid "Plugin deactivated."
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:541
-#: src-js/addons/index.js:196
+#: assets/js/build/addons.js
 msgid "Add-on deactivated."
 msgstr ""
 
@@ -2661,15 +2646,15 @@ msgstr ""
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:747
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:786
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:80
-#: src-js/addons/index.js:18
-#: src-js/options/LicenseSection.js:132
+#: assets/js/build/addons.js
+#: assets/js/build/options.js
 msgid "Active"
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:751
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:789
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:80
-#: src-js/addons/index.js:48
+#: assets/js/build/addons.js
 msgid "Deactivate"
 msgstr ""
 
@@ -2680,18 +2665,18 @@ msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:759
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:80
-#: src-js/addons/index.js:22
+#: assets/js/build/addons.js
 msgid "Not Installed"
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:760
-#: src-js/addons/index.js:45
+#: assets/js/build/addons.js
 msgid "Install Add-on"
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:764
 #: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:787
-#: src-js/addons/index.js:20
+#: assets/js/build/addons.js
 msgid "Inactive"
 msgstr ""
 
@@ -2810,12 +2795,12 @@ msgid "Check License Status"
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/views/license-form.php:19
-#: src-js/options/LicenseSection.js:198
+#: assets/js/build/options.js
 msgid "Activate License"
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/views/license-form.php:19
-#: src-js/options/LicenseSection.js:167
+#: assets/js/build/options.js
 msgid "Deactivate License"
 msgstr ""
 
@@ -2828,12 +2813,12 @@ msgid "Available Add-ons"
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:19
-#: src-js/addons/index.js:224
+#: assets/js/build/addons.js
 msgid "Refresh Add-ons"
 msgstr ""
 
 #: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:23
-#: src-js/addons/index.js:291
+#: assets/js/build/addons.js
 msgid "Search add-ons"
 msgstr ""
 
@@ -2917,2420 +2902,2320 @@ msgstr ""
 msgid "Could not install addon. Please check user permissions."
 msgstr ""
 
-#: src-js/add-new/index.js:81
-#: src-js/add-new/index.js:110
+#: assets/js/build/add-new.js
 msgid "Unable to load link."
 msgstr ""
 
-#: src-js/add-new/index.js:150
+#: assets/js/build/add-new.js
 msgid "Edit PrettyPay™ Link"
 msgstr ""
 
-#: src-js/add-new/index.js:151
+#: assets/js/build/add-new.js
 msgid "Add New PrettyPay™ Link"
 msgstr ""
 
-#: src-js/add-new/index.js:160
+#: assets/js/build/add-new.js
 msgid "Update the Stripe-backed PrettyPay™ Link and save your changes."
 msgstr ""
 
-#: src-js/add-new/index.js:164
+#: assets/js/build/add-new.js
 msgid "Accept Stripe payments before redirecting — set your products and checkout options below."
 msgstr ""
 
-#: src-js/add-new/index.js:170
+#: assets/js/build/add-new.js
 msgid "Update this link and save your changes."
 msgstr ""
 
-#: src-js/add-new/index.js:171
+#: assets/js/build/add-new.js
 msgid "Shorten a URL and start tracking clicks immediately."
 msgstr ""
 
-#: src-js/add-new/index.js:181
-#: src-js/add-new/index.js:264
+#: assets/js/build/add-new.js
 msgid "Back to links"
 msgstr ""
 
-#: src-js/add-new/index.js:204
+#: assets/js/build/add-new.js
 msgid "WordPress permalinks need updating."
 msgstr ""
 
 #. translators: %postname% is a literal WordPress permalink tag and must not be translated.
-#: src-js/add-new/index.js:212
+#: assets/js/build/add-new.js
 msgid "Pretty Links can’t create or serve short links while your site is set to the \"Plain\" permalink structure. Switch to \"Post name\" (/%postname%/) for the cleanest URLs — it’s the recommended setting."
 msgstr ""
 
-#: src-js/add-new/index.js:222
+#: assets/js/build/add-new.js
 msgid "Open permalink settings"
 msgstr ""
 
-#: src-js/add-new/index.js:261
+#: assets/js/build/add-new.js
 msgid "Link not found"
 msgstr ""
 
-#: src-js/add-new/index.js:278
+#: assets/js/build/add-new.js
 msgid "Link updated"
 msgstr ""
 
-#: src-js/add-new/index.js:279
+#: assets/js/build/add-new.js
 msgid "Link created"
 msgstr ""
 
-#: src-js/add-new/index.js:281
+#: assets/js/build/add-new.js
 msgid "Your changes are live — the pretty URL below reflects the latest settings."
 msgstr ""
 
-#: src-js/add-new/index.js:285
+#: assets/js/build/add-new.js
 msgid "Share this pretty link anywhere — clicks are now being tracked."
 msgstr ""
 
-#: src-js/add-new/index.js:314
+#: assets/js/build/add-new.js
 msgid "Copy pretty URL"
 msgstr ""
 
-#: src-js/add-new/index.js:332
+#: assets/js/build/add-new.js
 msgid "Continue editing"
 msgstr ""
 
-#: src-js/add-new/index.js:350
+#: assets/js/build/add-new.js
 msgid "Add another"
 msgstr ""
 
-#: src-js/add-new/index.js:362
+#: assets/js/build/add-new.js
 msgid "Visit link"
 msgstr ""
 
 #. translators: %s: link slug or name.
-#: src-js/add-new/index.js:375
+#: assets/js/build/add-new.js
 msgid "Editing: %s"
 msgstr ""
 
-#: src-js/add-new/index.js:378
+#: assets/js/build/add-new.js
 msgid "Link details"
 msgstr ""
 
-#: src-js/add-new/index.js:381
+#: assets/js/build/add-new.js
 msgid "Changes take effect immediately once you save."
 msgstr ""
 
-#: src-js/add-new/index.js:382
+#: assets/js/build/add-new.js
 msgid "Fill in the target, give it a memorable name, and click Create."
 msgstr ""
 
-#: src-js/add-new/index.js:405
-#: src-js/add-new/index.js:416
+#: assets/js/build/add-new.js
 msgid "Save changes"
 msgstr ""
 
-#: src-js/add-new/index.js:406
+#: assets/js/build/add-new.js
 msgid "Create PrettyPay™ Link"
 msgstr ""
 
-#: src-js/add-new/index.js:417
+#: assets/js/build/add-new.js
 msgid "Create link"
 msgstr ""
 
-#: src-js/addons/index.js:139
+#: assets/js/build/addons.js
 msgid "Could not load add-ons."
 msgstr ""
 
-#: src-js/addons/index.js:177
+#: assets/js/build/addons.js
 msgid "Something went wrong. Try again."
 msgstr ""
 
-#: src-js/addons/index.js:189
+#: assets/js/build/addons.js
 msgid "Add-on activated."
 msgstr ""
 
-#: src-js/addons/index.js:203
+#: assets/js/build/addons.js
 msgid "Add-on installed."
 msgstr ""
 
-#: src-js/addons/index.js:240
+#: assets/js/build/addons.js
 msgid "No add-ons available right now."
 msgstr ""
 
-#: src-js/addons/index.js:241
+#: assets/js/build/addons.js
 msgid "Activate your Pretty Links license on the Options page to unlock premium add-ons, or click Refresh Add-ons above to try again."
 msgstr ""
 
-#: src-js/addons/index.js:252
+#: assets/js/build/addons.js
 msgid "Go to License"
 msgstr ""
 
-#: src-js/addons/index.js:278
+#: assets/js/build/addons.js
 msgid "Extend Pretty Links with premium features."
 msgstr ""
 
-#: src-js/clicks/index.js:161
+#: assets/js/build/clicks.js
 msgid "Link"
 msgstr ""
 
-#: src-js/clicks/index.js:163
+#: assets/js/build/clicks.js
 msgid "IP"
 msgstr ""
 
-#: src-js/clicks/index.js:165
+#: assets/js/build/clicks.js
 msgid "Browser"
 msgstr ""
 
-#: src-js/clicks/index.js:167
+#: assets/js/build/clicks.js
 msgid "OS"
 msgstr ""
 
-#: src-js/clicks/index.js:169
+#: assets/js/build/clicks.js
 msgid "Device"
 msgstr ""
 
-#: src-js/clicks/index.js:171
+#: assets/js/build/clicks.js
 msgid "Country"
 msgstr ""
 
-#: src-js/clicks/index.js:173
+#: assets/js/build/clicks.js
 msgid "Visitor"
 msgstr ""
 
-#: src-js/clicks/index.js:175
+#: assets/js/build/clicks.js
 msgid "Timestamp"
 msgstr ""
 
-#: src-js/clicks/index.js:177
+#: assets/js/build/clicks.js
 msgid "Host"
 msgstr ""
 
-#: src-js/clicks/index.js:179
+#: assets/js/build/clicks.js
 msgid "URI"
 msgstr ""
 
-#: src-js/clicks/index.js:181
+#: assets/js/build/clicks.js
 msgid "Referrer"
 msgstr ""
 
-#: src-js/clicks/index.js:588
+#: assets/js/build/clicks.js
 msgid "Unable to load clicks."
 msgstr ""
 
-#: src-js/clicks/index.js:672
-#: src-js/options/ToolsSection.js:423
-#: src-js/shared/components/LinksApp.js:249
+#: assets/js/build/clicks.js
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "Export cancelled."
 msgstr ""
 
-#: src-js/clicks/index.js:674
+#: assets/js/build/clicks.js
 msgid "No clicks to export."
 msgstr ""
 
 #. translators: %s: number of click rows exported.
-#: src-js/clicks/index.js:679
+#: assets/js/build/clicks.js
 msgid "Exported %s clicks"
 msgstr ""
 
-#: src-js/clicks/index.js:686
+#: assets/js/build/clicks.js
 msgid "Unable to export clicks."
 msgstr ""
 
 #. translators: %s: IP address.
-#: src-js/clicks/index.js:734
+#: assets/js/build/clicks.js
 msgid "Showing clicks from IP: %s"
 msgstr ""
 
 #. translators: %s: visitor unique id.
-#: src-js/clicks/index.js:741
+#: assets/js/build/clicks.js
 msgid "Showing clicks for visitor: %s"
 msgstr ""
 
-#: src-js/clicks/index.js:757
+#: assets/js/build/clicks.js
 msgid "No clicks match these filters."
 msgstr ""
 
-#: src-js/clicks/index.js:758
+#: assets/js/build/clicks.js
 msgid "Try widening the date range, clearing search, or removing the link filter."
 msgstr ""
 
-#: src-js/clicks/index.js:770
+#: assets/js/build/clicks.js
 msgid "Browse, filter, and export every recorded click."
 msgstr ""
 
-#: src-js/clicks/index.js:790
-#: src-js/shared/components/LinksApp.js:1201
+#: assets/js/build/clicks.js
+#: assets/js/build/shared.js
 msgid "Columns"
 msgstr ""
 
-#: src-js/clicks/index.js:797
-#: src-js/shared/components/LinksApp.js:1208
+#: assets/js/build/clicks.js
+#: assets/js/build/shared.js
 msgid "Show columns"
 msgstr ""
 
-#: src-js/clicks/index.js:828
-#: src-js/shared/components/LinksApp.js:1241
+#: assets/js/build/clicks.js
+#: assets/js/build/shared.js
 msgid "Exporting…"
 msgstr ""
 
-#: src-js/clicks/index.js:829
-#: src-js/shared/components/LinksApp.js:1242
+#: assets/js/build/clicks.js
+#: assets/js/build/shared.js
 msgid "Export CSV"
 msgstr ""
 
-#: src-js/clicks/index.js:840
+#: assets/js/build/clicks.js
 msgid "See breakdowns by country, device, and referrer — and route clicks based on them — with Pretty Links Pro."
 msgstr ""
 
 #. translators: %1$s processed clicks, %2$s total clicks.
-#: src-js/clicks/index.js:853
+#: assets/js/build/clicks.js
 msgid "Exported %1$s of %2$s clicks…"
 msgstr ""
 
-#: src-js/clicks/index.js:889
+#: assets/js/build/clicks.js
 msgid "Click history view"
 msgstr ""
 
-#: src-js/clicks/index.js:922
+#: assets/js/build/clicks.js
 msgid "Table"
 msgstr ""
 
-#: src-js/clicks/index.js:949
-#: src-js/clicks/index.js:960
-#: src-js/options/index.js:39
-#: src-js/shared/components/LinksApp.js:115
+#: assets/js/build/clicks.js
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "Links"
 msgstr ""
 
-#: src-js/clicks/index.js:956
+#: assets/js/build/clicks.js
 msgid "Search links…"
 msgstr ""
 
-#: src-js/clicks/index.js:970
-#: src-js/shared/components/LinksApp.js:1303
-#: src-js/shared/components/LinksApp.js:1322
-#: src-js/shared/components/TaxonomyApp.js:371
+#: assets/js/build/clicks.js
+#: assets/js/build/shared.js
 msgid "Search"
 msgstr ""
 
-#: src-js/clicks/index.js:976
+#: assets/js/build/clicks.js
 msgid "IP, host, referrer, URL, link name…"
 msgstr ""
 
-#: src-js/clicks/index.js:985
+#: assets/js/build/clicks.js
 msgid "Unique visitors only"
 msgstr ""
 
-#: src-js/clicks/index.js:1005
+#: assets/js/build/clicks.js
 msgid "Clear filter"
 msgstr ""
 
 #. translators: %s: total click count.
-#: src-js/clicks/index.js:1016
+#: assets/js/build/clicks.js
 msgid "%s clicks"
 msgstr ""
 
-#: src-js/clicks/index.js:1280
-#: src-js/shared/components/LinksApp.js:1517
+#: assets/js/build/clicks.js
+#: assets/js/build/shared.js
 msgid "Per page"
 msgstr ""
 
-#: src-js/clicks/index.js:1315
-#: src-js/options/ToolsSection.js:967
-#: src-js/shared/components/LinksApp.js:1627
+#: assets/js/build/clicks.js
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "Large export"
 msgstr ""
 
 #. translators: %s: number of clicks to export.
-#: src-js/clicks/index.js:1318
+#: assets/js/build/clicks.js
 msgid "This export contains %s clicks. The download may be slow and could use a lot of memory in your browser. Continue?"
 msgstr ""
 
-#: src-js/clicks/index.js:1324
-#: src-js/options/ToolsSection.js:976
-#: src-js/shared/components/LinksApp.js:1636
+#: assets/js/build/clicks.js
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "Export anyway"
 msgstr ""
 
-#: src-js/dashboard/index.js:89
-#: src-js/dashboard/index.js:684
+#: assets/js/build/dashboard.js
 msgid "Unable to load dashboard."
 msgstr ""
 
-#: src-js/dashboard/index.js:126
+#: assets/js/build/dashboard.js
 msgid "Overview of your Pretty Links activity."
 msgstr ""
 
-#: src-js/dashboard/index.js:134
-#: src-js/dashboard/index.js:290
-#: src-js/dashboard/index.js:721
-#: src-js/dashboard/index.js:873
-#: src-js/shared/components/LinksApp.js:121
+#: assets/js/build/dashboard.js
+#: assets/js/build/shared.js
 msgid "Add new link"
 msgstr ""
 
-#: src-js/dashboard/index.js:160
-#: src-js/dashboard/index.js:767
+#: assets/js/build/dashboard.js
 msgid "Total clicks"
 msgstr ""
 
-#: src-js/dashboard/index.js:167
-#: src-js/dashboard/index.js:189
-#: src-js/shared/components/DateRangeControl.js:14
+#: assets/js/build/dashboard.js
+#: assets/js/build/shared.js
 msgid "Last 30 days"
 msgstr ""
 
-#: src-js/dashboard/index.js:182
+#: assets/js/build/dashboard.js
 msgid "Unique visitors"
 msgstr ""
 
-#: src-js/dashboard/index.js:198
-#: src-js/dashboard/index.js:786
+#: assets/js/build/dashboard.js
 msgid "Total links"
 msgstr ""
 
-#: src-js/dashboard/index.js:220
-#: src-js/dashboard/index.js:239
-#: src-js/dashboard/index.js:803
-#: src-js/dashboard/index.js:822
+#: assets/js/build/dashboard.js
 msgid "Top link"
 msgstr ""
 
-#: src-js/dashboard/index.js:229
-#: src-js/dashboard/index.js:334
-#: src-js/dashboard/index.js:453
-#: src-js/dashboard/index.js:461
-#: src-js/dashboard/index.js:812
-#: src-js/dashboard/index.js:917
-#: src-js/dashboard/index.js:1002
-#: src-js/shared/components/LinksApp.js:662
-#: src-js/shared/components/TaxonomyApp.js:238
+#: assets/js/build/dashboard.js
+#: assets/js/build/shared.js
 msgid "Untitled"
 msgstr ""
 
-#: src-js/dashboard/index.js:244
+#: assets/js/build/dashboard.js
 msgid "No data yet"
 msgstr ""
 
-#: src-js/dashboard/index.js:258
-#: src-js/dashboard/index.js:841
+#: assets/js/build/dashboard.js
 msgid "Recent links"
 msgstr ""
 
-#: src-js/dashboard/index.js:259
-#: src-js/dashboard/index.js:842
+#: assets/js/build/dashboard.js
 msgid "Your newest additions."
 msgstr ""
 
-#: src-js/dashboard/index.js:266
-#: src-js/dashboard/index.js:372
-#: src-js/dashboard/index.js:518
-#: src-js/dashboard/index.js:849
-#: src-js/dashboard/index.js:953
+#: assets/js/build/dashboard.js
 msgid "View all"
 msgstr ""
 
-#: src-js/dashboard/index.js:274
-#: src-js/dashboard/index.js:857
-#: src-js/shared/components/LinksApp.js:116
+#: assets/js/build/dashboard.js
+#: assets/js/build/shared.js
 msgid "No links yet."
 msgstr ""
 
-#: src-js/dashboard/index.js:278
-#: src-js/dashboard/index.js:861
+#: assets/js/build/dashboard.js
 msgid "Create your first pretty link to start tracking clicks."
 msgstr ""
 
-#: src-js/dashboard/index.js:311
-#: src-js/dashboard/index.js:315
-#: src-js/dashboard/index.js:894
-#: src-js/dashboard/index.js:898
-#: src-js/editor/InlineLinkUI.js:496
-#: src-js/shared/components/LinksApp.js:668
-#: src-js/shared/components/LinksApp.js:669
+#: assets/js/build/dashboard.js
+#: assets/js/build/editor.js
+#: assets/js/build/shared.js
 msgid "Edit link"
 msgstr ""
 
-#: src-js/dashboard/index.js:361
-#: src-js/dashboard/index.js:942
+#: assets/js/build/dashboard.js
 msgid "Top performing links"
 msgstr ""
 
-#: src-js/dashboard/index.js:365
+#: assets/js/build/dashboard.js
 msgid "Most clicks in the last 30 days."
 msgstr ""
 
-#: src-js/dashboard/index.js:380
+#: assets/js/build/dashboard.js
 msgid "No click data yet."
 msgstr ""
 
-#: src-js/dashboard/index.js:384
+#: assets/js/build/dashboard.js
 msgid "Click data will appear here once visitors start clicking your links."
 msgstr ""
 
-#: src-js/dashboard/index.js:421
-#: src-js/dashboard/index.js:425
-#: src-js/dashboard/index.js:560
-#: src-js/dashboard/index.js:564
-#: src-js/shared/components/LinksApp.js:851
-#: src-js/shared/components/LinksApp.js:855
+#: assets/js/build/dashboard.js
+#: assets/js/build/shared.js
 msgid "View clicks"
 msgstr ""
 
-#: src-js/dashboard/index.js:513
+#: assets/js/build/dashboard.js
 msgid "Recent clicks"
 msgstr ""
 
-#: src-js/dashboard/index.js:514
+#: assets/js/build/dashboard.js
 msgid "Latest activity."
 msgstr ""
 
-#: src-js/dashboard/index.js:526
+#: assets/js/build/dashboard.js
 msgid "No recent clicks."
 msgstr ""
 
-#: src-js/dashboard/index.js:530
+#: assets/js/build/dashboard.js
 msgid "Clicks will appear here as visitors engage with your links."
 msgstr ""
 
-#: src-js/dashboard/index.js:713
+#: assets/js/build/dashboard.js
 msgid "Simple tracking mode is on — showing per-link click totals."
 msgstr ""
 
-#: src-js/dashboard/index.js:741
+#: assets/js/build/dashboard.js
 msgid "Simple tracking mode is enabled."
 msgstr ""
 
-#: src-js/dashboard/index.js:746
+#: assets/js/build/dashboard.js
 msgid "Only per-link click counters are recorded — no dates, visitors, referrers, or breakdowns. Switch to Normal or Extended to unlock the full dashboard and Reports."
 msgstr ""
 
-#: src-js/dashboard/index.js:754
+#: assets/js/build/dashboard.js
 msgid "Tracking settings"
 msgstr ""
 
-#: src-js/dashboard/index.js:774
+#: assets/js/build/dashboard.js
 msgid "Across all links, all time"
 msgstr ""
 
-#: src-js/dashboard/index.js:827
+#: assets/js/build/dashboard.js
 msgid "No clicks yet"
 msgstr ""
 
-#: src-js/dashboard/index.js:946
+#: assets/js/build/dashboard.js
 msgid "Ranked by total click count."
 msgstr ""
 
-#: src-js/dashboard/index.js:962
+#: assets/js/build/dashboard.js
 msgid "No clicks recorded yet."
 msgstr ""
 
-#: src-js/dashboard/index.js:966
+#: assets/js/build/dashboard.js
 msgid "Once your links start receiving clicks, the leaderboard will appear here."
 msgstr ""
 
-#: src-js/editor/index.js:81
+#: assets/js/build/editor.js
 msgid "Remove Pretty Link"
 msgstr ""
 
-#: src-js/editor/InlineLinkUI.js:366
+#: assets/js/build/editor.js
 msgid "Pretty Link created."
 msgstr ""
 
-#: src-js/editor/InlineLinkUI.js:429
+#: assets/js/build/editor.js
 msgid "Search Pretty Links"
 msgstr ""
 
-#: src-js/options/index.js:42
+#: assets/js/build/options.js
 msgid "Reporting"
 msgstr ""
 
-#: src-js/options/index.js:47
+#: assets/js/build/options.js
 msgid "Payments"
 msgstr ""
 
-#: src-js/options/index.js:59
+#: assets/js/build/options.js
 msgid "Tools"
 msgstr ""
 
-#: src-js/options/index.js:64
+#: assets/js/build/options.js
 msgid "Defaults applied to every new pretty link you create."
 msgstr ""
 
-#: src-js/options/index.js:68
+#: assets/js/build/options.js
 msgid "Control click tracking, storage, and privacy."
 msgstr ""
 
-#: src-js/options/index.js:72
+#: assets/js/build/options.js
 msgid "Connect Stripe and set defaults for your PrettyPay™ Links."
 msgstr ""
 
-#: src-js/options/index.js:76
+#: assets/js/build/options.js
 msgid "Activate your Pretty Links license to receive updates and premium add-ons."
 msgstr ""
 
-#: src-js/options/index.js:80
+#: assets/js/build/options.js
 msgid "Import, export, and configure performance tooling."
 msgstr ""
 
-#: src-js/options/index.js:90
+#: assets/js/build/options.js
 msgid "URL formatting"
 msgstr ""
 
-#: src-js/options/index.js:91
+#: assets/js/build/options.js
 msgid "Controls what the generated pretty link URL looks like on your site."
 msgstr ""
 
-#: src-js/options/index.js:97
+#: assets/js/build/options.js
 msgid "Default redirect"
 msgstr ""
 
-#: src-js/options/index.js:98
+#: assets/js/build/options.js
 msgid "Default HTTP status for new links. 301 is permanent — aggressively cached by browsers and search engines. 302 is temporary and passes referrer data more reliably. You can still override this per link on its edit screen."
 msgstr ""
 
-#: src-js/options/index.js:114
+#: assets/js/build/options.js
 msgid "Slug character count"
 msgstr ""
 
-#: src-js/options/index.js:115
+#: assets/js/build/options.js
 msgid "Number of random characters in each auto-generated slug. Minimum 2."
 msgstr ""
 
-#: src-js/options/index.js:138
+#: assets/js/build/options.js
 msgid "Allow spaces in slugs"
 msgstr ""
 
-#: src-js/options/index.js:139
+#: assets/js/build/options.js
 msgid "Keep literal spaces in link slugs instead of converting them to dashes when you save. Your site has links whose slugs contain spaces (carried over from Pretty Links 3.x), so this is on to keep those URLs working. Turn it off to normalize spaces to dashes on future edits — existing links keep working either way. A space shows up as %20 in the URL."
 msgstr ""
 
-#: src-js/options/index.js:152
+#: assets/js/build/options.js
 msgid "Slug rules"
 msgstr ""
 
-#: src-js/options/index.js:153
+#: assets/js/build/options.js
 msgid "Block specific slug patterns from being created. Built-in protection for WordPress core paths (wp-admin, wp-json, admin-ajax, etc.) is always on; this list is for site-specific additions (other plugin permalinks, sensitive page slugs, etc.)."
 msgstr ""
 
-#: src-js/options/index.js:159
+#: assets/js/build/options.js
 msgid "Reserved slug patterns"
 msgstr ""
 
-#: src-js/options/index.js:160
+#: assets/js/build/options.js
 msgid "Patterns to block, one per line or comma-separated. Wildcards (*) are supported — e.g. \"*wp-admin*\" also blocks \"my-wp-admin-thing\"."
 msgstr ""
 
-#: src-js/options/index.js:176
+#: assets/js/build/options.js
 msgid "Allow admins to bypass reserved slugs"
 msgstr ""
 
-#: src-js/options/index.js:180
+#: assets/js/build/options.js
 msgid "When enabled, administrators can create links with any slug, including patterns in the list above. When disabled, the patterns apply to admin-created links too. Pattern checks always apply to non-admin sources (front-end user dashboards and public-link forms) regardless of this setting."
 msgstr ""
 
-#: src-js/options/index.js:192
+#: assets/js/build/options.js
 msgid "Default attributes"
 msgstr ""
 
-#: src-js/options/index.js:193
+#: assets/js/build/options.js
 msgid "Applied to every new pretty link. You can still override these per link."
 msgstr ""
 
-#: src-js/options/index.js:199
+#: assets/js/build/options.js
 msgid "Default nofollow"
 msgstr ""
 
-#: src-js/options/index.js:200
+#: assets/js/build/options.js
 msgid "Adds rel=\"nofollow\" to every pretty link in your content, telling search engines not to pass ranking authority to the destination. Recommended for affiliate and outbound links — most affiliate programs and Google's guidelines expect it."
 msgstr ""
 
-#: src-js/options/index.js:208
+#: assets/js/build/options.js
 msgid "Default sponsored"
 msgstr ""
 
-#: src-js/options/index.js:209
+#: assets/js/build/options.js
 msgid "Adds rel=\"sponsored\" to every pretty link, declaring to search engines that the link is paid, affiliated, or part of a sponsorship. Google recommends this on top of (or instead of) nofollow for affiliate and ad links."
 msgstr ""
 
-#: src-js/options/index.js:287
-#: src-js/options/index.js:327
+#: assets/js/build/options.js
 msgid "Normal"
 msgstr ""
 
-#: src-js/options/index.js:288
+#: assets/js/build/options.js
 msgid "Extended"
 msgstr ""
 
-#: src-js/options/index.js:289
+#: assets/js/build/options.js
 msgid "Simple"
 msgstr ""
 
-#: src-js/options/index.js:295
+#: assets/js/build/options.js
 msgid "Click tracking"
 msgstr ""
 
-#: src-js/options/index.js:296
+#: assets/js/build/options.js
 msgid "What data Pretty Links records on every click."
 msgstr ""
 
-#: src-js/options/index.js:302
+#: assets/js/build/options.js
 msgid "Track clicks on all links by default"
 msgstr ""
 
-#: src-js/options/index.js:306
+#: assets/js/build/options.js
 msgid "Master switch for click tracking. When off, Pretty Links stops recording clicks site-wide and the Reports page shows zeros. Individual links can still opt into tracking on their own edit screen even while this is disabled."
 msgstr ""
 
-#: src-js/options/index.js:314
+#: assets/js/build/options.js
 msgid "Tracking mode"
 msgstr ""
 
-#: src-js/options/index.js:315
+#: assets/js/build/options.js
 msgid "Normal stores a row per click with raw fields (IP, referrer, country, timestamp) — fast and covers most reports. Extended also parses the user agent to populate browser, device, and OS breakdowns, at extra cost on every redirect. Simple only increments a per-link counter — fastest, smallest database, but disables every report except total clicks."
 msgstr ""
 
-#: src-js/options/index.js:331
+#: assets/js/build/options.js
 msgid "Extended (parse browser + device)"
 msgstr ""
 
-#: src-js/options/index.js:338
+#: assets/js/build/options.js
 msgid "Simple (count only)"
 msgstr ""
 
-#: src-js/options/index.js:351
+#: assets/js/build/options.js
 msgid "Switching tracking mode deletes all click data"
 msgstr ""
 
-#: src-js/options/index.js:357
+#: assets/js/build/options.js
 msgid "Switching to Simple mode will permanently delete every recorded click row, reset every link’s click and uniques counters to zero, and remove all Reports history. Nothing can be recovered. Continue?"
 msgstr ""
 
-#: src-js/options/index.js:361
+#: assets/js/build/options.js
 msgid "Switching away from Simple mode will permanently delete every link’s static click counter and reset Reports to zero. Nothing can be recovered. Continue?"
 msgstr ""
 
-#: src-js/options/index.js:376
+#: assets/js/build/options.js
 msgid "Last chance — delete all click data?"
 msgstr ""
 
 #. translators: %1$s = current mode, %2$s = target mode.
-#: src-js/options/index.js:382
+#: assets/js/build/options.js
 msgid "You’re about to switch tracking from %1$s to %2$s. This will erase ALL click history across every link immediately and cannot be undone. Are you absolutely sure?"
 msgstr ""
 
-#: src-js/options/index.js:389
+#: assets/js/build/options.js
 msgid "Delete all click data and switch"
 msgstr ""
 
-#: src-js/options/index.js:402
+#: assets/js/build/options.js
 msgid "Retention"
 msgstr ""
 
-#: src-js/options/index.js:403
+#: assets/js/build/options.js
 msgid "How long click data is kept in the database before trimming."
 msgstr ""
 
-#: src-js/options/index.js:409
+#: assets/js/build/options.js
 msgid "Auto-delete click data older than"
 msgstr ""
 
-#: src-js/options/index.js:413
+#: assets/js/build/options.js
 msgid "Warning: this permanently deletes raw click records — deleted data cannot be recovered. A nightly background job removes click rows older than the selected window. Date-range reports past this window will show no data."
 msgstr ""
 
-#: src-js/options/index.js:429
+#: assets/js/build/options.js
 msgid "Keep forever"
 msgstr ""
 
-#: src-js/options/index.js:433
+#: assets/js/build/options.js
 msgid "30 days"
 msgstr ""
 
-#: src-js/options/index.js:437
+#: assets/js/build/options.js
 msgid "90 days (recommended)"
 msgstr ""
 
-#: src-js/options/index.js:444
+#: assets/js/build/options.js
 msgid "180 days"
 msgstr ""
 
-#: src-js/options/index.js:448
+#: assets/js/build/options.js
 msgid "1 year"
 msgstr ""
 
-#: src-js/options/index.js:452
+#: assets/js/build/options.js
 msgid "2 years"
 msgstr ""
 
-#: src-js/options/index.js:462
+#: assets/js/build/options.js
 msgid "Warning: enabling auto-delete will permanently remove click records older than the selected window. This cannot be undone. Continue?"
 msgstr ""
 
-#: src-js/options/index.js:487
+#: assets/js/build/options.js
 msgid "Privacy"
 msgstr ""
 
-#: src-js/options/index.js:488
+#: assets/js/build/options.js
 msgid "Scrubs personally-identifiable data before it lands in the database."
 msgstr ""
 
-#: src-js/options/index.js:494
+#: assets/js/build/options.js
 msgid "Anonymize IP addresses"
 msgstr ""
 
-#: src-js/options/index.js:495
+#: assets/js/build/options.js
 msgid "Zeroes the last octet of each visitor's IP (192.168.1.42 → 192.168.1.0) before it's stored. Recommended by GDPR, CCPA, and LGPD. City-level geo accuracy in reports drops; country-level stays intact."
 msgstr ""
 
-#: src-js/options/index.js:506
+#: assets/js/build/options.js
 msgid "Bot & IP filtering"
 msgstr ""
 
-#: src-js/options/index.js:507
+#: assets/js/build/options.js
 msgid "Stop low-signal traffic from distorting your click counts."
 msgstr ""
 
-#: src-js/options/index.js:513
+#: assets/js/build/options.js
 msgid "Filter bots from click counts"
 msgstr ""
 
-#: src-js/options/index.js:517
+#: assets/js/build/options.js
 msgid "When on, Pretty Link blocks 70+ known crawlers and AI scrapers (Googlebot, GPTBot, ClaudeBot, etc.) plus matches custom patterns + CDN bot signals. When off, every hit counts as a real click — useful for security monitoring or comparing pre/post-filter numbers."
 msgstr ""
 
-#: src-js/options/index.js:526
+#: assets/js/build/options.js
 msgid "Blocked bot user-agent patterns"
 msgstr ""
 
-#: src-js/options/index.js:530
+#: assets/js/build/options.js
 msgid "Custom patterns layered on top of the built-in bot list. One pattern per line. Matching is case-insensitive substring against the User-Agent header."
 msgstr ""
 
-#: src-js/options/index.js:544
+#: assets/js/build/options.js
 msgid "Blocked IP addresses"
 msgstr ""
 
-#: src-js/options/index.js:545
+#: assets/js/build/options.js
 msgid "Traffic from these IPs is silently ignored and never counted as a click. One IP address or CIDR range per line (e.g. 10.0.0.0/8). Useful for filtering out office, staging, or test traffic."
 msgstr ""
 
-#: src-js/options/index.js:559
+#: assets/js/build/options.js
 msgid "Allowed IP addresses"
 msgstr ""
 
-#: src-js/options/index.js:560
+#: assets/js/build/options.js
 msgid "The bot detector will occasionally flag legitimate traffic as bots (privacy-focused browsers, screen readers, spoofed user agents). IPs listed here bypass that check and always count as real visitors. One IP per line."
 msgstr ""
 
-#: src-js/options/index.js:698
+#: assets/js/build/options.js
 msgid "Stripe connected."
 msgstr ""
 
-#: src-js/options/index.js:699
+#: assets/js/build/options.js
 msgid "Stripe credentials refreshed."
 msgstr ""
 
-#: src-js/options/index.js:700
+#: assets/js/build/options.js
 msgid "Stripe disconnected."
 msgstr ""
 
-#: src-js/options/index.js:743
+#: assets/js/build/options.js
 msgid "Configure how Pretty Links behaves on your site."
 msgstr ""
 
-#: src-js/options/index.js:757
+#: assets/js/build/options.js
 msgid "Options sections"
 msgstr ""
 
-#: src-js/options/LicenseSection.js:32
+#: assets/js/build/options.js
 msgid "Could not load license status."
 msgstr ""
 
-#: src-js/options/LicenseSection.js:62
+#: assets/js/build/options.js
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: src-js/options/LicenseSection.js:76
+#: assets/js/build/options.js
 msgid "Enter your license key to activate."
 msgstr ""
 
-#: src-js/options/LicenseSection.js:90
+#: assets/js/build/options.js
 msgid "License deactivated."
 msgstr ""
 
-#: src-js/options/LicenseSection.js:99
+#: assets/js/build/options.js
 msgid "Edge updates enabled."
 msgstr ""
 
-#: src-js/options/LicenseSection.js:100
+#: assets/js/build/options.js
 msgid "Edge updates disabled."
 msgstr ""
 
-#: src-js/options/LicenseSection.js:123
+#: assets/js/build/options.js
 msgid "License status"
 msgstr ""
 
-#: src-js/options/LicenseSection.js:130
+#: assets/js/build/options.js
 msgid "Status:"
 msgstr ""
 
-#: src-js/options/LicenseSection.js:138
+#: assets/js/build/options.js
 msgid "License:"
 msgstr ""
 
-#: src-js/options/LicenseSection.js:146
+#: assets/js/build/options.js
 msgid "Expires:"
 msgstr ""
 
-#: src-js/options/LicenseSection.js:153
+#: assets/js/build/options.js
 msgid "Key:"
 msgstr ""
 
-#: src-js/options/LicenseSection.js:175
+#: assets/js/build/options.js
 msgid "Your Pretty Links Pro license key, found in your Caseproof account under Purchases. Activating the key unlocks Pro features on this site and enables automatic updates and Pro support."
 msgstr ""
 
-#: src-js/options/LicenseSection.js:206
+#: assets/js/build/options.js
 msgid "Update channel"
 msgstr ""
 
-#: src-js/options/LicenseSection.js:208
+#: assets/js/build/options.js
 msgid "Edge updates (bleeding-edge releases)"
 msgstr ""
 
-#: src-js/options/LicenseSection.js:212
+#: assets/js/build/options.js
 msgid "Opts this site into pre-release builds as soon as they ship — ideal for staging and development environments where you want to try new features early. Production sites should leave this off and stick with stable releases."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:49
+#: assets/js/build/options.js
 msgid "Unable to load Stripe settings."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:75
+#: assets/js/build/options.js
 msgid "Couldn’t save payment settings."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:94
-#: src-js/options/PaymentsSection.js:100
+#: assets/js/build/options.js
 msgid "Unable to start Stripe Connect."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:111
+#: assets/js/build/options.js
 msgid "Disconnect this site from Stripe?"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:123
+#: assets/js/build/options.js
 msgid "Disconnect failed."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:136
+#: assets/js/build/options.js
 msgid "Refresh failed."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:157
+#: assets/js/build/options.js
 msgid "Stripe Customer Portal configured. Subscribers can now manage their subscription."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:165
+#: assets/js/build/options.js
 msgid "Unable to configure the Stripe Customer Portal."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:196
+#: assets/js/build/options.js
 msgid "The Stripe-powered paid-links feature. Turning this off hides the PrettyPay menu entry, the \"+ New PrettyPay™ Link\" admin-bar shortcut, and the settings below. Existing PrettyPay links keep working — only the admin UI is hidden."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:202
+#: assets/js/build/options.js
 msgid "Enable PrettyPay™"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:216
+#: assets/js/build/options.js
 msgid "Enabled"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:217
+#: assets/js/build/options.js
 msgid "Disabled"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:226
+#: assets/js/build/options.js
 msgid "Stripe connection"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:245
+#: assets/js/build/options.js
 msgid "Configure the Stripe Customer Portal"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:251
+#: assets/js/build/options.js
 msgid "You have at least one recurring PrettyPay™ Link. Customers will need the Stripe Customer Portal to manage their subscription."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:273
+#: assets/js/build/options.js
 msgid "Open Stripe Dashboard"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:283
+#: assets/js/build/options.js
 msgid "Customer Portal URL"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:287
+#: assets/js/build/options.js
 msgid "Share this link with subscribers so they can manage their recurring PrettyPay™ Link subscriptions. It redirects to your configured Stripe Customer Portal."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:301
-#: src-js/shared/components/LinkForm.js:579
-#: src-js/shared/components/PayLinkForm.js:384
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "Copy URL"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:312
+#: assets/js/build/options.js
 msgid "Checkout defaults"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:313
+#: assets/js/build/options.js
 msgid "Applied to every PrettyPay™ Link unless overridden individually."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:319
-#: src-js/options/PaymentsSection.js:329
+#: assets/js/build/options.js
 msgid "Global thank-you page"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:323
+#: assets/js/build/options.js
 msgid "Default page shown after a successful checkout (order confirmation, thank-you page, etc.). Individual PrettyPay™ Links can override this — the setting here is the fallback used whenever a link doesn't specify its own redirect. Leave empty to send customers to the site homepage."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:345
+#: assets/js/build/options.js
 msgid "Default currency"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:346
+#: assets/js/build/options.js
 msgid "The currency pre-selected when creating a new Stripe product or PrettyPay™ Link. You can still change the currency on individual products. Must be a currency your Stripe account is configured to accept."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:403
+#: assets/js/build/options.js
 msgid "Connected to Stripe"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:410
+#: assets/js/build/options.js
 msgid "Stripe account linked."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:412
+#: assets/js/build/options.js
 msgid "Test mode"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:417
+#: assets/js/build/options.js
 msgid "Accept one-time payments and subscriptions before redirecting — no custom checkout to build."
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:431
+#: assets/js/build/options.js
 msgid "Refresh Stripe Credentials"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:444
+#: assets/js/build/options.js
 msgid "Disconnect"
 msgstr ""
 
-#: src-js/options/PaymentsSection.js:457
+#: assets/js/build/options.js
 msgid "Connect with Stripe"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:134
+#: assets/js/build/options.js
 msgid "Field count does not match the header row."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:138
+#: assets/js/build/options.js
 msgid "PrettyPay™ links cannot be imported via CSV."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:142
+#: assets/js/build/options.js
 msgid "No existing link with that ID."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:143
+#: assets/js/build/options.js
 msgid "URL is required."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:144
+#: assets/js/build/options.js
 msgid "URL is not valid."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:145
+#: assets/js/build/options.js
 msgid "Slug is reserved by Pretty Links or WordPress."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:149
+#: assets/js/build/options.js
 msgid "Slug is already in use by another link."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:153
+#: assets/js/build/options.js
 msgid "Slug is not valid."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:154
+#: assets/js/build/options.js
 msgid "Database insert failed."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:155
+#: assets/js/build/options.js
 msgid "Database update failed."
 msgstr ""
 
 #. translators: %1$s: number created, %2$s: number updated, %3$s: number skipped, %4$s: number of errors.
-#: src-js/options/ToolsSection.js:172
+#: assets/js/build/options.js
 msgid "Done — %1$s created, %2$s updated, %3$s skipped, %4$s error(s)."
 msgstr ""
 
 #. translators: %1$s: current row number, %2$s: total number of rows.
-#: src-js/options/ToolsSection.js:183
+#: assets/js/build/options.js
 msgid "Processing row %1$s of %2$s…"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:191
+#: assets/js/build/options.js
 msgid "Failed rows:"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:196
+#: assets/js/build/options.js
 msgid "Row"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:197
+#: assets/js/build/options.js
 msgid "Slug / ID"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:198
+#: assets/js/build/options.js
 msgid "Reason"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:234
+#: assets/js/build/options.js
 msgid "Pretty Links cookies registered with CookieYes."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:238
+#: assets/js/build/options.js
 msgid "Pretty Links cookies removed from CookieYes."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:246
+#: assets/js/build/options.js
 msgid "Unable to update CookieYes integration."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:266
+#: assets/js/build/options.js
 msgid "CookieYes integration"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:269
+#: assets/js/build/options.js
 msgid "Automatically register the cookies Pretty Links uses for click tracking with the CookieYes plugin so they appear in your consent banner. Cookies are added under the Analytics and Functional categories."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:277
+#: assets/js/build/options.js
 msgid "Install and activate the CookieYes plugin to enable this integration."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:285
+#: assets/js/build/options.js
 msgid "Register Pretty Links cookies with CookieYes"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:355
+#: assets/js/build/options.js
 msgid "Please select a .csv file."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:425
+#: assets/js/build/options.js
 msgid "No data to export."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:427
+#: assets/js/build/options.js
 msgid "Export ready."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:431
+#: assets/js/build/options.js
 msgid "Unable to export."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:474
+#: assets/js/build/options.js
 msgid "Select a CSV file first."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:482
+#: assets/js/build/options.js
 msgid "Could not read the file."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:489
+#: assets/js/build/options.js
 msgid "No importable rows found in the CSV."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:539
+#: assets/js/build/options.js
 msgid "Import failed."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:570
+#: assets/js/build/options.js
 msgid "Clear all clicks?"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:571
+#: assets/js/build/options.js
 msgid "This permanently deletes every click record for every link. Link totals will reset to zero. This cannot be undone."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:575
-#: src-js/options/ToolsSection.js:895
+#: assets/js/build/options.js
 msgid "Clear all clicks"
 msgstr ""
 
 #. translators: %d is the day threshold.
-#: src-js/options/ToolsSection.js:583
+#: assets/js/build/options.js
 msgid "Clear clicks older than %d days?"
 msgstr ""
 
 #. translators: %d is the day threshold.
-#: src-js/options/ToolsSection.js:588
+#: assets/js/build/options.js
 msgid "This permanently deletes click records older than %d days. Recent clicks remain intact. This cannot be undone."
 msgstr ""
 
 #. translators: %d is the day threshold.
-#: src-js/options/ToolsSection.js:596
+#: assets/js/build/options.js
 msgid "Clear clicks older than %d days"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:616
+#: assets/js/build/options.js
 msgid "Clicks cleared."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:640
+#: assets/js/build/options.js
 msgid "Clearing clicks in the background. This keeps running even if you leave this page."
 msgstr ""
 
 #. translators: %s is a formatted click count.
-#: src-js/options/ToolsSection.js:657
+#: assets/js/build/options.js
 msgid "Deleted %s clicks."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:664
+#: assets/js/build/options.js
 msgid "Unable to clear clicks."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:681
-#: src-js/options/ToolsSection.js:782
+#: assets/js/build/options.js
 msgid "Import links"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:686
+#: assets/js/build/options.js
 msgid "Upload a CSV file to bulk-import links. Rows are matched by ID (if provided) or slug — existing links are updated, new ones are created."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:695
+#: assets/js/build/options.js
 msgid "View sample CSV"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:707
+#: assets/js/build/options.js
 msgid "Choose CSV file"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:732
+#: assets/js/build/options.js
 msgid "Drop a CSV file here, or click to browse"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:750
+#: assets/js/build/options.js
 msgid "Remove file"
 msgstr ""
 
 #. translators: %s is a comma-separated list of column names.
-#: src-js/options/ToolsSection.js:764
+#: assets/js/build/options.js
 msgid "This file contains Pro-only column(s): %s. They will be ignored on this Lite site — install Pretty Links Pro to import them."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:814
+#: assets/js/build/options.js
 msgid "Import another file"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:834
+#: assets/js/build/options.js
 msgid "Export links"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:837
+#: assets/js/build/options.js
 msgid "Download all links as a CSV file for backup or migration. Includes link metadata, redirect settings, and SEO flags."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:851
+#: assets/js/build/options.js
 msgid "Download CSV"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:878
+#: assets/js/build/options.js
 msgid "Trim clicks"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:881
+#: assets/js/build/options.js
 msgid "Delete old click records to keep the database lean. Link totals are recalculated from what remains. These actions cannot be undone."
 msgstr ""
 
-#: src-js/options/ToolsSection.js:908
+#: assets/js/build/options.js
 msgid "Clear clicks older than 30 days"
 msgstr ""
 
-#: src-js/options/ToolsSection.js:921
+#: assets/js/build/options.js
 msgid "Clear clicks older than 90 days"
 msgstr ""
 
 #. translators: %s: number of links to export.
-#: src-js/options/ToolsSection.js:970
-#: src-js/shared/components/LinksApp.js:1630
+#: assets/js/build/options.js
+#: assets/js/build/shared.js
 msgid "This export contains %s links. The download may be slow and could use a lot of memory in your browser. Continue?"
 msgstr ""
 
-#: src-js/shared/components/ChipPicker.js:186
-#: src-js/shared/components/LinksApp.js:1583
+#: assets/js/build/shared.js
 msgid "Type to search…"
 msgstr ""
 
-#: src-js/shared/components/ChipPicker.js:195
-#: src-js/shared/components/StripeProductPicker.js:208
+#: assets/js/build/shared.js
 msgid "Searching…"
 msgstr ""
 
-#: src-js/shared/components/ConfirmDialog.js:18
+#: assets/js/build/shared.js
 msgid "Are you sure?"
 msgstr ""
 
-#: src-js/shared/components/ConfirmDialog.js:45
-#: src-js/shared/components/LinksApp.js:1617
+#: assets/js/build/shared.js
 msgid "Confirm"
 msgstr ""
 
-#: src-js/shared/components/CopyButton.js:50
+#: assets/js/build/shared.js
 msgid "Copied"
 msgstr ""
 
-#: src-js/shared/components/CopyButton.js:51
+#: assets/js/build/shared.js
 msgid "Copy"
 msgstr ""
 
-#: src-js/shared/components/DataTable.js:103
+#: assets/js/build/shared.js
 msgid "Select all"
 msgstr ""
 
-#: src-js/shared/components/DataTable.js:176
+#: assets/js/build/shared.js
 msgid "No items found."
 msgstr ""
 
-#: src-js/shared/components/DataTable.js:202
+#: assets/js/build/shared.js
 msgid "Select row"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:13
+#: assets/js/build/shared.js
 msgid "Last 7 days"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:15
+#: assets/js/build/shared.js
 msgid "Last 3 months"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:16
+#: assets/js/build/shared.js
 msgid "Last 12 months"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:19
+#: assets/js/build/shared.js
 msgid "Last 2 years"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:20
+#: assets/js/build/shared.js
 msgid "All time (slow)"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:21
+#: assets/js/build/shared.js
 msgid "Custom range"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:52
+#: assets/js/build/shared.js
 msgid "Range"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:64
+#: assets/js/build/shared.js
 msgid "From"
 msgstr ""
 
-#: src-js/shared/components/DateRangeControl.js:85
+#: assets/js/build/shared.js
 msgid "To"
 msgstr ""
 
 #. translators: %1$s processed rows, %2$s total rows.
-#: src-js/shared/components/ExportProgress.js:24
+#: assets/js/build/shared.js
 msgid "Exported %1$s of %2$s rows…"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:53
+#: assets/js/build/shared.js
 msgid "Link Attributes"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:207
-#: src-js/shared/components/PayLinkForm.js:127
+#: assets/js/build/shared.js
 msgid "Unable to generate slug."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:251
+#: assets/js/build/shared.js
 msgid "Target URL is required."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:261
+#: assets/js/build/shared.js
 msgid "Target URL must start with http:// or https://."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:271
-#: src-js/shared/components/PayLinkForm.js:155
+#: assets/js/build/shared.js
 msgid "Slug is required."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:286
+#: assets/js/build/shared.js
 msgid "Please fix the highlighted errors."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:300
+#: assets/js/build/shared.js
 msgid "Link created."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:301
+#: assets/js/build/shared.js
 msgid "Link saved."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:306
-#: src-js/shared/components/LinkForm.js:314
+#: assets/js/build/shared.js
 msgid "Unable to create link."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:307
-#: src-js/shared/components/LinkForm.js:315
+#: assets/js/build/shared.js
 msgid "Unable to save link."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:387
+#: assets/js/build/shared.js
 msgid "Link settings"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:444
-#: src-js/shared/components/LinkForm.js:449
+#: assets/js/build/shared.js
 msgid "Link name"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:454
+#: assets/js/build/shared.js
 msgid "Destination"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:457
-#: src-js/shared/components/LinkForm.js:470
-#: src-js/shared/components/LinkIndicators.js:35
-#: src-js/shared/components/LinksApp.js:1332
+#: assets/js/build/shared.js
 msgid "Redirect type"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:461
+#: assets/js/build/shared.js
 msgid "The HTTP status used when redirecting."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:505
+#: assets/js/build/shared.js
 msgid "Where the pretty link redirects visitors."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:526
+#: assets/js/build/shared.js
 msgid "Short path appended to the home URL."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:564
-#: src-js/shared/components/PayLinkForm.js:375
+#: assets/js/build/shared.js
 msgid "Generate"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:592
+#: assets/js/build/shared.js
 msgid "Attributes"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:595
+#: assets/js/build/shared.js
 msgid "Apply nofollow"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:599
+#: assets/js/build/shared.js
 msgid "Add rel=\"nofollow\" to this link's anchor tag when used in shortcodes / Pretty Bar. Tells search engines not to pass ranking authority to the destination."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:609
+#: assets/js/build/shared.js
 msgid "Apply sponsored"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:613
+#: assets/js/build/shared.js
 msgid "Add rel=\"sponsored\" to mark this link as paid or affiliate content. Google's preferred signal for monetised links since 2019; usually used together with nofollow."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:640
+#: assets/js/build/shared.js
 msgid "Tracking"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:643
+#: assets/js/build/shared.js
 msgid "Track clicks"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:647
+#: assets/js/build/shared.js
 msgid "Record every click on this link in the Reports section. Disable for links you don't want to count (e.g. internal navigation, test links)."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:658
+#: assets/js/build/shared.js
 msgid "Forward query parameters"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:662
+#: assets/js/build/shared.js
 msgid "Pass through ?key=value params to the target URL. 99.9% of users won’t need this, and should leave it off."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:684
-#: src-js/shared/components/LinkForm.js:687
-#: src-js/shared/components/LinkForm.js:696
-#: src-js/shared/components/PayLinkForm.js:392
-#: src-js/shared/components/PayLinkForm.js:401
+#: assets/js/build/shared.js
 msgid "Notes"
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:688
+#: assets/js/build/shared.js
 msgid "Private notes about this link — not shown publicly."
 msgstr ""
 
-#: src-js/shared/components/LinkForm.js:739
-#: src-js/shared/components/TaxonomyApp.js:534
+#: assets/js/build/shared.js
 msgid "Save"
 msgstr ""
 
-#: src-js/shared/components/LinkIndicators.js:49
-#: src-js/shared/components/LinkIndicators.js:50
+#: assets/js/build/shared.js
 msgid "Nofollow enabled"
 msgstr ""
 
-#: src-js/shared/components/LinkIndicators.js:63
-#: src-js/shared/components/LinkIndicators.js:64
+#: assets/js/build/shared.js
 msgid "Sponsored attribute enabled"
 msgstr ""
 
-#: src-js/shared/components/LinkIndicators.js:80
-#: src-js/shared/components/LinkIndicators.js:84
+#: assets/js/build/shared.js
 msgid "Parameter forwarding enabled"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:49
+#: assets/js/build/shared.js
 msgid "Trashed"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:65
+#: assets/js/build/shared.js
 msgid "Bulk actions"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:68
+#: assets/js/build/shared.js
 msgid "Move to trash"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:69
+#: assets/js/build/shared.js
 msgid "move to trash"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:73
+#: assets/js/build/shared.js
 msgid "Restore"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:74
+#: assets/js/build/shared.js
 msgid "restore"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:78
+#: assets/js/build/shared.js
 msgid "Delete permanently"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:79
+#: assets/js/build/shared.js
 msgid "permanently delete"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:83
+#: assets/js/build/shared.js
 msgid "Enable nofollow"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:84
+#: assets/js/build/shared.js
 msgid "enable nofollow on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:88
+#: assets/js/build/shared.js
 msgid "Disable nofollow"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:89
+#: assets/js/build/shared.js
 msgid "disable nofollow on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:93
+#: assets/js/build/shared.js
 msgid "Enable sponsored"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:94
+#: assets/js/build/shared.js
 msgid "enable sponsored on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:98
+#: assets/js/build/shared.js
 msgid "Disable sponsored"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:99
+#: assets/js/build/shared.js
 msgid "disable sponsored on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:103
+#: assets/js/build/shared.js
 msgid "Enable tracking"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:104
+#: assets/js/build/shared.js
 msgid "enable click tracking on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:108
+#: assets/js/build/shared.js
 msgid "Disable tracking"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:109
+#: assets/js/build/shared.js
 msgid "disable click tracking on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:117
+#: assets/js/build/shared.js
 msgid "Your links will appear here. Add your first pretty link to start tracking clicks."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:122
-#: src-js/shared/hooks/useLinks.js:68
+#: assets/js/build/shared.js
 msgid "Unable to load links."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:126
+#: assets/js/build/shared.js
 msgid "No PrettyPay™ Links yet."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:127
+#: assets/js/build/shared.js
 msgid "PrettyPay™ Links accept payment via Stripe before redirecting. Add one to get started."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:131
+#: assets/js/build/shared.js
 msgid "Add new PrettyPay™ Link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:132
+#: assets/js/build/shared.js
 msgid "Unable to load PrettyPay™ Links."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:251
+#: assets/js/build/shared.js
 msgid "No links to export."
 msgstr ""
 
 #. translators: %s: number of links exported.
-#: src-js/shared/components/LinksApp.js:256
+#: assets/js/build/shared.js
 msgid "Exported %s links"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:263
+#: assets/js/build/shared.js
 msgid "Unable to export links."
 msgstr ""
 
 #. translators: %d: number of links.
-#: src-js/shared/components/LinksApp.js:390
+#: assets/js/build/shared.js
 msgid "Bulk action applied to %d link(s)."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:403
+#: assets/js/build/shared.js
 msgid "Unable to complete bulk action."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:413
+#: assets/js/build/shared.js
 msgid "Select an action and at least one link."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:428
+#: assets/js/build/shared.js
 msgid "Unable to load options for this action."
 msgstr ""
 
 #. translators: 1: action verb, 2: link count.
-#: src-js/shared/components/LinksApp.js:441
+#: assets/js/build/shared.js
 msgid "Are you sure you want to %1$s %2$d link(s)?"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:463
+#: assets/js/build/shared.js
 msgid "Clone this link? A copy will be created and opened for editing."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:475
+#: assets/js/build/shared.js
 msgid "Move this link to the trash?"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:487
+#: assets/js/build/shared.js
 msgid "Reset all click statistics for this link? This permanently deletes its click history and sets its counters back to zero. This cannot be undone."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:499
+#: assets/js/build/shared.js
 msgid "Permanently delete this link? This cannot be undone."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:510
+#: assets/js/build/shared.js
 msgid "Link restored."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:515
+#: assets/js/build/shared.js
 msgid "Unable to restore link."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:530
+#: assets/js/build/shared.js
 msgid "Link moved to trash."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:535
+#: assets/js/build/shared.js
 msgid "Link permanently deleted."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:544
+#: assets/js/build/shared.js
 msgid "Resetting click statistics in the background. This keeps running even if you leave this page."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:551
+#: assets/js/build/shared.js
 msgid "Link click statistics reset."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:564
+#: assets/js/build/shared.js
 msgid "Link duplicated."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:570
+#: assets/js/build/shared.js
 msgid "Unable to complete action."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:648
-#: src-js/shared/components/PayLinkForm.js:333
-#: src-js/shared/components/PayLinkForm.js:343
-#: src-js/shared/components/StripeAddProductDialog.js:97
-#: src-js/shared/components/TaxonomyApp.js:230
-#: src-js/shared/components/TaxonomyApp.js:436
+#: assets/js/build/shared.js
 msgid "Name"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:711
+#: assets/js/build/shared.js
 msgid "Copy Pretty Link URL"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:725
+#: assets/js/build/shared.js
 msgid "Target"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:744
+#: assets/js/build/shared.js
 msgid "Open target URL"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:759
-#: src-js/shared/components/LinksApp.js:760
+#: assets/js/build/shared.js
 msgid "Tracking disabled for this link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:772
+#: assets/js/build/shared.js
 msgid "Clicks"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:790
+#: assets/js/build/shared.js
 msgid "Uniques"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:809
+#: assets/js/build/shared.js
 msgid "Created"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:816
+#: assets/js/build/shared.js
 msgid "Trashed on"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:818
+#: assets/js/build/shared.js
 msgid "Trashed:"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:829
+#: assets/js/build/shared.js
 msgid "Actions"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:886
-#: src-js/shared/components/LinksApp.js:890
+#: assets/js/build/shared.js
 msgid "Reset clicks"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:905
-#: src-js/shared/components/LinksApp.js:909
+#: assets/js/build/shared.js
 msgid "Duplicate link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:922
-#: src-js/shared/components/LinksApp.js:926
+#: assets/js/build/shared.js
 msgid "Trash link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:942
-#: src-js/shared/components/LinksApp.js:946
+#: assets/js/build/shared.js
 msgid "Restore link"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:962
-#: src-js/shared/components/LinksApp.js:966
+#: assets/js/build/shared.js
 msgid "Delete forever"
 msgstr ""
 
 #. translators: %1$s processed links, %2$s total links.
-#: src-js/shared/components/LinksApp.js:1255
+#: assets/js/build/shared.js
 msgid "Exported %1$s of %2$s links…"
 msgstr ""
 
 #. translators: the "3%" here is a literal percentage, not a sprintf placeholder.
-#: src-js/shared/components/LinksApp.js:1278
+#: assets/js/build/shared.js
 msgid "A 3% platform fee applies to every PrettyPay™ checkout"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1282
+#: assets/js/build/shared.js
 msgid "Upgrade to Pretty Links Pro and remove the platform fee — you keep every dollar after Stripe's own processing fees."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1286
-#: src-js/shared/components/PayLinkForm.js:326
+#: assets/js/build/shared.js
 msgid "Remove the fee"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1305
+#: assets/js/build/shared.js
 msgid "Search name, slug, or URL…"
 msgstr ""
 
 #. translators: %s: total result count for the current filters.
-#: src-js/shared/components/LinksApp.js:1316
-#: src-js/shared/components/TaxonomyApp.js:384
+#: assets/js/build/shared.js
 msgid "%s Results"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1352
+#: assets/js/build/shared.js
 msgid "Status filter"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1433
-#: src-js/shared/components/LinksApp.js:1434
+#: assets/js/build/shared.js
 msgid "Clear filters"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1450
+#: assets/js/build/shared.js
 msgid "Items left in trash can be restored until you delete them permanently."
 msgstr ""
 
 #. translators: %d: number of selected links.
-#: src-js/shared/components/LinksApp.js:1463
+#: assets/js/build/shared.js
 msgid "%d selected"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1486
+#: assets/js/build/shared.js
 msgid "Clear selection"
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1506
+#: assets/js/build/shared.js
 msgid "No links match the current filters."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1570
+#: assets/js/build/shared.js
 msgid "No options exist yet for this action."
 msgstr ""
 
-#: src-js/shared/components/LinksApp.js:1593
+#: assets/js/build/shared.js
 msgid "Confirm bulk action"
 msgstr ""
 
-#: src-js/shared/components/NoticeStrip.js:44
+#: assets/js/build/shared.js
 msgid "Installing…"
 msgstr ""
 
-#: src-js/shared/components/NoticeStrip.js:54
+#: assets/js/build/shared.js
 msgid "Install failed. Please try again."
 msgstr ""
 
-#: src-js/shared/components/NoticeStrip.js:68
+#: assets/js/build/shared.js
 msgid "Notices"
 msgstr ""
 
-#: src-js/shared/components/NoticeStrip.js:105
-#: src-js/shared/components/ReviewAskNotice.js:196
+#: assets/js/build/shared.js
 msgid "Dismiss notice"
 msgstr ""
 
 #. translators: %d: page ID
-#: src-js/shared/components/PageSearchPicker.js:73
+#: assets/js/build/shared.js
 msgid "Page #%d"
 msgstr ""
 
-#: src-js/shared/components/PageSearchPicker.js:123
+#: assets/js/build/shared.js
 msgid "Search for a page…"
 msgstr ""
 
-#: src-js/shared/components/PageSearchPicker.js:129
+#: assets/js/build/shared.js
 msgid "No matching pages."
 msgstr ""
 
-#: src-js/shared/components/PageSearchPicker.js:130
+#: assets/js/build/shared.js
 msgid "Type to search pages…"
 msgstr ""
 
-#: src-js/shared/components/Pagination.js:20
+#: assets/js/build/shared.js
 msgid "Pagination"
 msgstr ""
 
 #. translators: 1: current page, 2: total pages
-#: src-js/shared/components/Pagination.js:25
+#: assets/js/build/shared.js
 msgid "Page %1$d of %2$d"
 msgstr ""
 
-#: src-js/shared/components/Pagination.js:34
-#: src-js/shared/components/Pagination.js:35
+#: assets/js/build/shared.js
 msgid "Previous page"
 msgstr ""
 
-#: src-js/shared/components/Pagination.js:44
-#: src-js/shared/components/Pagination.js:45
+#: assets/js/build/shared.js
 msgid "Next page"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:104
+#: assets/js/build/shared.js
 msgid "Unable to load Stripe data."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:160
+#: assets/js/build/shared.js
 msgid "Select at least one Stripe product to sell with this PrettyPay™ Link."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:174
+#: assets/js/build/shared.js
 msgid "Select at least one shipping country."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:203
+#: assets/js/build/shared.js
 msgid "PrettyPay™ Link created."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:204
+#: assets/js/build/shared.js
 msgid "PrettyPay™ Link saved."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:209
-#: src-js/shared/components/PayLinkForm.js:223
+#: assets/js/build/shared.js
 msgid "Unable to create PrettyPay™ Link."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:213
-#: src-js/shared/components/PayLinkForm.js:227
+#: assets/js/build/shared.js
 msgid "Unable to save PrettyPay™ Link."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:307
+#: assets/js/build/shared.js
 msgid "Stripe is not connected. Connect Stripe in Options → Payments before PrettyPay™ Links can accept payments."
 msgstr ""
 
 #. translators: the "3%" is a literal percentage, not a placeholder.
-#: src-js/shared/components/PayLinkForm.js:318
+#: assets/js/build/shared.js
 msgid "A 3% platform fee applies to every checkout"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:322
+#: assets/js/build/shared.js
 msgid "Pretty Links Pro removes the platform fee — you keep every dollar after Stripe's own processing fees."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:331
+#: assets/js/build/shared.js
 msgid "Basics"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:334
+#: assets/js/build/shared.js
 msgid "Internal label that shows in your dashboard."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:393
+#: assets/js/build/shared.js
 msgid "Private notes — not shown on the checkout."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:410
+#: assets/js/build/shared.js
 msgid "Products"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:411
+#: assets/js/build/shared.js
 msgid "Required. Pick at least one Stripe product to sell with this PrettyPay™ Link."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:426
+#: assets/js/build/shared.js
 msgid "Checkout options"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:429
+#: assets/js/build/shared.js
 msgid "Collect tax automatically"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:433
+#: assets/js/build/shared.js
 msgid "Requires Stripe Tax to be enabled on your connected account."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:441
+#: assets/js/build/shared.js
 msgid "Collect customer addresses"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:453
+#: assets/js/build/shared.js
 msgid "Also collect shipping address"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:469
+#: assets/js/build/shared.js
 msgid "Allowed shipping countries"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:492
+#: assets/js/build/shared.js
 msgid "Require phone number"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:499
+#: assets/js/build/shared.js
 msgid "Allow promotion codes"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:506
+#: assets/js/build/shared.js
 msgid "Allow business customers to provide tax IDs"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:517
+#: assets/js/build/shared.js
 msgid "Save payment details for future use"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:530
+#: assets/js/build/shared.js
 msgid "Include a free trial"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:541
-#: src-js/shared/components/PayLinkForm.js:550
+#: assets/js/build/shared.js
 msgid "Trial period (days)"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:569
+#: assets/js/build/shared.js
 msgid "Messaging"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:571
-#: src-js/shared/components/PayLinkForm.js:581
+#: assets/js/build/shared.js
 msgid "Checkout submit message"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:572
+#: assets/js/build/shared.js
 msgid "Displayed next to the Stripe Checkout submit button (up to 1000 characters)."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:592
-#: src-js/shared/components/PayLinkForm.js:599
+#: assets/js/build/shared.js
 msgid "Thank-you page override"
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:593
+#: assets/js/build/shared.js
 msgid "Where customers land after a successful checkout. Leave empty to use the global thank-you page setting."
 msgstr ""
 
-#: src-js/shared/components/PayLinkForm.js:622
+#: assets/js/build/shared.js
 msgid "Save PrettyPay™ Link"
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:8
+#: assets/js/build/shared.js
 msgid "Bulletproof Payments"
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:9
+#: assets/js/build/shared.js
 msgid "Bank-grade security your customers actually trust."
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:16
+#: assets/js/build/shared.js
 msgid "Sell Everywhere"
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:17
+#: assets/js/build/shared.js
 msgid "135+ currencies, instant global reach. Paris, Tokyo, Topeka — take their money."
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:24
+#: assets/js/build/shared.js
 msgid "One Link. Any Channel."
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:25
+#: assets/js/build/shared.js
 msgid "Drop it in emails, Instagram bios, TikToks, DMs — if it’s online, it’s selling."
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:32
+#: assets/js/build/shared.js
 msgid "Cash in Your Pocket, Fast"
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:33
+#: assets/js/build/shared.js
 msgid "Funds hit your account in days, not decades."
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:40
+#: assets/js/build/shared.js
 msgid "See Every Sale"
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:41
+#: assets/js/build/shared.js
 msgid "Rich tracking and analytics so you know exactly what’s crushing it."
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:48
+#: assets/js/build/shared.js
 msgid "Zero Code Required"
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:49
+#: assets/js/build/shared.js
 msgid "If you can click a button, you can start collecting."
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:67
+#: assets/js/build/shared.js
 msgid "Turn Clicks Into Sales — Instantly."
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:73
+#: assets/js/build/shared.js
 msgid "Stop waiting. Start selling. Connect Stripe to your PrettyPay™ links and every click becomes a chance to close — one-tap checkout, money in your account, zero friction between “interested” and “paid.”"
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:84
+#: assets/js/build/shared.js
 msgid "Why Stripe + PrettyPay™ = Pure Profit Magic"
 msgstr ""
 
-#: src-js/shared/components/PayLinksEmptyState.js:112
+#: assets/js/build/shared.js
 msgid "Flip the switch. Watch the sales roll in. Your next sale is one click away."
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:79
+#: assets/js/build/shared.js
 msgid "Are you enjoying Pretty Links?"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:89
+#: assets/js/build/shared.js
 msgid "Yes, I love it!"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:101
+#: assets/js/build/shared.js
 msgid "Not really…"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:110
+#: assets/js/build/shared.js
 msgid "That's awesome! Could you please give Pretty Links a 5-star rating on WordPress to help spread the word?"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:116
+#: assets/js/build/shared.js
 msgid "~ Blair Williams, Founder & CEO of Pretty Links"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:128
+#: assets/js/build/shared.js
 msgid "Okay, you deserve it!"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:141
+#: assets/js/build/shared.js
 msgid "Nope, maybe later"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:153
+#: assets/js/build/shared.js
 msgid "I already did"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:162
+#: assets/js/build/shared.js
 msgid "We're sorry to hear that. We'd love a chance to improve — could you take a moment and share what we can do better?"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:174
+#: assets/js/build/shared.js
 msgid "Give Feedback"
 msgstr ""
 
-#: src-js/shared/components/ReviewAskNotice.js:186
+#: assets/js/build/shared.js
 msgid "No thanks"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:66
-#: src-js/shared/components/StripeAddProductDialog.js:71
+#: assets/js/build/shared.js
 msgid "Could not add product."
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:89
+#: assets/js/build/shared.js
 msgid "Add a new product"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:98
+#: assets/js/build/shared.js
 msgid "Premium Plan, Sunglasses, etc."
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:109
+#: assets/js/build/shared.js
 msgid "Price"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:117
+#: assets/js/build/shared.js
 msgid "Currency"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:125
+#: assets/js/build/shared.js
 msgid "Type"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:129
+#: assets/js/build/shared.js
 msgid "One time"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:133
+#: assets/js/build/shared.js
 msgid "Recurring"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:145
+#: assets/js/build/shared.js
 msgid "Billing period"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:150
+#: assets/js/build/shared.js
 msgid "Daily"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:154
+#: assets/js/build/shared.js
 msgid "Weekly"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:158
+#: assets/js/build/shared.js
 msgid "Monthly"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:162
+#: assets/js/build/shared.js
 msgid "Every 3 months"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:169
+#: assets/js/build/shared.js
 msgid "Every 6 months"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:176
+#: assets/js/build/shared.js
 msgid "Yearly"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:180
+#: assets/js/build/shared.js
 msgid "Custom"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:187
+#: assets/js/build/shared.js
 msgid "every"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:196
+#: assets/js/build/shared.js
 msgid "Interval count"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:208
+#: assets/js/build/shared.js
 msgid "days"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:212
+#: assets/js/build/shared.js
 msgid "weeks"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:216
+#: assets/js/build/shared.js
 msgid "months"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:232
+#: assets/js/build/shared.js
 msgid "Tax behavior"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:233
+#: assets/js/build/shared.js
 msgid "Whether the price is tax-inclusive, tax-exclusive, or left unspecified."
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:241
+#: assets/js/build/shared.js
 msgid "Default"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:245
+#: assets/js/build/shared.js
 msgid "Price is inclusive of tax"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:252
+#: assets/js/build/shared.js
 msgid "Price is exclusive of tax"
 msgstr ""
 
-#: src-js/shared/components/StripeAddProductDialog.js:274
+#: assets/js/build/shared.js
 msgid "Add product"
 msgstr ""
 
-#: src-js/shared/components/StripeProductPicker.js:53
+#: assets/js/build/shared.js
 msgid "Search failed."
 msgstr ""
 
-#: src-js/shared/components/StripeProductPicker.js:164
+#: assets/js/build/shared.js
 msgid "Remove product"
 msgstr ""
 
-#: src-js/shared/components/StripeProductPicker.js:180
+#: assets/js/build/shared.js
 msgid "Search Stripe products or prices…"
 msgstr ""
 
-#: src-js/shared/components/StripeProductPicker.js:197
+#: assets/js/build/shared.js
 msgid "New product"
 msgstr ""
 
-#: src-js/shared/components/StripeProductPicker.js:218
+#: assets/js/build/shared.js
 msgid "No products match that search."
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:116
+#: assets/js/build/shared.js
 msgid "— None —"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:154
+#: assets/js/build/shared.js
 msgid "Name is required."
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:172
+#: assets/js/build/shared.js
 msgid "Saved."
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:175
+#: assets/js/build/shared.js
 msgid "Created."
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:181
+#: assets/js/build/shared.js
 msgid "Unable to save."
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:199
+#: assets/js/build/shared.js
 msgid "Deleted."
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:204
+#: assets/js/build/shared.js
 msgid "Unable to delete."
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:221
-#: src-js/shared/components/TaxonomyApp.js:222
-#: src-js/shared/components/TaxonomyApp.js:244
-#: src-js/shared/components/TaxonomyApp.js:245
+#: assets/js/build/shared.js
 msgid "Edit"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:263
-#: src-js/shared/components/TaxonomyApp.js:483
+#: assets/js/build/shared.js
 msgid "Description"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:276
-#: src-js/shared/components/TaxonomyApp.js:501
+#: assets/js/build/shared.js
 msgid "Parent"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:287
+#: assets/js/build/shared.js
 msgid "Count"
 msgstr ""
 
 #. translators: %s: taxonomy term name.
-#: src-js/shared/components/TaxonomyApp.js:304
+#: assets/js/build/shared.js
 msgid "View links in %s"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:317
-#: src-js/shared/components/TaxonomyApp.js:325
-#: src-js/shared/components/TaxonomyApp.js:326
+#: assets/js/build/shared.js
 msgid "Delete"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:373
+#: assets/js/build/shared.js
 msgid "Search name, slug…"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:410
+#: assets/js/build/shared.js
 msgid "No items match your search."
 msgstr ""
 
 #. translators: %s: item name.
-#: src-js/shared/components/TaxonomyApp.js:424
+#: assets/js/build/shared.js
 msgid "Edit: %s"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:466
+#: assets/js/build/shared.js
 msgid "Leave empty to generate from name."
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:535
+#: assets/js/build/shared.js
 msgid "Create"
 msgstr ""
 
-#: src-js/shared/components/TaxonomyApp.js:543
+#: assets/js/build/shared.js
 msgid "Confirm delete"
 msgstr ""
 
 #. translators: %s: item name.
-#: src-js/shared/components/TaxonomyApp.js:546
+#: assets/js/build/shared.js
 msgid "Delete \"%s\"? Links assigned to it will be unassigned. This cannot be undone."
 msgstr ""
 
-#: src-js/shared/hooks/useAutosaveToasts.js:33
+#: assets/js/build/shared.js
 msgid "Saved"
 msgstr ""
 
-#: src-js/shared/hooks/useOptions.js:52
+#: assets/js/build/shared.js
 msgid "Unable to load options."
 msgstr ""
 
-#: src-js/shared/hooks/useOptions.js:133
+#: assets/js/build/shared.js
 msgid "Unable to save options."
 msgstr ""
 
-#: src-js/shared/link-helpers.js:155
+#: assets/js/build/shared.js
 msgid "All Redirect Types"
 msgstr ""
 
-#: src-js/shared/upsell/components.js:176
+#: assets/js/build/shared.js
 msgid "Unlock with Pretty Links Pro"
 msgstr ""
 
-#: src-js/shared/upsell/components.js:278
+#: assets/js/build/shared.js
 msgid "Pretty Links add-on"
 msgstr ""
 
-#: src-js/shared/upsell/components.js:281
+#: assets/js/build/shared.js
 msgid "This add-on is installed on your site but currently deactivated."
 msgstr ""
 
-#: src-js/shared/upsell/components.js:315
-#: src-js/shared/upsell/components.js:320
+#: assets/js/build/shared.js
 msgid "Could not activate the add-on."
 msgstr ""
 
-#: src-js/shared/upsell/components.js:351
+#: assets/js/build/shared.js
 msgid "Activating…"
 msgstr ""
 
-#: src-js/shared/upsell/components.js:394
-#: src-js/shared/upsell/components.js:466
+#: assets/js/build/shared.js
 msgid "Pretty Links Pro feature"
 msgstr ""
 
-#: src-js/shared/upsell/components.js:561
+#: assets/js/build/shared.js
 msgid "Learn more"
 msgstr ""
 
-#: src-js/shared/upsell/components.js:568
+#: assets/js/build/shared.js
 msgid "Dismiss tip"
 msgstr ""
 
-#: src-js/shared/upsell/locked-link-form-tabs.js:26
+#: assets/js/build/shared.js
 msgid "Dynamic redirection"
 msgstr ""
 
-#: src-js/shared/upsell/locked-link-form-tabs.js:32
+#: assets/js/build/shared.js
 msgid "Expiration"
 msgstr ""
 
-#: src-js/shared/upsell/locked-link-form-tabs.js:38
-#: src-js/shared/upsell/locked-option-sections.js:31
+#: assets/js/build/shared.js
 msgid "Replacements"
 msgstr ""
 
-#: src-js/shared/upsell/locked-link-form-tabs.js:44
+#: assets/js/build/shared.js
 msgid "UTM tracking"
 msgstr ""
 
-#: src-js/shared/upsell/locked-link-form-tabs.js:52
+#: assets/js/build/shared.js
 msgid "QR code"
 msgstr ""
 
-#: src-js/shared/upsell/locked-option-sections.js:25
+#: assets/js/build/shared.js
 msgid "Pretty Bar"
 msgstr ""
 
-#: src-js/shared/upsell/locked-option-sections.js:37
+#: assets/js/build/shared.js
 msgid "Auto-Create"
 msgstr ""
 
-#: src-js/shared/upsell/locked-option-sections.js:43
+#: assets/js/build/shared.js
 msgid "QR Codes"
 msgstr ""
 
-#: src-js/shared/upsell/locked-option-sections.js:49
+#: assets/js/build/shared.js
 msgid "Link Health"
 msgstr ""
 
-#: src-js/shared/upsell/locked-option-sections.js:55
+#: assets/js/build/shared.js
 msgid "Social Buttons"
 msgstr ""
