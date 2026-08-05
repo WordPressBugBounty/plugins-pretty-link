@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Repositories;
 
+use PrettyLinks\Support\SiteDate;
+
 // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
@@ -74,13 +76,19 @@ class Clicks
             $where[]  = 'cl.link_id = %d';
             $params[] = (int) $args['link_id'];
         }
-        if (!empty($args['from']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $args['from'])) {
+        // Site-local calendar days in, inclusive UTC bounds out. An absent or
+        // unusable bound is omitted rather than defaulted.
+        list($fromUtc, $toUtc) = SiteDate::optionalBoundsUtc(
+            (string) ($args['from'] ?? ''),
+            (string) ($args['to'] ?? '')
+        );
+        if ($fromUtc !== '') {
             $where[]  = 'cl.created_at >= %s';
-            $params[] = $args['from'] . ' 00:00:00';
+            $params[] = $fromUtc;
         }
-        if (!empty($args['to']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $args['to'])) {
+        if ($toUtc !== '') {
             $where[]  = 'cl.created_at <= %s';
-            $params[] = $args['to'] . ' 23:59:59';
+            $params[] = $toUtc;
         }
         if (!empty($args['ip'])) {
             $where[]  = 'cl.ip = %s';

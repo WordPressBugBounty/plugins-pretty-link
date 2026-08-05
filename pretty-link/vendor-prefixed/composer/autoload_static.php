@@ -4,7 +4,7 @@
 
 namespace PrettyLinks\Composer\Autoload;
 
-class ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c
+class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
 {
     public static $files = array (
         '6381d01c0284a4425b18527a16135f70' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -316,6 +316,8 @@ class ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c
         'PrettyLinks\\Redirect\\DeviceDetector' => __DIR__ . '/../..' . '/src/Redirect/DeviceDetector.php',
         'PrettyLinks\\Redirect\\Engine' => __DIR__ . '/../..' . '/src/Redirect/Engine.php',
         'PrettyLinks\\Redirect\\Geo' => __DIR__ . '/../..' . '/src/Redirect/Geo.php',
+        'PrettyLinks\\Redirect\\GeoBackfillJob' => __DIR__ . '/../..' . '/src/Redirect/GeoBackfillJob.php',
+        'PrettyLinks\\Redirect\\GeoStore' => __DIR__ . '/../..' . '/src/Redirect/GeoStore.php',
         'PrettyLinks\\Redirect\\IpMatcher' => __DIR__ . '/../..' . '/src/Redirect/IpMatcher.php',
         'PrettyLinks\\Redirect\\IpUtil' => __DIR__ . '/../..' . '/src/Redirect/IpUtil.php',
         'PrettyLinks\\Redirect\\ReservedSlugs' => __DIR__ . '/../..' . '/src/Redirect/ReservedSlugs.php',
@@ -351,6 +353,7 @@ class ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c
         'PrettyLinks\\Stripe\\InvoiceRenderer' => __DIR__ . '/../..' . '/src/Stripe/InvoiceRenderer.php',
         'PrettyLinks\\Stripe\\Jwt' => __DIR__ . '/../..' . '/src/Stripe/Jwt.php',
         'PrettyLinks\\Support\\HasStaticContainer' => __DIR__ . '/../..' . '/src/Support/HasStaticContainer.php',
+        'PrettyLinks\\Support\\SiteDate' => __DIR__ . '/../..' . '/src/Support/SiteDate.php',
         'PrettyLinks\\Support\\StaticContainerAwareness' => __DIR__ . '/../..' . '/src/Support/StaticContainerAwareness.php',
         'PrettyLinks\\Tools\\ChunkedCsvExporter' => __DIR__ . '/../..' . '/src/Tools/ChunkedCsvExporter.php',
         'PrettyLinks\\Tools\\ClicksCsvExporter' => __DIR__ . '/../..' . '/src/Tools/ClicksCsvExporter.php',
@@ -427,9 +430,9 @@ class ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc95105aa153e4ceb6e5f9df953cb7a7c::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864::$classMap;
 
         }, null, ClassLoader::class);
     }

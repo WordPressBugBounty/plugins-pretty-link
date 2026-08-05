@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable Tag: 4.0.14
+Stable Tag: 4.0.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,17 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.15 =
+* Added an option to record clicks immediately rather than after the page finishes loading. Turn this on if your click counts are stuck at zero — some security and optimization plugins end PHP early and the click was silently discarded. Off by default, because the standard method keeps redirects faster.
+* Fixed the Pretty Links menu appearing for users who can't actually open it. Editors and other roles without permission saw a menu with an empty flyout that led to the pricing page; it's now hidden from them entirely.
+* Fixed click times and report date ranges being worked out in UTC instead of your site's timezone (Settings &rarr; General &rarr; Timezone). The Clicks list, CSV exports, report totals, and chart days now agree with each other and with your own calendar day.
+* Fixed the slug box being left blank when you create a Pretty Link from the post editor. It now suggests one automatically, the same as Add New does, and honors your configured prefix.
+* Fixed redirects being held up on links that use country targeting — the country is no longer looked up twice for the same click, and a lookup that fails or times out no longer delays the visitor.
+* Pro: Fixed a link's categories and tags showing as empty in the link editor, and being wiped when you saved the link.
+* Pro: Fixed keyword replacement never linking a keyword on posts that were already published. The record of which keywords appear in which post could fall permanently out of date, and re-saving each post was the only way to recover.
+* Pro: Fixed keywords not linking when the word only appears once the page is built — text coming from a shortcode, a block, or a page builder. Re-saving didn't help in that case, because the word isn't in the saved post content.
+* Pro: Fixed your disclosure text showing up in post excerpts and archive listings, where the keyword link itself is stripped out anyway.
 
 = 4.0.14 =
 * Fixed the redesigned admin interface still displaying in English even when a translation was installed — translations created with Loco Translate (or provided by WordPress.org) now load correctly on the new React-based screens, not just the classic menus.

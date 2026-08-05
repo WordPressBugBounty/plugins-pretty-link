@@ -16,6 +16,7 @@ namespace PrettyLinks\Rest\Controllers;
 // user values bind through $wpdb->prepare(). No caching: these tables are the source
 // of truth for click/redirect data and must read-through. "meta_key"/"meta_value" here
 // refer to our own prli_link_metas table, not wp_postmeta.
+use PrettyLinks\Support\SiteDate;
 use PrettyLinks\Tools\ClicksCsvExporter;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -112,8 +113,8 @@ class ReportsController extends BaseController
         $metas  = $wpdb->prefix . 'prli_link_metas';
         $clicks = $wpdb->prefix . 'prli_clicks';
 
-        list($fromDt, $toDt) = $this->dateBounds($request);
-        $days                = $this->dayCount($fromDt, $toDt);
+        list($fromDt, $toDt, $fromYmd, $toYmd) = $this->dateBounds($request);
+        $days                                  = SiteDate::calendarDaysInclusive($fromYmd, $toYmd);
 
         $isCount = $this->isCountMode();
 
@@ -253,56 +254,22 @@ class ReportsController extends BaseController
     }
 
     /**
-     * Resolve YYYY-MM-DD from/to into inclusive UTC MySQL datetimes. Missing
-     * or malformed values fall back to last-30-days so every caller has a
-     * safe default. ClickWriter stamps rows with `current_time('mysql', true)`
-     * which is UTC, so the whole analytics layer stays UTC end-to-end.
+     * Resolve site-local YYYY-MM-DD from/to into inclusive UTC MySQL datetimes
+     * plus the normalized calendar days (for avg_per_day). Missing/malformed
+     * values fall back to last-30-days.
      *
      * @param WP_REST_Request $request The incoming REST request.
      *
-     * @return array{0:string,1:string}
+     * @return array{0:string,1:string,2:string,3:string} UTC start, UTC end, from Y-m-d, to Y-m-d.
      */
     private function dateBounds(WP_REST_Request $request): array
     {
-        $from = $this->normalizeDate((string) $request->get_param('from'));
-        $to   = $this->normalizeDate((string) $request->get_param('to'));
-        if ($from === '') {
-            $from = gmdate('Y-m-d', strtotime('-30 days'));
-        }
-        if ($to === '') {
-            $to = gmdate('Y-m-d');
-        }
-        return [$from . ' 00:00:00', $to . ' 23:59:59'];
-    }
+        list($from, $to) = SiteDate::resolvePickerRange(
+            (string) $request->get_param('from'),
+            (string) $request->get_param('to')
+        );
 
-    /**
-     * Validates a YYYY-MM-DD date string, returning '' when malformed.
-     *
-     * @param string $raw The raw date string.
-     *
-     * @return string
-     */
-    private function normalizeDate(string $raw): string
-    {
-        return preg_match('/^\d{4}-\d{2}-\d{2}$/', $raw) === 1 ? $raw : '';
-    }
-
-    /**
-     * Returns the inclusive number of days between two datetimes.
-     *
-     * @param string $fromDt The range start datetime.
-     * @param string $toDt   The range end datetime.
-     *
-     * @return integer
-     */
-    private function dayCount(string $fromDt, string $toDt): int
-    {
-        $fromTs = strtotime($fromDt);
-        $toTs   = strtotime($toDt);
-        if ($fromTs === false || $toTs === false || $toTs < $fromTs) {
-            return 1;
-        }
-        return max(1, (int) floor(($toTs - $fromTs) / 86400) + 1);
+        return [SiteDate::dayStartUtc($from), SiteDate::dayEndUtc($to), $from, $to];
     }
 
     /**

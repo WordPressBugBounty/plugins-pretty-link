@@ -136,6 +136,7 @@ class Migrator
         return [
             'install_core_tables'        => [$this, 'installCoreTables'],
             'install_link_terms'         => [$this, 'installLinkTermsTable'],
+            'install_geo_tables'         => [$this, 'installGeoTables'],
             // Step name is versioned: bumping the suffix re-runs the drop
             // pass on installs that completed an earlier version of it.
             'backfill_indexes_v2'        => [$this, 'backfillIndexes'],
@@ -161,7 +162,7 @@ class Migrator
 
         $steps = $this->steps();
 
-        $done     = is_array($state['steps'] ?? null) ? (array) $state['steps'] : [];
+        $done = is_array($state['steps'] ?? null) ? (array) $state['steps'] : [];
         // Seed from persisted failures so each per-step write is accurate, and
         // prune entries for step keys that no longer exist so a failure under a
         // removed key can't linger forever.
@@ -350,6 +351,50 @@ class Migrator
             PRIMARY KEY  (link_id, term_id, taxonomy),
             KEY term_id (term_id),
             KEY taxonomy (taxonomy)
+        ) {$charset};");
+    }
+
+    /**
+     * Geolocation cache and its pending-lookup queue. Both are 4.0-only, so
+     * they get their own step rather than joining installCoreTables() — that
+     * step is already recorded complete on existing installs and would never
+     * re-run.
+     *
+     * Purely additive: no existing table or column is touched.
+     */
+    private function installGeoTables(): void
+    {
+        $charset = $this->db->get_charset_collate();
+
+        // Replaces the two `wp_options` transient rows per cached lookup that
+        // v4 used previously — those accumulated into the hundreds of
+        // thousands on a busy site and WP never collects them until expiry.
+        // `cache_key` is the same md5-based string Geo has always derived, so
+        // the block/per-IP tiering carries over. NULL expires_at means "keep
+        // indefinitely": a network's country assignment is stable for years.
+        // Read by the Turbo Mode dispatcher too, with raw SQL, since that runs
+        // before WordPress loads.
+        dbDelta("CREATE TABLE {$this->db->prefix}prli_geo_cache (
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            cache_key VARCHAR(64) NOT NULL,
+            country CHAR(2) NOT NULL DEFAULT '',
+            expires_at DATETIME DEFAULT NULL,
+            created_at DATETIME NOT NULL,
+            PRIMARY KEY  (id),
+            UNIQUE KEY cache_key (cache_key),
+            KEY expires_at (expires_at)
+        ) {$charset};");
+
+        // IPs seen on a redirect that nothing local could geolocate. Drained by
+        // GeoBackfillJob on the Resque worker. Unique on `ip` so repeat hits
+        // from one visitor collapse to a single row; rows are deleted as they
+        // are resolved, so this stays small.
+        dbDelta("CREATE TABLE {$this->db->prefix}prli_geo_pending (
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            ip VARCHAR(45) NOT NULL,
+            created_at DATETIME NOT NULL,
+            PRIMARY KEY  (id),
+            UNIQUE KEY ip (ip)
         ) {$charset};");
     }
 

@@ -35,14 +35,37 @@ class Page implements StaticContainerAwareness
     /**
      * Register the top-level menu and its Dashboard submenu.
      *
-     * @return string The menu page hook suffix returned by add_menu_page().
+     * Returns '' without registering anything when the current user can't
+     * reach any of our pages.
+     *
+     * The guard is needed because `add_menu_page()` adds its row to `$menu`
+     * with no capability check of its own — unlike `add_submenu_page()`, which
+     * returns early and leaves `$submenu` untouched. WordPress only removes
+     * such a parent later if its submenu came out empty, and the renderer
+     * prints the parent link without checking the capability whenever the
+     * submenu array has anything in it. So a top-level row plus a single
+     * unguarded submenu row is enough to produce a visible menu whose flyout
+     * renders nothing. See `ProUpsell::registerMenu()`, which supplies that
+     * row and now carries the same guard.
+     *
+     * @return string The menu page hook suffix, or '' when nothing was registered.
      */
     public static function register(): string
     {
+        // Resolve once: `prli_admin_capability` is a third-party filter, and
+        // re-running it per call risks the guard disagreeing with what gets
+        // registered. The filtered value (not the constant) is what lets a
+        // site grant Pretty Links to another role and still get the full menu.
+        $capability = self::capability();
+
+        if (!current_user_can($capability)) {
+            return '';
+        }
+
         $hook = add_menu_page(
             self::pageTitle(),
             esc_html__('Pretty Links', 'pretty-link'),
-            self::capability(),
+            $capability,
             self::SLUG,
             [self::class, 'render'],
             self::menuIcon(),
@@ -56,7 +79,7 @@ class Page implements StaticContainerAwareness
             self::SLUG,
             self::pageTitle(),
             esc_html__('Dashboard', 'pretty-link'),
-            self::capability(),
+            $capability,
             self::SLUG,
             [self::class, 'render']
         );

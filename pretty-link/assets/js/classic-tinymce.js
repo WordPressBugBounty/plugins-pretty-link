@@ -115,6 +115,7 @@
       sponsored: false,
       text: selectedText,
       creating: false,
+      slugLoading: false,
       createOpen: false,
       createUrl: '',
       createSlug: '',
@@ -408,6 +409,39 @@
         state.existingAnchor.parentNode.replaceChild( textNode, state.existingAnchor );
         editor.nodeChanged();
         close();
+      } );
+    }
+
+    // Prefill the slug when the "Create New" section is expanded, matching
+    // the dashboard Add New form. Uses the same `/links/generate-slug`
+    // endpoint, so slug length, the reserved list, collision retries and the
+    // configured base prefix are all resolved server-side — which means the
+    // value may legitimately contain a slash (`go/a7kd`). Assigning to .value
+    // bypasses the leading-slash stripping applied to typed input, which is
+    // what we want for a prefixed slug.
+    //
+    // On expand rather than on overlay open: the usual flow is picking an
+    // existing link, and that shouldn't cost a request.
+    if ( els.createDetails ) {
+      els.createDetails.addEventListener( 'toggle', function () {
+        if ( ! els.createDetails.open || state.slugLoading ) { return; }
+        if ( ( els.createSlug.value || '' ).trim() !== '' ) { return; }
+        if ( ! apiFetch ) { return; }
+
+        state.slugLoading = true;
+        apiFetch( { path: '/pretty-links/v1/links/generate-slug' } )
+          .then( function ( result ) {
+            state.slugLoading = false;
+            // Don't overwrite anything typed while the request was in flight.
+            if ( ( els.createSlug.value || '' ).trim() !== '' ) { return; }
+            if ( result && result.slug ) {
+              els.createSlug.value = result.slug;
+            }
+          } )
+          .catch( function () {
+            // Leave the field empty and editable — the pre-existing behaviour.
+            state.slugLoading = false;
+          } );
       } );
     }
 

@@ -146,7 +146,7 @@ class ClickWriter
         $ip        = $this->resolveIp();
         $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? (string) $_SERVER['HTTP_USER_AGENT'] : '';
         $referer   = isset($_SERVER['HTTP_REFERER']) ? (string) $_SERVER['HTTP_REFERER'] : '';
-        $country   = Geo::country($ip);
+        $country   = $this->resolveCountry($ip);
         $isBot     = BotDetector::isBot($userAgent);
 
         // IP allow list overrides the bot decision: trust this IP as a human
@@ -233,6 +233,36 @@ class ClickWriter
         if ($clickId > 0) {
             do_action('prli_click_written', $linkId, $clickId, $url);
         }
+    }
+
+    /**
+     * The country to store on this click row.
+     *
+     * Deliberately never contacts the geolocation endpoint. A click row is a
+     * report, not a routing decision — nothing is waiting on it — so a remote
+     * lookup here only ever costs latency. Where a CDN header, the cache or
+     * the `plp_locate_by_ip` filter can answer, we use it; otherwise the row
+     * is written with an empty country and the IP is queued for GeoBackfillJob
+     * to resolve and fill in.
+     *
+     * (Geo targeting still resolves synchronously, in Evaluator — it has to
+     * pick a destination before it can redirect. Where both run, Geo's
+     * per-request memo means only one lookup happens.)
+     *
+     * @param  string $ip The resolved client IP.
+     * @return string Uppercase ISO 3166-1 alpha-2 code, or '' if not yet known.
+     */
+    private function resolveCountry(string $ip): string
+    {
+        $country = Geo::cachedCountry($ip);
+        if ($country !== null) {
+            return $country;
+        }
+
+        GeoStore::queue($ip);
+        GeoBackfillJob::requestDrain();
+
+        return '';
     }
 
     /**

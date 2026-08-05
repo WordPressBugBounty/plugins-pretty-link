@@ -328,6 +328,17 @@ class ProUpsell implements StaticContainerAwareness
             return;
         }
 
+        // Writing to $submenu by hand skips the capability check that
+        // add_submenu_page() does for every other row under this parent, so we
+        // have to do it ourselves. Without this, a user who can't reach any
+        // Pretty Links page still gets a submenu array containing only this
+        // row — which is enough to stop WordPress removing the parent, leaving
+        // a menu whose flyout renders nothing and whose parent link points at
+        // the pricing page. See Page::register() for the full mechanism.
+        if (!current_user_can(Page::capability())) {
+            return;
+        }
+
         global $submenu;
         $parent = Page::SLUG;
         $url    = self::upgradeUrl('menu');

@@ -77,6 +77,21 @@ class Engine
     private array $resolveCache = [];
 
     /**
+     * Idempotent click-write closure for the current dispatch, or null when no
+     * write was scheduled. Runs at most once (guarded by {@see self::$clickWritten}).
+     *
+     * @var callable|null
+     */
+    private $pendingClickWrite = null;
+
+    /**
+     * Whether the scheduled click write has already run this request.
+     *
+     * @var boolean
+     */
+    private bool $clickWritten = false;
+
+    /**
      * Constructor.
      *
      * @param wpdb         $db      WordPress database handle.
@@ -309,6 +324,16 @@ class Engine
         } elseif (function_exists('litespeed_finish_request')) {
             litespeed_finish_request();
         }
+
+        // With synchronous tracking on, record the click now — after the
+        // response is flushed (so no added visitor latency where a finish
+        // function exists) but before the shutdown queue, so a foreign
+        // shutdown `exit` can't abort it. Idempotent: the shutdown fallback
+        // registered in scheduleClickWrite() then no-ops.
+        if ((bool) $this->options->get('synchronous_click_tracking', false)) {
+            $this->flushClickWrite();
+        }
+
         exit;
     }
 
@@ -717,8 +742,6 @@ class Engine
         // prli_link_metas only; no prli_clicks row, no bump
         // on prli_links.clicks/uniques.
         $mode = (string) $this->options->get('extended_tracking', 'normal');
-        $db   = $this->db;
-        $opts = $this->options;
 
         // Resolve and set vuid / first-click / dedup cookies before the
         // response is flushed — setcookie() inside a shutdown function
@@ -734,9 +757,15 @@ class Engine
             return;
         }
 
-        register_shutdown_function(static function () use ($db, $linkId, $url, $mode, $opts, $vuid, $firstClick): void {
+        // Idempotent write, guarded so it runs at most once regardless of how
+        // many code paths invoke it (inline flush + shutdown fallback).
+        $this->pendingClickWrite = function () use ($linkId, $url, $mode, $vuid, $firstClick): void {
+            if ($this->clickWritten) {
+                return;
+            }
+            $this->clickWritten = true;
             try {
-                $writer = new ClickWriter($db, $opts);
+                $writer = new ClickWriter($this->db, $this->options);
                 if ($mode === 'extended') {
                     $writer->writeExtended($linkId, $url, $vuid, $firstClick);
                 } elseif ($mode === 'count') {
@@ -757,6 +786,29 @@ class Engine
                     $e->getLine()
                 ));
             }
-        });
+        };
+
+        // Default path: defer to shutdown (post-response, zero visitor latency).
+        // When `synchronous_click_tracking` is on, dispatch() also calls the
+        // write inline right after the response is flushed — see flushClickWrite().
+        // Registering the shutdown fallback in both modes is harmless: the
+        // idempotency guard means it no-ops if the inline write already ran, and
+        // it still covers redirect-type handlers that exit before the inline point.
+        register_shutdown_function($this->pendingClickWrite);
+    }
+
+    /**
+     * Run the scheduled click write inline (idempotent). Called by dispatch()
+     * after the response is flushed when synchronous tracking is enabled, so the
+     * click lands before PHP's shutdown queue — where a foreign shutdown `exit`
+     * could otherwise abort the deferred write.
+     *
+     * @return void
+     */
+    private function flushClickWrite(): void
+    {
+        if ($this->pendingClickWrite !== null) {
+            ($this->pendingClickWrite)();
+        }
     }
 }

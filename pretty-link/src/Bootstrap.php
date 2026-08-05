@@ -56,6 +56,7 @@ use PrettyLinks\Onboarding\Wizard as OnboardingWizard;
 use PrettyLinks\Options\Store as OptionsStore;
 use PrettyLinks\Redirect\ClickDataWiper;
 use PrettyLinks\Redirect\Engine as RedirectEngine;
+use PrettyLinks\Redirect\GeoBackfillJob;
 use PrettyLinks\Rest\Router as RestRouter;
 use PrettyLinks\Shortcodes\Loader as ShortcodesLoader;
 use PrettyLinks\Stripe\CheckoutRedirect as StripeCheckoutRedirect;
@@ -222,6 +223,15 @@ class Bootstrap extends BaseBootstrap
             new Hook(Hook::TYPE_ACTION, 'admin_init', [AddonCompatibilityGuard::class, 'maybeDismiss']),
             new Hook(Hook::TYPE_ACTION, 'in_admin_header', [AddonCompatibilityGuard::class, 'registerNotice'], 2),
             new Hook(Hook::TYPE_ACTION, 'init', [$container->get(RedirectEngine::class), 'dispatch'], 1),
+            // Geo backfill: queue a drain from the Resque jobs cron rather than
+            // from a request, so pending lookups are picked up no matter which
+            // path queued them. The Turbo Mode dispatcher exits before the
+            // plugin loads and can't enqueue anything itself, and a
+            // ClickWriter enqueue can fail. Priority 5 so it lands before the
+            // worker's own run() on the same tick and the job it queues is
+            // processed immediately. Hook name is ResqueServiceProvider's
+            // PARAM_JOBS_ACTION default, which we don't override.
+            new Hook(Hook::TYPE_ACTION, 'resque_run_jobs', [GeoBackfillJob::class, 'maybeQueueDrain'], 5),
             new Hook(Hook::TYPE_ACTION, 'rest_api_init', [$container->get(RestRouter::class), 'register']),
             // Merge per-source JS translation JSON (Loco / WordPress.org) onto
             // our built bundles — see ScriptTranslations for the why.

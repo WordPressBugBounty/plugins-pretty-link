@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Tools;
 
+use PrettyLinks\Support\SiteDate;
+
 // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
@@ -129,7 +131,11 @@ class ClicksCsvExporter extends ChunkedCsvExporter
         fputcsv($fh, $columns);
         foreach ($rows as $row) {
             fputcsv($fh, array_map(
-                static fn (string $col): string => self::escapeCell((string) ($row[$col] ?? '')),
+                function (string $col) use ($row): string {
+                    // Route through formatCell so created_at gets site-TZ
+                    // conversion (same path as chunk()/fullCsv()).
+                    return $this->formatCell($col, $row);
+                },
                 $columns
             ));
         }
@@ -219,12 +225,23 @@ class ClicksCsvExporter extends ChunkedCsvExporter
     /**
      * Format a single cell, escaping spreadsheet-injection characters.
      *
+     * Click `created_at` is stored UTC; convert to the site timezone so the
+     * export matches the Clicks dashboard (Settings → General → Timezone).
+     *
      * @param string               $col Column name.
      * @param array<string, mixed> $row Row data keyed by column name.
      */
     protected function formatCell(string $col, array $row): string
     {
-        return self::escapeCell((string) ($row[$col] ?? ''));
+        $value = (string) ($row[$col] ?? '');
+        if ($col === 'created_at' && $value !== '') {
+            $local = get_date_from_gmt($value, 'Y-m-d H:i:s');
+            if ($local !== '') {
+                $value = $local;
+            }
+        }
+
+        return self::escapeCell($value);
     }
 
     /**
@@ -258,13 +275,20 @@ class ClicksCsvExporter extends ChunkedCsvExporter
                 $params[] = $id;
             }
         }
-        if (!empty($args['from']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $args['from'])) {
+        // Site-local calendar days in, inclusive UTC bounds out. An absent or
+        // unusable bound is omitted rather than defaulted — an export with a
+        // bad filter should not quietly return only the last 30 days.
+        list($fromUtc, $toUtc) = SiteDate::optionalBoundsUtc(
+            (string) ($args['from'] ?? ''),
+            (string) ($args['to'] ?? '')
+        );
+        if ($fromUtc !== '') {
             $where[]  = 'c.created_at >= %s';
-            $params[] = $args['from'] . ' 00:00:00';
+            $params[] = $fromUtc;
         }
-        if (!empty($args['to']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $args['to'])) {
+        if ($toUtc !== '') {
             $where[]  = 'c.created_at <= %s';
-            $params[] = $args['to'] . ' 23:59:59';
+            $params[] = $toUtc;
         }
         if (!empty($args['ip'])) {
             $where[]  = 'c.ip = %s';

@@ -21,13 +21,101 @@ class Geo
     public const CSPF_ENDPOINT = 'https://cspf-locate.herokuapp.com';
 
     /**
-     * Resolve a two-letter country code for the request.
+     * How long a lookup that produced no country is remembered for. Without a
+     * negative entry a host that can't reach the endpoint pays the full
+     * request timeout on every single click, forever; v3 cached the empty
+     * result too.
+     *
+     * Kept deliberately short. An unreachable endpoint negative-caches
+     * block-wide (see lookupViaApi), and geo *targeting* reads the same cache —
+     * so a momentary outage would route every visitor in that /24 as
+     * country-unknown until the entry lapses. Five minutes still collapses a
+     * retry storm by ~3 orders of magnitude at real click rates while keeping
+     * the mis-routing window to minutes rather than an hour.
+     */
+    public const EMPTY_TTL = 5 * MINUTE_IN_SECONDS;
+
+    /**
+     * Resolved lookups for this request, keyed by IP.
+     *
+     * Targeting (Evaluator) and click recording (ClickWriter) both need the
+     * visitor's country and each used to resolve it independently, so a geo
+     * link cost two lookups per click. Neither has visibility of the other,
+     * so the shared memo lives here.
+     *
+     * Keyed on the IP as passed in, deliberately. With `anonymize_ips` on the
+     * two callers pass different values — Evaluator the full IP (routing must
+     * not be degraded by a storage setting), ClickWriter the anonymized one —
+     * so they legitimately miss each other's memo entry. Don't "fix" that by
+     * normalizing the key: it would make one caller answer with the other's
+     * value. The cache table still collapses the API work to one call, since
+     * both derive the same /24 block key; the cost is one extra indexed read.
+     *
+     * @var array<string, string>
+     */
+    private static array $memo = [];
+
+    /**
+     * Discard the per-request memo.
+     *
+     * Only matters where one PHP process serves many notional requests — the
+     * test suite, and long-running WP-CLI commands that loop over visitors.
+     *
+     * @return void
+     */
+    public static function flushMemo(): void
+    {
+        self::$memo = [];
+    }
+
+    /**
+     * Resolve a two-letter country code for the request, consulting the
+     * remote endpoint when headers and cache can't answer.
+     *
+     * Blocking. Only correct on a path that genuinely cannot proceed without
+     * the country — geo targeting has to pick a destination before it can
+     * redirect. Anything recording the country for later (click rows) wants
+     * cachedCountry() instead.
      *
      * @param  string $ip Optional client IP for the API fallback.
      * @return string Uppercase ISO 3166-1 alpha-2 code, or '' if unknown.
      */
     public static function country(string $ip = ''): string
     {
+        // Never null with $allowRemote: a failed lookup resolves to '' and
+        // writes a negative cache entry.
+        return (string) self::resolve($ip, true);
+    }
+
+    /**
+     * Resolve a country code from free sources only — CDN headers, the local
+     * cache, and the `plp_locate_by_ip` filter. Never makes a network call.
+     *
+     * @param  string $ip Optional client IP for the cache lookup.
+     * @return string|null The code, '' where a source positively reports
+     *                     "unknown", or null when only a remote lookup could
+     *                     answer — the caller should queue one.
+     */
+    public static function cachedCountry(string $ip = ''): ?string
+    {
+        return self::resolve($ip, false);
+    }
+
+    /**
+     * Shared implementation of country() and cachedCountry().
+     *
+     * @param  string  $ip          Optional client IP.
+     * @param  boolean $allowRemote Whether a cache miss may call the endpoint.
+     * @return string|null Uppercase ISO 3166-1 alpha-2 code, '' where a source
+     *                     positively reports "unknown", or null when only a
+     *                     remote lookup could answer and none was permitted.
+     */
+    private static function resolve(string $ip, bool $allowRemote): ?string
+    {
+        if (isset(self::$memo[$ip])) {
+            return self::$memo[$ip];
+        }
+
         $candidates = [
             'HTTP_CF_IPCOUNTRY',
             'HTTP_X_VERCEL_IP_COUNTRY',
@@ -50,8 +138,21 @@ class Geo
             }
         }
 
+        // Tracks a cache miss that only the endpoint could have answered, so
+        // the caller can tell "nobody knows yet" from "known to be unknown"
+        // without a second read.
+        $unresolved = false;
+
         if ($country === '' && self::isPublicIp($ip)) {
-            $country = self::lookupViaApi($ip);
+            if ($allowRemote) {
+                $country = self::lookupViaApi($ip);
+            } else {
+                // Without $allowRemote, a cache miss stays unknown — the caller
+                // queues a background lookup rather than holding up the redirect.
+                $cached     = self::readCache($ip);
+                $unresolved = $cached === null;
+                $country    = (string) $cached;
+            }
         }
 
         /**
@@ -78,7 +179,18 @@ class Geo
         if (is_object($loc) && isset($loc->country)) {
             $country = strtoupper((string) $loc->country);
         }
-        return $country === 'XX' ? '' : $country;
+        $country = $country === 'XX' ? '' : $country;
+
+        // Only memoize once a source has actually answered. Caching the empty
+        // result of a headers-and-cache-only pass would make the background
+        // lookup, once it lands, invisible for the rest of the request.
+        if ($country !== '' || $allowRemote) {
+            self::$memo[$ip] = $country;
+        }
+
+        // Checked after the filter so a filter-supplied country still counts as
+        // resolved even when nothing local had an answer.
+        return ($country === '' && $unresolved) ? null : $country;
     }
 
     /**
@@ -162,14 +274,14 @@ class Geo
     }
 
     /**
-     * Block-level transient key for a country lookup: derived from the IP's
+     * Block-level cache key for a country lookup: derived from the IP's
      * /24 (IPv4) or /48 (IPv6) network base via IpUtil::anonymize(), so one
      * entry serves every visitor in the block and nothing full-IP-derived is
-     * persisted. Written with a month TTL only when the geo API confirms the
+     * persisted. Written without an expiry only when the geo API confirms the
      * whole block resolves to one answer (see lookupViaApi()).
      *
      * @param  string $ip The IP being looked up.
-     * @return string The transient key.
+     * @return string The cache key.
      */
     private static function cacheKey(string $ip): string
     {
@@ -178,13 +290,13 @@ class Geo
     }
 
     /**
-     * Per-IP transient key (v3 `PlpUtils::locate_by_ip` key format). Used
+     * Per-IP cache key (v3 `PlpUtils::locate_by_ip` key format). Used
      * only when a block straddles geo-database networks — a block-level
      * answer would be wrong for part of the block — and only with
      * `anonymize_ips` off, since the key derives from the full IP.
      *
      * @param  string $ip The IP being looked up.
-     * @return string The transient key.
+     * @return string The cache key.
      */
     private static function ipCacheKey(string $ip): string
     {
@@ -198,7 +310,7 @@ class Geo
      * `anonymize_ips` is turned off and per-IP accuracy is expected again.
      *
      * @param  string $ip The IP being looked up.
-     * @return string The transient key.
+     * @return string The cache key.
      */
     private static function anonDayKey(string $ip): string
     {
@@ -277,41 +389,60 @@ class Geo
     }
 
     /**
-     * Look up a country code for the IP via the cspf-locate API, with a
-     * two-tier transient cache:
+     * Read the two-tier cache for an IP without contacting the endpoint.
      *
-     *  - Block tier (month TTL): when the API's returned `network` covers
-     *    the IP's whole /24 (IPv4) or /48 (IPv6) block, every address in it
-     *    shares the answer, so it caches block-wide with no accuracy loss.
-     *  - Per-IP tier (day TTL, v3 key format): when the block straddles geo
+     *  - Block tier: set when the API's returned `network` covers the IP's
+     *    whole /24 (IPv4) or /48 (IPv6) block, so every address in it shares
+     *    the answer and it caches block-wide with no accuracy loss.
+     *  - Per-IP tier (v3 key format): used when the block straddles geo
      *    networks. With `anonymize_ips` on, full-IP keys are off-limits, so
      *    the straddle guess is stored under the mode-scoped anonDayKey()
-     *    namespace instead — block-wide for a day (the accepted privacy
-     *    trade-off) and never read once the option is turned off.
+     *    namespace instead — block-wide (the accepted privacy trade-off) and
+     *    never read once the option is turned off.
+     *
+     * @param  string $ip The public IP to look up.
+     * @return string|null The cached code ('' for a cached "unknown"), or null
+     *                     on a miss.
+     */
+    private static function readCache(string $ip): ?string
+    {
+        // Block key holds only network-verified (block-safe) entries; the
+        // mode-specific second tier prevents anonymize-era block-wide guesses
+        // from leaking into per-IP mode after the option is toggled off.
+        $cached = GeoStore::get(self::cacheKey($ip));
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        $anonymize = (bool) (new OptionsStore())->get('anonymize_ips', false);
+
+        return GeoStore::get($anonymize ? self::anonDayKey($ip) : self::ipCacheKey($ip));
+    }
+
+    /**
+     * Look up a country code for the IP via the cspf-locate API, reading the
+     * cache first and writing the outcome back to it. Blocking.
      *
      * @param  string $ip The public IP to geolocate.
      * @return string Uppercase ISO 3166-1 alpha-2 code, or '' on failure.
      */
     private static function lookupViaApi(string $ip): string
     {
-        $blockKey  = self::cacheKey($ip);
-        $anonymize = (bool) (new OptionsStore())->get('anonymize_ips', false);
+        $cached = self::readCache($ip);
+        if ($cached !== null) {
+            return $cached;
+        }
 
-        // Block key holds only network-verified (block-safe) entries; the
-        // mode-specific second tier prevents anonymize-era block-wide guesses
-        // from leaking into per-IP mode after the option is toggled off.
-        $cached = get_transient($blockKey);
-        if ($cached !== false) {
-            return (string) $cached;
-        }
-        $cached = get_transient($anonymize ? self::anonDayKey($ip) : self::ipCacheKey($ip));
-        if ($cached !== false) {
-            return (string) $cached;
-        }
+        $anonymize = (bool) (new OptionsStore())->get('anonymize_ips', false);
 
         $response = wp_remote_get(self::CSPF_ENDPOINT . '?ip=' . rawurlencode($ip), [
             'timeout' => 3,
         ]);
+
+        // Distinguishes "we couldn't reach the endpoint" from "the endpoint
+        // answered and doesn't know". Only used to pick the negative-cache
+        // tier below; response parsing is unchanged either way.
+        $unreachable = is_wp_error($response) || (int) wp_remote_retrieve_response_code($response) !== 200;
 
         $country = '';
         $network = '';
@@ -328,14 +459,40 @@ class Geo
             }
         }
 
-        if ($country !== '') {
-            if ($network !== '' && self::networkCoversBlock($network, $ip)) {
-                set_transient($blockKey, $country, MONTH_IN_SECONDS);
-            } elseif ($anonymize) {
-                set_transient(self::anonDayKey($ip), $country, DAY_IN_SECONDS);
-            } else {
-                set_transient(self::ipCacheKey($ip), $country, DAY_IN_SECONDS);
-            }
+        if ($country === '') {
+            // Remember the miss briefly. v3 cached the empty result too; v4
+            // dropped that, which turned an unreachable endpoint into a full
+            // request timeout on every single click, indefinitely.
+            //
+            // Which tier depends on what "empty" meant. An unreachable
+            // endpoint says nothing about this IP — it's our own
+            // connectivity — so holding it block-wide costs no accuracy and
+            // suppresses the retry storm that matters. An endpoint that
+            // answered "unknown" is reporting a fact about this address, so
+            // it must not stop us resolving the rest of its block.
+            $negativeKey = $unreachable
+                ? self::cacheKey($ip)
+                : ($anonymize ? self::anonDayKey($ip) : self::ipCacheKey($ip));
+            GeoStore::put($negativeKey, '', self::EMPTY_TTL);
+
+            return '';
+        }
+
+        // A network's country assignment is stable for years, so a verified
+        // block-wide answer is kept indefinitely (null TTL) rather than
+        // expiring and forcing a fresh lookup. Straddle guesses are narrowed
+        // to the tier that is safe to reuse.
+        //
+        // The trade-off is that a wrong answer from the endpoint won't age out
+        // on its own. To force a re-resolve for support, delete the row(s):
+        // DELETE FROM {prefix}prli_geo_cache WHERE expires_at IS NULL;
+        // (safe at any time — a miss just re-resolves on the next lookup).
+        if ($network !== '' && self::networkCoversBlock($network, $ip)) {
+            GeoStore::put(self::cacheKey($ip), $country, null);
+        } elseif ($anonymize) {
+            GeoStore::put(self::anonDayKey($ip), $country, DAY_IN_SECONDS);
+        } else {
+            GeoStore::put(self::ipCacheKey($ip), $country, DAY_IN_SECONDS);
         }
 
         return $country;

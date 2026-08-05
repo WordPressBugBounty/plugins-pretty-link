@@ -39,6 +39,16 @@ class Store
             'auto_trim_clicks'             => false,
             'auto_trim_window'             => '90d',
             'extended_tracking'            => 'normal',
+            // Record the click synchronously during the redirect instead of
+            // deferring it to a shutdown function. Off by default: the deferred
+            // write runs after the response is flushed, so it adds no visitor
+            // latency. Turn it on only as a compatibility escape hatch — another
+            // plugin that calls exit() in an earlier-registered shutdown
+            // function (e.g. some security/logging plugins) aborts PHP's
+            // shutdown queue and silently drops our deferred write. See
+            // Engine::scheduleClickWrite(). Does NOT affect the standalone
+            // (mu-plugin) redirect path — disable that separately if needed.
+            'synchronous_click_tracking'   => false,
             'enable_bot_filter'            => true,
             'filter_robots'                => false,
             'bot_patterns'                 => '',
