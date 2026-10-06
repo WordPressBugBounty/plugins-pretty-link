@@ -176,9 +176,10 @@ class ReservedSlugs
         /**
          * Merged reserved-slug patterns.
          *
-         * @var string[] $filtered
+         * @var mixed $filtered
          */
         $filtered = apply_filters('prli_reserved_slugs', self::DEFAULTS);
+        $filtered = is_array($filtered) ? $filtered : self::DEFAULTS;
         return array_values(array_unique(array_filter(array_map('strval', $filtered))));
     }
 }

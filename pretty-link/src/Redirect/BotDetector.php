@@ -27,6 +27,13 @@ namespace PrettyLinks\Redirect;
  */
 class BotDetector
 {
+    /**
+     * Per-request cache of the stored `prli_options` blob (see options()).
+     *
+     * @var array<string, mixed>|null
+     */
+    private static ?array $opts = null;
+
     private const DEFAULT_PATTERN =
         '~bot|crawl|spider|slurp|mediapartners|facebot|facebookexternalhit|'
         . 'googlebot|googleother|bingbot|duckduckbot|yandex|baiduspider|sogou|'
@@ -57,9 +64,10 @@ class BotDetector
         /**
          * Bot-matching regex.
          *
-         * @var string $pattern
+         * @var mixed $pattern
          */
         $pattern = apply_filters('prli_bot_regex', self::DEFAULT_PATTERN);
+        $pattern = is_string($pattern) ? $pattern : self::DEFAULT_PATTERN;
         if ($pattern !== '' && preg_match($pattern, $userAgent)) {
             return true;
         }
@@ -122,11 +130,10 @@ class BotDetector
      */
     private static function options(): array
     {
-        static $opts = null;
-        if ($opts === null) {
-            $opts = (array) get_option('prli_options', []);
+        if (self::$opts === null) {
+            self::$opts = (array) get_option('prli_options', []);
         }
-        return $opts;
+        return self::$opts;
     }
 
     /**
@@ -149,6 +156,25 @@ class BotDetector
             return (bool) $opts['filter_robots'];
         }
         return true;
+    }
+
+    /**
+     * Whether a parsed user agent (DeviceDetector::detect()) is a client that
+     * Matomo couldn't identify at all: neither the browser nor the OS is
+     * recognised (both come back as Matomo's `UNK`). Real browsers practically
+     * never look like that, so these are treated as bots, as v3's "filter
+     * known robots and unidentifiable browser clients" did in extended
+     * tracking (#901). Respects the bot filter master switch.
+     *
+     * @param  array<string, mixed> $device Result of DeviceDetector::detect().
+     * @return boolean True when the client is unidentifiable.
+     */
+    public static function isUnidentifiedClient(array $device): bool
+    {
+        return self::filterEnabled()
+            && ($device['browser'] ?? '') === 'UNK'
+            && ($device['os'] ?? '') === 'UNK'
+            && apply_filters('prli_bot_unidentified_check', true);
     }
 
     /**

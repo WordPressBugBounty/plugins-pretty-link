@@ -14,19 +14,42 @@ declare(strict_types=1);
  * @var string[]                  $enabledFeatureLabels
  * @var array{plan:string,planLabel:string,heading:string,label:string,url:string}|null $upgradeCta
  * @var array{features:string[],addons_installed:string[],addons_failed:string[]}|null $drainOutcome
+ * @var string[]                  $addonsInstalledLabels
+ * @var string[]                  $addonsFailedLabels
+ * @var boolean                   $canDrain
  */
 
 defined('ABSPATH') || exit;
 ?>
-<?php if (is_array($drainOutcome) && (!empty($drainOutcome['features']) || !empty($drainOutcome['addons_installed']))) : ?>
-    <div class="prli-onboarding-resume-result is-success">
-        <p><strong><?php esc_html_e('Welcome back!', 'pretty-link'); ?></strong>
-        <?php esc_html_e('We finished setting up the features you selected.', 'pretty-link'); ?></p>
+<?php if ($canDrain) : ?>
+    <?php $this->openForm(); ?>
+    <div class="prli-onboarding-resume-result">
+        <p><?php esc_html_e('Your license is active. Turn on the features you selected earlier and install the add-ons they need.', 'pretty-link'); ?></p>
+        <button type="submit" name="prli_action" value="drain" class="button button-primary" data-busy-label="<?php esc_attr_e('Working…', 'pretty-link'); ?>">
+            <?php esc_html_e('Finish setup', 'pretty-link'); ?>
+        </button>
     </div>
+    <?php $this->closeForm(); ?>
 <?php endif; ?>
-<?php if (is_array($drainOutcome) && !empty($drainOutcome['addons_failed'])) : ?>
-    <div class="prli-onboarding-resume-result is-error">
-        <p><?php esc_html_e('Some add-ons couldn\'t be installed automatically. You can install them manually from Pretty Links → Add-ons.', 'pretty-link'); ?></p>
+<?php
+/*
+ * `!$canDrain` means nothing is left queued. Without it an add-on the active
+ * plan does not entitle — drainQueue() `continue`s past those, so they land in
+ * neither outcome list — left addons_failed empty and printed "All set!"
+ * directly above the upgrade CTA that exists because the add-on is still
+ * waiting. It also stops the banner appearing above the "Finish setup" button.
+ */
+?>
+<?php if (is_array($drainOutcome) && (!empty($drainOutcome['features']) || !empty($drainOutcome['addons_installed'])) && empty($drainOutcome['addons_failed']) && !$canDrain) : ?>
+    <div class="prli-onboarding-resume-result is-success">
+        <?php
+        /*
+         * Neutral wording: the drain now runs on the Features save too, so this
+         * is reached in the same sitting as well as after a checkout round trip.
+         */
+        ?>
+        <p><strong><?php esc_html_e('All set!', 'pretty-link'); ?></strong>
+        <?php esc_html_e('We finished setting up the features and add-ons you selected.', 'pretty-link'); ?></p>
     </div>
 <?php endif; ?>
 <?php if (is_array($upgradeCta)) : ?>
@@ -95,6 +118,21 @@ defined('ABSPATH') || exit;
         <li>
             <strong><?php esc_html_e('Features enabled', 'pretty-link'); ?></strong><br />
             <?php echo esc_html(implode(', ', $enabledFeatureLabels)); ?>
+        </li>
+    <?php endif; ?>
+
+    <?php if (!empty($addonsInstalledLabels)) : ?>
+        <li>
+            <strong><?php esc_html_e('Add-ons installed', 'pretty-link'); ?></strong><br />
+            <?php echo esc_html(implode(', ', $addonsInstalledLabels)); ?>
+        </li>
+    <?php endif; ?>
+
+    <?php if (!empty($addonsFailedLabels)) : ?>
+        <li class="is-error">
+            <strong><?php esc_html_e('Add-ons not installed', 'pretty-link'); ?></strong><br />
+            <?php echo esc_html(implode(', ', $addonsFailedLabels)); ?><br />
+            <?php esc_html_e('Install from Pretty Links → Add-ons.', 'pretty-link'); ?>
         </li>
     <?php endif; ?>
 </ul>

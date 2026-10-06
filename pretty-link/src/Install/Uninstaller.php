@@ -35,7 +35,18 @@ class Uninstaller
      */
     private static function clearCron(): void
     {
-        foreach (['prli_link_health_check', 'prli_link_health_check_now', 'prli_send_broken_link_emails', 'prli_auto_trim_clicks'] as $event) {
+        // Same set Deactivator clears, plus the bundled Pro's events, which Pro
+        // normally clears off `prli_plugin_deactivating` but can't here:
+        // uninstall.php runs with the plugin inactive and Pro not loaded.
+        // Literal keys, kept in sync with pro/src/Health and pro/src/Expiration.
+        $events = array_merge(Deactivator::cronHooks(), [
+            'prli_link_health_check',
+            'prli_link_health_check_now',
+            'prli_link_health_watchdog',
+            'prli_send_broken_link_emails',
+            'prli_trash_expired_links',
+        ]);
+        foreach ($events as $event) {
             $timestamp = wp_next_scheduled($event);
             if ($timestamp) {
                 wp_unschedule_event($timestamp, $event);

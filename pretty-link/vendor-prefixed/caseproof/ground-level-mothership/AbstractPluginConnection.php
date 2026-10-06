@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace PrettyLinks\GroundLevel\Mothership;
 
 /**
- * This class is used to serve as a contract to set how the plugin gets/sets data (license key, domain, email, api token) used to connect to the mothership.
+ * Per-plugin configuration for Mothership. Plugins extend this class and override
+ * the defaults to customize how the plugin connects to Mothership.
  *
- * Two authentication methods are supported:
- * 1. License Key and Domain.
- * 2. Email and API Token.
+ * The `resolve*()` methods are called by {@see Credentials} and should not be called
+ * directly by consumer code - use the matching `Credentials` getter instead.
  *
- * The License Key and Domain method is the default and is used to authenticate the plugin.
- *
- * The consumer plugin may override the public methods to implement its own logic for retrieving
- * and storing the data used to connect to the Mothership API.
+ * Two auth methods are supported, chosen at request time:
+ * 1. License Key + Domain - used when the license key is set.
+ * 2. Email + API Token - used when the license key is not set.
  *
  * @property string $pluginId     The ID of the plugin using this component.
  * @property string $pluginPrefix The prefix of the plugin using this component.
@@ -86,35 +85,14 @@ abstract class AbstractPluginConnection
 
 
     /**
-     * Updates the license activation status.
+     * Sets the license activation status.
      *
      * @param  boolean $status The new status of the license activation.
      * @return boolean Whether the license activation status was updated successfully.
      */
-    public function updateLicenseActivationStatus(bool $status): bool
+    public function setLicenseActivationStatus(bool $status): bool
     {
         return update_option($this->pluginId . '_license_active', $status);
-    }
-
-    /**
-     * Gets the license key.
-     *
-     * @return string The license key.
-     */
-    public function getLicenseKey(): string
-    {
-        return (string) get_option($this->pluginId . '_license_key', '');
-    }
-
-    /**
-     * Updates the license key.
-     *
-     * @param  string $licenseKey The license key.
-     * @return boolean Whether the license key was updated successfully.
-     */
-    public function updateLicenseKey(string $licenseKey): bool
-    {
-        return update_option($this->pluginId . '_license_key', $licenseKey);
     }
 
     /**
@@ -163,31 +141,77 @@ abstract class AbstractPluginConnection
     }
 
     /**
-     * Gets the domain.
+     * Resolves the license key from storage.
      *
-     * @return string The domain.
+     * IMPORTANT: Called by {@see Credentials}. Consumer code should use
+     * {@see Credentials::getLicenseKey()} to read the license key.
+     *
+     * @internal
+     *
+     * @return string The license key.
      */
-    public function getDomain(): string
+    public function resolveLicenseKey(): string
+    {
+        return (string) get_option($this->pluginId . '_license_key', '');
+    }
+
+    /**
+     * Stores the license key.
+     *
+     * IMPORTANT: Called by {@see Credentials}. Consumer code should use
+     * {@see Credentials::setLicenseKey()} to write the license key.
+     *
+     * @internal
+     *
+     * @param  string $licenseKey The license key.
+     * @return boolean Whether the license key was stored successfully.
+     */
+    public function storeLicenseKey(string $licenseKey): bool
+    {
+        return update_option($this->pluginId . '_license_key', $licenseKey);
+    }
+
+    /**
+     * Resolves the activation domain from storage.
+     *
+     * IMPORTANT: Called by {@see Credentials}. Consumer code should use
+     * {@see Credentials::getDomain()} to read the activation domain.
+     *
+     * @internal
+     *
+     * @return string The activation domain.
+     */
+    public function resolveDomain(): string
     {
         return parse_url(get_home_url(), PHP_URL_HOST);
     }
 
     /**
-     * Gets the email.
+     * Resolves the email from storage.
+     *
+     * IMPORTANT: Called by {@see Credentials}. Consumer code should use
+     * {@see Credentials::getEmail()} to read the email.
+     *
+     * @internal
      *
      * @return string The email.
      */
-    public function getEmail(): string
+    public function resolveEmail(): string
     {
         return '';
     }
 
     /**
-     * Gets the API token.
+     * Resolves the API token from storage.
+     *
+     * IMPORTANT: Called by {@see Credentials}. Consumer code should use
+     * {@see Credentials::getApiToken()} to read the API token.
+     *
+     * @internal
      *
      * @return string The API token.
      */
-    public function getApiToken(): string
+    public function resolveApiToken(): string
     {
         return '';
     }

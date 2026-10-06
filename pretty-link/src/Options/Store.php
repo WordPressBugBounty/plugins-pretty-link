@@ -36,6 +36,14 @@ class Store
             'link_nofollow'                => true,
             'link_sponsored'               => false,
             'link_track_me'                => true,
+            // Menu placement: when true the Links list becomes the first
+            // item under the Pretty Links parent, which also makes the
+            // parent itself open the list. The Dashboard keeps working but
+            // moves to `admin.php?page=pretty-link-dashboard`, and the links
+            // list stays registered at its own slug so existing deep links
+            // survive. Off by default - this changes where a long-standing
+            // menu click lands, so it is opt-in.
+            'links_first_menu_item'        => false,
             'auto_trim_clicks'             => false,
             'auto_trim_window'             => '90d',
             'extended_tracking'            => 'normal',
@@ -103,6 +111,14 @@ class Store
                 $stored = [];
             }
             $this->cache = array_merge(self::defaults(), $stored);
+            // A v3 site that hasn't saved v4 Options has no enable_bot_filter
+            // yet, and BotDetector (and the turbo drop-in) honor v3's
+            // filter_robots then. Report that same effective value (#899).
+            // Keep the `(bool)` cast identical to those two copies; the
+            // drop-in loads before the autoloader, so it can't call Store.
+            if (!array_key_exists('enable_bot_filter', $stored) && array_key_exists('filter_robots', $stored)) {
+                $this->cache['enable_bot_filter'] = (bool) $stored['filter_robots'];
+            }
         }
         return $this->cache;
     }
@@ -131,10 +147,7 @@ class Store
      */
     public function set(string $key, $value): void
     {
-        $all       = $this->all();
-        $all[$key] = $value;
-        update_option(self::OPTION, $all);
-        $this->cache = $all;
+        $this->persist([$key => $value]);
     }
 
     /**
@@ -146,9 +159,44 @@ class Store
      */
     public function merge(array $values): void
     {
-        $all = array_merge($this->all(), $values);
-        update_option(self::OPTION, $all);
-        $this->cache = $all;
+        $this->persist($values);
+    }
+
+    /**
+     * Write the given keys into the stored blob, leaving untouched keys absent.
+     *
+     * Deliberately merges over what is actually STORED, not over
+     * `all()` — which is the defaults merged with the stored blob. Writing that
+     * back turned every default into an explicitly-stored value on the first
+     * write of any single key, and several things read the raw option and treat
+     * "key absent" as meaningful:
+     *
+     *  - `BotDetector::filterEnabled()` falls back to v3's `filter_robots`
+     *    only while `enable_bot_filter` is absent (and `all()` reports that
+     *    same value). Baking the default in killed that upgrade path on the
+     *    first option write.
+     *  - Pro's `migrateNumSlugChars()` copies the v3 Pro value across only
+     *    while the Lite blob has no `num_slug_chars`. The Lite migrator's
+     *    `initSlugSpaceCompat()` writes at `after_setup_theme:1`, before Pro
+     *    boots, so the default 4 was already baked in by the time the
+     *    migration looked — and a v3 site's configured slug length was lost.
+     *
+     * Reads are unaffected: the cache is cleared, so the next `all()` layers
+     * the defaults on top again.
+     *
+     * @param array<string, mixed> $values Values to write.
+     *
+     * @return void
+     */
+    private function persist(array $values): void
+    {
+        $stored = get_option(self::OPTION, []);
+        if (!is_array($stored)) {
+            $stored = [];
+        }
+        $stored = array_merge($stored, $values);
+        update_option(self::OPTION, $stored);
+        $this->cache = null;
     }
 
     /**

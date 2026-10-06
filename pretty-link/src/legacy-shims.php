@@ -83,7 +83,7 @@ function prli_create_pretty_link( // phpcs:ignore Squiz.Commenting.FunctionComme
     _deprecated_function(
         __FUNCTION__,
         '4.0.0',
-        '\\PrettyLinks\\Repositories\\Links::create()'
+        '\\PrettyLinks\\Repositories\\Links::save()'
     );
 
     $data = ['url' => (string) $target_url];
@@ -112,7 +112,7 @@ function prli_create_pretty_link( // phpcs:ignore Squiz.Commenting.FunctionComme
         $data['param_forwarding'] = $param_forwarding ? 'on' : 'off';
     }
 
-    $result = (new PrliLinksRepo())->create($data);
+    $result = (new PrliLinksRepo())->save($data);
     if (isset($result['error'])) {
         return false;
     }
@@ -122,18 +122,21 @@ function prli_create_pretty_link( // phpcs:ignore Squiz.Commenting.FunctionComme
 /**
  * V3 shim: update a pretty link. v3 used `-1` as a sentinel meaning
  * "don't touch this field" for name/description, and `''` for the others.
- * Both are preserved here.
+ * Both are preserved here. v3 compared these loosely; the two loose forms
+ * legacy callers actually pass are also accepted: `null` counts as `''` for
+ * url/slug/redirect_type, and the string `"-1"` counts as `-1`. The boolean
+ * flags stay strict on `''`, as v3 had them.
  *
  * @param  integer                $id               Required.
- * @param  string                 $target_url       Empty keeps existing.
- * @param  string                 $slug             Empty keeps existing.
- * @param  string|integer         $name             Sentinel -1 keeps existing.
- * @param  string|integer         $description      Sentinel -1 keeps existing.
+ * @param  string|null            $target_url       Empty or null keeps existing.
+ * @param  string|null            $slug             Empty or null keeps existing.
+ * @param  string|integer|null    $name             -1 or "-1" keeps existing.
+ * @param  string|integer|null    $description      -1 or "-1" keeps existing.
  * @param  integer                $group_id         DEPRECATED in v3; ignored.
  * @param  boolean|integer|string $track_me         Empty keeps existing.
  * @param  boolean|integer|string $nofollow         Empty keeps existing.
  * @param  boolean|integer|string $sponsored        Empty keeps existing.
- * @param  string                 $redirect_type    Empty keeps existing.
+ * @param  string|null            $redirect_type    Empty or null keeps existing.
  * @param  boolean|integer|string $param_forwarding Empty keeps existing.
  * @return boolean true on success, false on failure.
  */
@@ -153,7 +156,7 @@ function prli_update_pretty_link( // phpcs:ignore Squiz.Commenting.FunctionComme
     _deprecated_function(
         __FUNCTION__,
         '4.0.0',
-        '\\PrettyLinks\\Repositories\\Links::update()'
+        '\\PrettyLinks\\Repositories\\Links::save()'
     );
 
     $id = (int) $id;
@@ -162,16 +165,16 @@ function prli_update_pretty_link( // phpcs:ignore Squiz.Commenting.FunctionComme
     }
 
     $data = [];
-    if ($target_url !== '') {
+    if ((string) $target_url !== '') {
         $data['url'] = (string) $target_url;
     }
-    if ($slug !== '') {
+    if ((string) $slug !== '') {
         $data['slug'] = (string) $slug;
     }
-    if ($name !== -1) {
+    if ((string) $name !== '-1') {
         $data['name'] = (string) $name;
     }
-    if ($description !== -1) {
+    if ((string) $description !== '-1') {
         $data['description'] = (string) $description;
     }
     if ($track_me !== '') {
@@ -183,14 +186,20 @@ function prli_update_pretty_link( // phpcs:ignore Squiz.Commenting.FunctionComme
     if ($sponsored !== '') {
         $data['sponsored'] = $sponsored ? 1 : 0;
     }
-    if ($redirect_type !== '') {
+    if ((string) $redirect_type !== '') {
         $data['redirect_type'] = (string) $redirect_type;
     }
     if ($param_forwarding !== '') {
         $data['param_forwarding'] = $param_forwarding ? 'on' : 'off';
     }
 
-    return (new PrliLinksRepo())->update($id, $data) !== null;
+    // Mirrors the create shim: the repo signals refusal with an `error` key,
+    // and v3 callers expect a boolean. Returning true for a refused update
+    // (a taken slug, a reserved slug, an invalid URL) reports success for a
+    // link that did not change.
+    $result = (new PrliLinksRepo())->save($data, $id);
+
+    return is_array($result) && !isset($result['error']);
 }
 
 /**
@@ -208,15 +217,29 @@ function prli_get_all_links(): array
         '\\PrettyLinks\\Repositories\\Links::search()'
     );
 
-    $result = (new PrliLinksRepo())->search([
-        'per_page' => 10000,
-        'orderby'  => 'name',
-        'order'    => 'asc',
-    ]);
-    $out    = [];
-    foreach ($result['items'] as $item) {
-        $out[] = prli_legacy_reshape_link($item);
-    }
+    // v3 returned every link with no stats, so page through the whole table
+    // and skip the per-row click-count subquery v3's call never ran. Count
+    // mode keeps the counters on: there they come from the static-clicks /
+    // static-uniques meta JOINs (no prli_clicks read), because the
+    // prli_links columns are never bumped.
+    $repo       = new PrliLinksRepo();
+    $withClicks = PrliLinksRepo::isCountMode();
+    $out        = [];
+    $page       = 1;
+    do {
+        $result = $repo->search([
+            'per_page'    => 1000,
+            'page'        => $page,
+            'orderby'     => 'name',
+            'order'       => 'asc',
+            'with_clicks' => $withClicks,
+        ]);
+        foreach ($result['items'] as $item) {
+            $out[] = prli_legacy_reshape_link($item);
+        }
+        $pages = $result['pages'];
+        $page++;
+    } while ($page <= $pages);
     return $out;
 }
 
@@ -312,50 +335,3 @@ add_action('prli_click_written', static function (int $linkId, int $clickId, str
         'url'      => $url,
     ]);
 }, 10, 3);
-
-// Hook shim: v3 Pro fired the unified `prli-redirect-header` action (no args)
-// inside every Pro redirect template. v4 Pro fires separate per-type actions
-// instead. Re-fire the v3 hook from each so code hooked to the unified action
-// keeps working. Registered here with 0 accepted args to match v3's no-arg
-// signature; the per-type actions pass $link as arg 1 which we deliberately ignore.
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Loop-local var (unset below); underscore prefix avoids clashing with anything.
-foreach (['prli_cloak_head', 'prli_metarefresh_head', 'prli_javascript_redirect_head', 'prli_pretty_bar_head'] as $_prli_head_action) {
-    add_action($_prli_head_action, static function (): void {
-        do_action('prli-redirect-header');
-    }, 10, 0);
-}
-unset($_prli_head_action);
-
-if (!function_exists('the_prettylink')) {
-    /**
-     * V3 template tag: echo the pretty link for the current post.
-     *
-     * Deprecated. Prefer `echo do_shortcode('[post-pretty-link]')` or
-     * reading the `_pretty-link` post meta directly via the v4 REST API.
-     */
-    function the_prettylink(): void // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
-    {
-        _deprecated_function('the_prettylink', '4.0.0', '[post-pretty-link] shortcode');
-        echo do_shortcode('[post-pretty-link]');
-    }
-}
-
-if (!function_exists('the_social_buttons_bar')) {
-    /**
-     * V3 Pro template tag: echo the social buttons bar for the current post.
-     *
-     * Deprecated. Prefer `echo do_shortcode('[social_buttons_bar]')`.
-     */
-    function the_social_buttons_bar(): void // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
-    {
-        _deprecated_function('the_social_buttons_bar', '4.0.0', '[social_buttons_bar] shortcode');
-        echo do_shortcode('[social_buttons_bar]');
-    }
-}
-
-// Shortcode shim: v3 `[tweetbadge]` registered a Twitter badge renderer. The
-// feature relied on X API v1.1 endpoints that were shut down in 2023 — no
-// restoration is possible. We still register the tag so existing post content
-// containing `[tweetbadge]` renders empty instead of showing literal bracket
-// text on the frontend.
-add_shortcode('tweetbadge', static fn (): string => '');

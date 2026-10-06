@@ -73,4 +73,73 @@ class Util
 
         return $this->apiBaseUrl;
     }
+
+    /**
+     * Checks whether a package download URL is allowed.
+     *
+     * A URL is allowed when it is well-formed, uses HTTPS, and its host is in the
+     * configured allowlist ({@see getAllowedDownloadHosts()}).Use this before
+     * passing a URL into WP_Upgrader::install() to guard against poisoned transients
+     * or tampered API responses.
+     *
+     * @param  string $url The package download URL to validate.
+     * @return boolean True if the URL is allowed, false otherwise.
+     */
+    public function isAllowedDownloadUrl(string $url): bool
+    {
+        if (false === filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $scheme = strtolower((string) wp_parse_url($url, PHP_URL_SCHEME));
+        $host   = strtolower((string) wp_parse_url($url, PHP_URL_HOST));
+
+        if ('https' !== $scheme || empty($host)) {
+            return false;
+        }
+
+        return in_array($host, $this->getAllowedDownloadHosts(), true);
+    }
+
+    /**
+     * Returns the URL when it passes {@see self::isAllowedDownloadUrl()}, or an empty string.
+     *
+     * @param  string $url The package download URL to sanitize.
+     * @return string The URL when allowed, or an empty string otherwise.
+     */
+    public function sanitizeDownloadUrl(string $url): string
+    {
+        return $this->isAllowedDownloadUrl($url) ? $url : '';
+    }
+
+    /**
+     * Returns the allowlist of hostnames permitted as package download sources.
+     *
+     * Defaults to the Mothership API host plus downloads.wordpress.org. Extend the
+     * list via the '{pluginId}_allowed_download_hosts' filter; hosts are matched
+     * exactly (no subdomain wildcards) and compared case-insensitively.
+     *
+     * @return array<string> Lowercased hostnames.
+     */
+    public function getAllowedDownloadHosts(): array
+    {
+        $apiHost  = (string) wp_parse_url($this->getApiBaseUrl(), PHP_URL_HOST);
+        $defaults = [];
+
+        if ('' !== $apiHost) {
+            $defaults[] = $apiHost;
+        }
+
+        $defaults[] = 'downloads.wordpress.org';
+
+        /**
+         * Filters the list of hostnames allowed as package download sources.
+         *
+         * @param array<string> $hosts Hostnames; comparison is case-insensitive.
+         */
+        $hosts = (array) apply_filters("{$this->plugin->pluginId}_allowed_download_hosts", $defaults);
+        $hosts = array_filter($hosts, 'is_string');
+
+        return array_values(array_unique(array_map('strtolower', $hosts)));
+    }
 }

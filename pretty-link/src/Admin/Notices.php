@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Admin;
 
-use PrettyLinks\Support\HasStaticContainer;
-use PrettyLinks\Support\StaticContainerAwareness;
-
 /**
  * Single notice manager. Pretty Links historically stacked ~10 notices at once;
  * this replaces them with one coordinated queue persisted in a single option
  * bag (`prli_notices`). Dismissals write back to the same bag.
  */
-class Notices implements StaticContainerAwareness
+class Notices
 {
-    use HasStaticContainer;
-
     private const OPTION = 'prli_notices';
 
     /**
@@ -36,6 +31,33 @@ class Notices implements StaticContainerAwareness
             'created'   => time(),
         ];
         update_option(self::OPTION, $notices, false);
+    }
+
+    /**
+     * Add a notice only if that id isn't already queued.
+     *
+     * {@see self::add()} is a replace: it always writes `dismissed => false`
+     * and a fresh `created`, then persists. That is right for a notice raised
+     * once at a decision point, and wrong for one raised from a condition
+     * re-evaluated on every request — a wp-config constant, say. There, add()
+     * un-dismisses the notice the moment the user dismisses it, and the moving
+     * `created` timestamp means a real database write on every admin request
+     * that lands in a new second.
+     *
+     * @param  string $id      Unique notice identifier.
+     * @param  string $type    Notice type (e.g. info, success, warning, error).
+     * @param  string $message Notice body (allowed post HTML retained).
+     * @return boolean True when the notice was added, false when already queued.
+     */
+    public static function addOnce(string $id, string $type, string $message): bool
+    {
+        if (array_key_exists($id, self::load())) {
+            return false;
+        }
+
+        self::add($id, $type, $message);
+
+        return true;
     }
 
     /**

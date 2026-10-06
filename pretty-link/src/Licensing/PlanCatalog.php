@@ -88,37 +88,37 @@ final class PlanCatalog
         return [
             self::ADDON_LINK_IN_BIO      => [
                 'label'   => __('Link in Bio', 'pretty-link'),
-                'summary' => __('Publish a hosted mini-site of your best pretty links — one URL for every platform that only allows a single link.', 'pretty-link'),
+                'summary' => __('One link for every social profile, and it is yours rather than a rented page. Profile, stacked buttons and social icons on your own domain, with every tap tracked.', 'pretty-link'),
                 'url'     => 'https://prettylinks.com/add-ons/link-in-bio/',
                 'plans'   => [self::PLAN_MARKETER, self::PLAN_EXECUTIVE],
             ],
             self::ADDON_DEVELOPER_TOOLS  => [
                 'label'   => __('Developer Tools', 'pretty-link'),
-                'summary' => __('REST API keys, webhook dispatch, and programmatic link management for developers building on top of Pretty Links.', 'pretty-link'),
+                'summary' => __('Wire Pretty Links into the rest of your stack. Token-authenticated REST endpoints and signed webhooks connect it to Make, Zapier, n8n, your own dashboards or your CI.', 'pretty-link'),
                 'url'     => 'https://prettylinks.com/add-ons/developer-tools/',
                 'plans'   => [self::PLAN_MARKETER, self::PLAN_EXECUTIVE],
             ],
             self::ADDON_PRODUCT_DISPLAYS => [
                 'label'   => __('Product Displays', 'pretty-link'),
-                'summary' => __('Insert rich product cards (image, price, buy button) that auto-update from your affiliate feeds and track clicks as pretty links.', 'pretty-link'),
+                'summary' => __('Turn a mention into a storefront. Build product cards with image, price and buy button, drop them into any post by shortcode or block, and track every click through as a pretty link.', 'pretty-link'),
                 'url'     => 'https://prettylinks.com/add-ons/product-displays/',
                 'plans'   => [self::PLAN_EXECUTIVE],
             ],
             self::ADDON_SPLASH_PAGES     => [
                 'label'   => __('Splash Pages', 'pretty-link'),
-                'summary' => __('Show a branded interstitial (heading, media, CTAs, optional countdown) before forwarding visitors — affiliate disclosures, choose-your-own-destination, video gates.', 'pretty-link'),
+                'summary' => __('Own the moment before the handoff. A branded page carries your disclosure, your pitch and your calls to action, with an optional countdown, instead of dumping visitors straight onto someone else\'s site.', 'pretty-link'),
                 'url'     => 'https://prettylinks.com/add-ons/splash-pages/',
                 'plans'   => [self::PLAN_EXECUTIVE],
             ],
             self::ADDON_UTMS             => [
                 'label'   => __('UTMs', 'pretty-link'),
-                'summary' => __('Build Google Analytics UTM parameters (source, medium, campaign, content, term, ID) right on the link form — no manual URL editing.', 'pretty-link'),
+                'summary' => __('Campaign data you can actually trust. Build source, medium, campaign, content, term and ID tags on the link form itself, so your reports never hinge on someone hand-editing a URL correctly.', 'pretty-link'),
                 'url'     => 'https://prettylinks.com/add-ons/utms/',
                 'plans'   => [self::PLAN_EXECUTIVE],
             ],
             self::ADDON_USER_LINKS       => [
                 'label'   => __('User Links', 'pretty-link'),
-                'summary' => __('Drop a self-service pretty-link manager onto a front-end page so logged-in users create and manage their own shortlinks without ever touching wp-admin.', 'pretty-link'),
+                'summary' => __('Let your team or members make their own short links on a front-end page. They get self-service, you keep one branded, tracked link namespace and hand out no wp-admin logins.', 'pretty-link'),
                 'url'     => 'https://prettylinks.com/add-ons/user-links/',
                 'plans'   => [self::PLAN_EXECUTIVE],
             ],

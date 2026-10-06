@@ -9,10 +9,10 @@
   font-weight: 600;
 }
 
-/* "(PRO)" chip rendered inline with locked Pro-only submenu labels on
- * Lite installs (currently only Custom Reports). Muted pill so it reads
- * as "this is a Pro feature" without competing with the brand yellow
- * "Get More with Pro" CTA row. */
+/* Chip rendered inline with locked submenu labels: "PRO" on Lite (Custom
+ * Reports and the add-on stubs), "ADD-ON" on the add-on stubs once Pro is
+ * installed. Muted pill so it reads as "this isn't here yet" without
+ * competing with the brand yellow "Get More with Pro" CTA row. */
 #adminmenu .wp-submenu a .prli-menu-pro-badge {
   display: inline-block;
   margin-left: 6px;

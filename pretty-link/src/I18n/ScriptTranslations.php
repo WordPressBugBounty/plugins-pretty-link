@@ -73,10 +73,16 @@ class ScriptTranslations
             return self::$cache[$cacheKey];
         }
 
+        // Highest precedence first: the merge below is first-writer-wins, so
+        // whichever directory is swept first owns a duplicated msgid.
         $dirs = [
-            WP_LANG_DIR . '/plugins',
-            // Loco Translate's "Custom" save location.
+            // Loco Translate's "Custom" save location leads deliberately. A
+            // user who edits a string in Loco has overridden whatever the
+            // WordPress.org language pack says, and that edit has to win or it
+            // silently does nothing in the React admin while applying fine
+            // everywhere in PHP.
             WP_LANG_DIR . '/loco/plugins',
+            WP_LANG_DIR . '/plugins',
         ];
         if (defined('PRLI_FILE')) {
             $dirs[] = plugin_dir_path(PRLI_FILE) . 'languages';
@@ -106,8 +112,10 @@ class ScriptTranslations
                 }
                 unset($block['']);
 
-                // Same msgid always carries the same translation across bundles,
-                // so first-writer-wins is safe.
+                // First-writer-wins. Within one directory that is safe: the
+                // same msgid carries the same translation across bundles. Across
+                // directories it is the precedence rule, which is why $dirs is
+                // ordered deliberately above.
                 $messages += $block;
             }
         }

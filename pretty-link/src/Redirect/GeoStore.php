@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Redirect;
 
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 // phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
 // Custom plugin tables (prli_geo_*): table names interpolate from $wpdb->prefix
 // (trusted), all values bind through $wpdb->prepare(). No object caching: this

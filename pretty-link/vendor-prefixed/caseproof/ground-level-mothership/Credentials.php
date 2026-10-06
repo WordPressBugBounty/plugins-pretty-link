@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace PrettyLinks\GroundLevel\Mothership;
 
 /**
- * The Credentials class provides the interface for storing and retrieving credentials
- * based on environment variables, constants, and database (WordPress Database).
+ * Public read/write API for Mothership credentials.
+ *
+ * Reads resolve in order: environment variable, PHP constant, plugin storage.
+ * Writes skip when env/const supplies the credential, since the database
+ * value is unreachable in that case.
  */
 class Credentials
 {
@@ -29,13 +32,6 @@ class Credentials
      * The basename for the API token used in the Token authentication strategy.
      */
     public const API_TOKEN_BASENAME = 'api_token';
-
-    /**
-     * The proxy license key used in the Email/Token strategy.
-     *
-     * @var string
-     */
-    private static string $proxyLicenseKey = '';
 
     /**
      * The plugin connection.
@@ -74,11 +70,11 @@ class Credentials
     }
 
     /**
-     * Get the activation domain.
+     * Get the domain.
      *
      * @return string
      */
-    public function getActivationDomain(): string
+    public function getDomain(): string
     {
         $domain = $this->getCredential(self::DOMAIN_BASENAME);
 
@@ -110,23 +106,17 @@ class Credentials
     }
 
     /**
-     * Store License Key credentials in the database using the plugin's way of storing dbOptions.
+     * Set the license key.
      *
-     * @param  string $licenseKey The mothership license key.
-     * @throws \Exception If the credentials are already stored in environment variables or constants.
-     * @return void
+     * @param  string  $licenseKey The license key to store.
+     * @param  boolean $silent     See {@see self::setCredential()}.
+     * @return boolean
+     *
+     * @throws \Exception When $silent is false and env/const supplies the credential.
      */
-    public function storeLicenseKey(string $licenseKey): void
+    public function setLicenseKey(string $licenseKey, bool $silent = true): bool
     {
-        if ($this->isCredentialSetInEnvironmentOrConstants(self::LICENSE_KEY_BASENAME)) {
-            throw new \Exception(
-                esc_html__(
-                    'Cannot store credentials in database; found in environment variables or constants.',
-                    'pretty-link'
-                )
-            );
-        }
-        $this->plugin->updateLicenseKey($licenseKey);
+        return $this->setCredential(self::LICENSE_KEY_BASENAME, $licenseKey, $silent);
     }
 
     /**
@@ -144,15 +134,60 @@ class Credentials
         }
         switch ($credentialName) {
             case self::LICENSE_KEY_BASENAME:
-                return (string) $this->plugin->getLicenseKey();
+                return (string) $this->plugin->resolveLicenseKey();
             case self::DOMAIN_BASENAME:
-                return (string) $this->plugin->getDomain();
+                return (string) $this->plugin->resolveDomain();
             case self::EMAIL_BASENAME:
-                return (string) $this->plugin->getEmail();
+                return (string) $this->plugin->resolveEmail();
             case self::API_TOKEN_BASENAME:
-                return (string) $this->plugin->getApiToken();
+                return (string) $this->plugin->resolveApiToken();
             default:
                 return '';
+        }
+    }
+
+    /**
+     * Stores a credential to the database, honoring the env/const policy.
+     *
+     * When the credential is supplied via environment variable or constant the
+     * write is skipped: subsequent reads resolve to the env/constant value via
+     * {@see self::getCredential()}, so the database value is irrelevant.
+     *
+     * @param  string  $credentialName The base name of the credential to store.
+     * @param  string  $value          The value to store.
+     * @param  boolean $silent         When true, silently skip the write if env/const
+     *                                 supplies the credential. When false, throws.
+     * @return boolean Whether the underlying store succeeded. Returns false when
+     *                 the write was skipped due to env/const override.
+     *
+     * @throws \Exception      When $silent is false and env/const supplies the credential.
+     * @throws \LogicException When no store is configured for the given credential.
+     */
+    private function setCredential(string $credentialName, string $value, bool $silent): bool
+    {
+        // PL strauss-fixup: empty env is not set. getenv() returns '' for an
+        // exported-but-empty variable (PRLI_LICENSE_KEY= is routine in Docker
+        // and .env files), which is !== false and so blocked every write —
+        // while getCredential() reads '' as falsy and falls through to the
+        // database. Activation then succeeded, burned a seat and persisted
+        // nothing. Only a non-empty override may block the write.
+        $environmentValue = $this->isCredentialSetInEnvironmentOrConstants($credentialName);
+
+        if (false !== $environmentValue && '' !== $environmentValue) {
+            if (!$silent) {
+                throw new \Exception(
+                    // phpcs:ignore Generic.Files.LineLength.TooLong
+                    "Cannot write the {$credentialName} credential: it is supplied via environment variable or constant."
+                );
+            }
+            return false;
+        }
+
+        switch ($credentialName) {
+            case self::LICENSE_KEY_BASENAME:
+                return $this->plugin->storeLicenseKey($value);
+            default:
+                throw new \LogicException("No store configured for the {$credentialName} credential.");
         }
     }
 
@@ -187,28 +222,5 @@ class Credentials
         }
 
         return false;
-    }
-
-    /**
-     * Gets the proxy license key.
-     *
-     * @return string
-     */
-    public static function getProxyLicenseKey(): string
-    {
-        return self::$proxyLicenseKey;
-    }
-
-    /**
-     * Set the proxy license key.
-     *
-     * This will be used as the user's temporary license key in the Email/Token authentication strategy.
-     * It will be supplied in the X-Proxy-License-Key header.
-     *
-     * @param string $proxyLicenseKey The proxy license key.
-     */
-    public static function setProxyLicenseKey(string $proxyLicenseKey): void
-    {
-        self::$proxyLicenseKey = $proxyLicenseKey;
     }
 }

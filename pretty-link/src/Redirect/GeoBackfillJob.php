@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Redirect;
 
+use PrettyLinks\Support\JobDeadline;
+
 use PrettyLinks\GroundLevel\Resque\Models\Job;
 
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 // phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
 // Custom plugin table (prli_clicks): name interpolates from $wpdb->prefix
 // (trusted), values bind through $wpdb->prepare().
@@ -104,7 +103,14 @@ class GeoBackfillJob extends Job
             return;
         }
 
+        // Stop at the worker's deadline: 20 API calls at up to Geo's 3s
+        // timeout would otherwise hold the worker for a minute. Unprocessed
+        // IPs stay queued and the chain below resumes.
+        $deadline = JobDeadline::at();
         foreach ($ips as $ip) {
+            if (microtime(true) >= $deadline) {
+                break;
+            }
             // Blocking is fine here — this is the background worker, and the
             // lookup populates the shared cache for subsequent redirects.
             $country = Geo::country($ip);
@@ -149,6 +155,7 @@ class GeoBackfillJob extends Job
         $table = $wpdb->prefix . 'prli_clicks';
 
         $wpdb->last_error = '';
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Table identifier is the plugin-owned prli_clicks table built from $wpdb->prefix; the country and ip values bind through prepare(). No WP API exists for this table, and an UPDATE has nothing to cache.
         $wpdb->query(
             $wpdb->prepare(
                 "UPDATE {$table} SET country = %s WHERE ip = %s AND country = ''",
@@ -156,6 +163,7 @@ class GeoBackfillJob extends Job
                 $ip
             )
         );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
         return $wpdb->last_error === '';
     }

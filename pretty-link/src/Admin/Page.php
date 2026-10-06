@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Admin;
 
-use PrettyLinks\Support\HasStaticContainer;
-use PrettyLinks\Support\StaticContainerAwareness;
+use PrettyLinks\Admin\Pages\Links as LinksPage;
+use PrettyLinks\Options\Store as OptionsStore;
 
 /**
  * Top-level Pretty Links admin menu.
@@ -14,13 +14,33 @@ use PrettyLinks\Support\StaticContainerAwareness;
  * React mount point. Submenus attach to this parent via `add_submenu_page`
  * in their own classes (see Admin\Pages\*).
  */
-class Page implements StaticContainerAwareness
+class Page
 {
-    use HasStaticContainer;
-
     public const CAPABILITY = 'manage_options';
 
     public const SLUG = 'pretty-link';
+
+    /**
+     * Where the top-level menu sits in the admin sidebar.
+     *
+     * 55 is the gap between Comments (25) and Appearance (60), which is where
+     * Pretty Links lived through 3.x and where long-time users look for it.
+     * 4.0 shipped 100 by mistake, dropping it below Settings (#821).
+     *
+     * The fraction matters: `$menu` is keyed by position, so two plugins
+     * claiming a bare 55 means one silently overwrites the other. v3 dodged
+     * that with `menu_position => 55.5532265` buried in its CPT registration —
+     * same idea, but arbitrary enough that nobody could tell whether the digits
+     * meant anything. A single decimal place is just as collision-resistant
+     * and reads as a deliberate choice.
+     */
+    public const MENU_POSITION = 55.5;
+
+    /**
+     * Where the Dashboard lives when the links list has taken the parent
+     * slug. Unused in the default layout, where the Dashboard is the parent.
+     */
+    public const DASHBOARD_SLUG = 'pretty-link-dashboard';
 
     /**
      * Translated page title shown in the menu and document title.
@@ -62,29 +82,70 @@ class Page implements StaticContainerAwareness
             return '';
         }
 
+        // What the parent slug renders is a setting, not a WordPress
+        // inference (#820). Deciding it here keeps the whole menu shape
+        // readable in one place: the parent, its first row, and the label
+        // on that row all come from the same flag.
+        $linksFirst   = self::linksListIsFirst();
+        $parentRender = $linksFirst ? [LinksPage::class, 'render'] : [self::class, 'render'];
+
         $hook = add_menu_page(
             self::pageTitle(),
             esc_html__('Pretty Links', 'pretty-link'),
             $capability,
             self::SLUG,
-            [self::class, 'render'],
+            $parentRender,
             self::menuIcon(),
-            100
+            self::MENU_POSITION
         );
 
-        // Registering the first submenu with the parent's own slug overrides
-        // the auto-duplicated "Pretty Links" label WordPress would otherwise
-        // generate from the top-level menu title.
+        // The first submenu must use the parent's own slug. It overrides the
+        // duplicate label WordPress would generate from the menu title, and
+        // registering any other slug first makes core insert that duplicate
+        // itself (wp-admin/includes/plugin.php) — so this row is the only
+        // lever over what the parent menu item points at.
         add_submenu_page(
             self::SLUG,
             self::pageTitle(),
-            esc_html__('Dashboard', 'pretty-link'),
+            // "Pretty Links" when it is the links list, matching what that
+            // row is called in the default layout — the setting moves the
+            // screen, it does not rename it.
+            $linksFirst
+                ? esc_html__('Pretty Links', 'pretty-link')
+                : esc_html__('Dashboard', 'pretty-link'),
             $capability,
             self::SLUG,
-            [self::class, 'render']
+            $parentRender
         );
 
+        // With the parent showing links, the Dashboard keeps a home but no
+        // menu row: an empty parent slug registers the page without listing
+        // it. Its URL changes to `page=pretty-link-dashboard` in this mode,
+        // which is the one visible trade of turning the setting on.
+        if ($linksFirst) {
+            add_submenu_page(
+                '',
+                self::pageTitle(),
+                esc_html__('Dashboard', 'pretty-link'),
+                $capability,
+                self::DASHBOARD_SLUG,
+                [self::class, 'render']
+            );
+        }
+
         return $hook;
+    }
+
+    /**
+     * Whether the Links list should take the parent menu's place.
+     *
+     * Read straight from the store rather than cached: menu registration runs
+     * once per request, and a stale value here would leave the sidebar
+     * disagreeing with the setting the user just saved.
+     */
+    public static function linksListIsFirst(): bool
+    {
+        return (bool) (new OptionsStore())->get('links_first_menu_item', false);
     }
 
     /**
@@ -94,10 +155,34 @@ class Page implements StaticContainerAwareness
      * Security note: third-party code MUST NOT reduce this below
      * `manage_options`. Lowering the capability grants full Pretty Link
      * admin access (link CRUD, settings, reports) to those users.
+     *
+     * @api
      */
     public static function capability(): string
     {
         return (string) apply_filters('prli_admin_capability', self::CAPABILITY);
+    }
+
+    /**
+     * The page slug an admin hook suffix belongs to.
+     *
+     * WordPress builds a submenu's hook suffix from the sanitized, translated
+     * parent menu title (`pretty-links_page_<slug>` in English), so matching
+     * whole suffixes breaks on any locale that translates "Pretty Links".
+     * Every admin page hook ends in `_page_<slug>` — top-level, submenu, or
+     * empty-parent (`admin_page_`) — and our slugs never contain `_page_`,
+     * so the slug is what follows the last one.
+     *
+     * @api
+     *
+     * @param string $hookSuffix The `$hook_suffix` WordPress passes to admin_enqueue_scripts.
+     *
+     * @return string The page slug, or '' when the hook is not an admin page hook.
+     */
+    public static function slugFromHook(string $hookSuffix): string
+    {
+        $pos = strrpos($hookSuffix, '_page_');
+        return $pos === false ? '' : substr($hookSuffix, $pos + strlen('_page_'));
     }
 
     /**
@@ -116,7 +201,7 @@ class Page implements StaticContainerAwareness
      */
     public static function menuIcon(): string
     {
-        $path = self::getContainer()->get('BASE_PATH') . 'assets/images/menu-icon.svg';
+        $path = PRLI_PATH . 'assets/images/menu-icon.svg';
         return is_readable($path) ? 'none' : 'dashicons-admin-links';
     }
 
@@ -129,10 +214,15 @@ class Page implements StaticContainerAwareness
      * because WP's color-scheme CSS sets the per-state color on `:before`
      * — `currentColor` on the div would inherit the link text color
      * instead of the icon-specific color.
+     *
+     * The rule resets font and line-height and sets `box-sizing:content-box`
+     * so an inherited `border-box` cannot fold core's `:before` padding into
+     * the 20px mask box (#897). Padding stays with core so the icon moves
+     * with the other menu icons.
      */
     public static function enqueueMenuIconStyle(): void
     {
-        $path = self::getContainer()->get('BASE_PATH') . 'assets/images/menu-icon.svg';
+        $path = PRLI_PATH . 'assets/images/menu-icon.svg';
         if (!is_readable($path)) {
             return;
         }
@@ -142,13 +232,21 @@ class Page implements StaticContainerAwareness
         // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- data-URI encoding.
         $uri = 'data:image/svg+xml;base64,' . base64_encode($svg);
 
-        // WP's base CSS already sets `div.wp-menu-image:before { padding:7px 0 }`
-        // which combined with a 20px-tall mask box gives the same 34px total
-        // height (7+20+7) that the dashicons font icons use. Don't override
-        // padding/margin/position — let WP own the layout.
+        // Core pads the icon with `div.wp-menu-image:before` (admin-menu.css)
+        // and sets the font with `.dashicons-before:before` (dashicons.css),
+        // a class WP adds even for `'none'` icons. The #897 trigger is an
+        // inherited `box-sizing: border-box`, which counts that 14px padding
+        // inside our 20px mask box. `content-box` keeps it outside.
         $css = sprintf(
             '#adminmenu .toplevel_page_%1$s div.wp-menu-image::before{'
-            . 'content:"";display:block;width:20px;height:20px;margin:0 auto;'
+            . 'content:"";'
+            . 'display:block;'
+            . 'width:20px;'
+            . 'height:20px;'
+            . 'margin:0 auto;'
+            . 'font:0/0 a;'
+            . 'line-height:0;'
+            . 'box-sizing:content-box;'
             . 'background-color:currentColor;'
             . '-webkit-mask:url("%2$s") center/20px no-repeat;'
             . 'mask:url("%2$s") center/20px no-repeat;'

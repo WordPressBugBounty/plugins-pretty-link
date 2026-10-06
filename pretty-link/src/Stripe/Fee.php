@@ -316,8 +316,9 @@ final class Fee
      * Pro installed AND currently activated. Public so callers that need
      * to mirror the fee-bypass decision (e.g. the onboarding wizard showing
      * the "you won't be charged" copy) can use the same check as
-     * shouldApply(). Delegates to {@see ProState} — LicenseManager owns the
-     * expiry roll-off (maybeCheck flips OPTION_ACTIVATED=false on expired).
+     * shouldApply(). Delegates to {@see ProState} — ground-level-mothership's
+     * twice-daily status cron owns the expiry roll-off (it flips the activation
+     * flag off when the licenses server reports the key expired/invalid).
      */
     public static function hasActiveLicense(): bool
     {

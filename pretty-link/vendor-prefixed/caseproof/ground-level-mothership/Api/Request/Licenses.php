@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\GroundLevel\Mothership\Api\Request;
 
-use PrettyLinks\GroundLevel\Mothership\Api\Request;
 use PrettyLinks\GroundLevel\Mothership\Api\Response;
 
 /**
@@ -12,40 +11,24 @@ use PrettyLinks\GroundLevel\Mothership\Api\Response;
  *
  * @link https://licenses.caseproof.com/help/api-reference#licenses
  */
-class Licenses
+class Licenses extends AbstractResource
 {
-    /**
-     * The request instance.
-     *
-     * @var \PrettyLinks\GroundLevel\Mothership\Api\Request
-     */
-    private Request $request;
-
-    /**
-     * Constructor.
-     *
-     * @param \PrettyLinks\GroundLevel\Mothership\Api\Request $request The request instance.
-     */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     /**
      * Create a new license.
      *
-     * @param  array $licenseData The data to create the license.
+     * @param  array $body   The body of the request.
+     * @param  array $params Additional query parameters.
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
      */
-    public function create(array $licenseData): Response
+    public function create(array $body, array $params = []): Response
     {
-        return $this->request->post('licenses', $licenseData);
+        return $this->request->post('licenses', $body, $params);
     }
 
     /**
      * Get all licenses.
      *
-     * @param  array $params The parameters to pass to the API.
+     * @param  array $params Additional query parameters.
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
      */
     public function list(array $params = []): Response
@@ -57,7 +40,7 @@ class Licenses
      * Get a license by license key.
      *
      * @param string $licenseKey The license key.
-     * @param array  $params     Additional parameters for the request.
+     * @param array  $params     Additional query parameters.
      *
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
      */
@@ -69,12 +52,37 @@ class Licenses
     /**
      * Update a license by license key.
      *
-     * @param  string $licenseKey  The license key.
-     * @param  array  $licenseData The data to update the license with.
+     * @param  string $licenseKey The license key.
+     * @param  array  $body       The body of the request.
+     * @param  array  $params     Additional query parameters.
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
      */
-    public function update(string $licenseKey, array $licenseData): Response
+    public function update(string $licenseKey, array $body, array $params = []): Response
     {
-        return $this->request->patch('licenses/' . $licenseKey, $licenseData);
+        return $this->request->patch('licenses/' . $licenseKey, $body, $params);
+    }
+
+    /**
+     * Add or remove additional activations for a license.
+     *
+     * @param  string      $licenseKey The license key.
+     * @param  integer     $change     The number of additional activations to add or remove. Accepts negative values.
+     * @param  string|null $reference  An optional external reference ID, such as a subscription ID.
+     * @param  array       $params     Additional query parameters.
+     * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
+     */
+    public function updateAdditionalActivations(
+        string $licenseKey,
+        int $change,
+        ?string $reference = null,
+        array $params = []
+    ): Response {
+        $body = ['change' => $change];
+
+        if (null !== $reference) {
+            $body['reference'] = $reference;
+        }
+
+        return $this->request->post('licenses/' . $licenseKey . '/additional-activations', $body, $params);
     }
 }

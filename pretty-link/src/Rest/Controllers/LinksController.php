@@ -4,36 +4,14 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Rest\Controllers;
 
-use PrettyLinks\Repositories\LinkMetas;
 use PrettyLinks\Repositories\Links as LinksRepo;
+use PrettyLinks\Stripe\LinkMeta as StripeLinkMeta;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
 class LinksController extends BaseController
 {
-    /**
-     * PrettyPay meta keys stored in `prli_link_metas`. Names match v3
-     * exactly so an in-place upgrade finds existing rows as-is.
-     *
-     * @var list<string>
-     */
-    private const STRIPE_META_KEYS = [
-        'stripe_line_items',
-        'stripe_automatic_tax',
-        'stripe_billing_address_collection',
-        'stripe_shipping_address_collection',
-        'stripe_shipping_address_allowed_countries',
-        'stripe_phone_number_collection',
-        'stripe_allow_promotion_codes',
-        'stripe_tax_id_collection',
-        'stripe_save_payment_details',
-        'stripe_include_free_trial',
-        'stripe_trial_period_days',
-        'stripe_custom_text',
-        'stripe_thank_you_page_id',
-    ];
-
     /**
      * Registers the links REST routes.
      *
@@ -232,7 +210,7 @@ class LinksController extends BaseController
     }
 
     /**
-     * Creates a new link.
+     * Creates a new link through the repository save seam (`Links::save()`).
      *
      * @param WP_REST_Request $request The incoming REST request.
      *
@@ -240,56 +218,18 @@ class LinksController extends BaseController
      */
     public function create(WP_REST_Request $request): WP_REST_Response
     {
-        $data       = (array) $request->get_json_params();
-        $original   = $data;
-        $stripeMeta = $this->extractStripeMeta($data);
-
-        /**
-         * Filter: prli_link_payload_pre_save
-         *
-         * Plugins remove fields they own from `$data` so the Links repo
-         * never sees them (the repo only knows `prli_links` columns).
-         * Return the trimmed array.
-         *
-         * @param array<string, mixed> $data    Payload after Lite strips Stripe meta.
-         * @param string               $context 'create' | 'update'
-         * @param int                  $linkId  0 on create, link id on update.
-         */
-        $data = (array) apply_filters('prli_link_payload_pre_save', $data, 'create', 0);
-
-        $validation = $this->runValidationFilter($data, 'create', 0);
-        if ($validation !== null) {
-            return $validation;
-        }
-
-        $link = $this->repo()->create($data);
-        if (is_array($link) && isset($link['error'])) {
+        $link = $this->repo()->save((array) $request->get_json_params());
+        if (isset($link['error'])) {
             return new WP_REST_Response($link, 400);
         }
-
         if (isset($link['id'])) {
-            $linkId = (int) $link['id'];
-            $this->persistStripeMeta($linkId, $stripeMeta);
-            /**
-             * Action: prli_link_after_save
-             *
-             * Fires after the link row is written. Plugins read their own
-             * fields from `$original` (the unmodified request payload)
-             * and persist them (categories, tags, keywords, splitTest,
-             * etc.).
-             *
-             * @param int                  $linkId
-             * @param array<string, mixed> $original Full unmodified request payload.
-             * @param string               $context  'create' | 'update'
-             */
-            do_action('prli_link_after_save', $linkId, $original, 'create');
-            $link = $this->attachAllMeta($linkId, $link);
+            $link = $this->attachAllMeta((int) $link['id'], $link);
         }
         return new WP_REST_Response($link, 201);
     }
 
     /**
-     * Updates an existing link.
+     * Updates an existing link through the repository save seam (`Links::save()`).
      *
      * @param WP_REST_Request $request The incoming REST request.
      *
@@ -297,27 +237,18 @@ class LinksController extends BaseController
      */
     public function update(WP_REST_Request $request): WP_REST_Response
     {
-        $id         = (int) $request['id'];
-        $data       = (array) $request->get_json_params();
-        $original   = $data;
-        $stripeMeta = $this->extractStripeMeta($data);
-
-        $data = (array) apply_filters('prli_link_payload_pre_save', $data, 'update', $id);
-
-        $validation = $this->runValidationFilter($data, 'update', $id);
-        if ($validation !== null) {
-            return $validation;
+        $id = (int) $request['id'];
+        // save() treats id 0 as a create; an update route must never create.
+        if ($id <= 0) {
+            return new WP_REST_Response(['error' => 'not_found'], 404);
         }
-
-        $link = $this->repo()->update($id, $data);
+        $link = $this->repo()->save((array) $request->get_json_params(), $id);
         if ($link === null) {
             return new WP_REST_Response(['error' => 'not_found'], 404);
         }
-        if (is_array($link) && isset($link['error'])) {
+        if (isset($link['error'])) {
             return new WP_REST_Response($link, 400);
         }
-        $this->persistStripeMeta($id, $stripeMeta);
-        do_action('prli_link_after_save', $id, $original, 'update');
         return new WP_REST_Response($this->attachAllMeta($id, $link));
     }
 
@@ -440,178 +371,17 @@ class LinksController extends BaseController
      */
     private function repo(): LinksRepo
     {
-        return $this->container->has(LinksRepo::class)
-            ? $this->container->get(LinksRepo::class)
-            : new LinksRepo();
+        return $this->container->get(LinksRepo::class);
     }
 
     /**
-     * Resolves the link metas service from the container.
+     * Resolves the PrettyPay link meta service from the container.
      *
-     * @return LinkMetas
+     * @return StripeLinkMeta
      */
-    private function metas(): LinkMetas
+    private function stripeMeta(): StripeLinkMeta
     {
-        return $this->container->has(LinkMetas::class)
-            ? $this->container->get(LinkMetas::class)
-            : new LinkMetas();
-    }
-
-    /**
-     * Pulls the Stripe-specific fields out of an incoming payload so the
-     * Links repo never sees them (it only knows about `prli_links` columns).
-     *
-     * @param  array<string, mixed> $data The incoming link payload, by reference.
-     * @return array<string, string>|null  null when the payload never mentioned Stripe (preserve existing meta)
-     */
-    private function extractStripeMeta(array &$data): ?array
-    {
-        $hasAny = false;
-        $out    = [];
-        foreach (self::STRIPE_META_KEYS as $key) {
-            if (!array_key_exists($key, $data)) {
-                continue;
-            }
-            $hasAny = true;
-            $value  = $data[$key];
-            unset($data[$key]);
-            if ($key === 'stripe_shipping_address_allowed_countries' && is_array($value)) {
-                $value = implode(',', array_map('strval', $value));
-            }
-            if (is_array($value)) {
-                // Recursively scrub every scalar in the structure (e.g. the
-                // line-items blob) before persisting, mirroring v3's
-                // array_walk_recursive + sanitize_text_field pass. Admin-only
-                // input that's always escaped on output — defense in depth.
-                array_walk_recursive($value, static function (&$item): void {
-                    if (is_string($item)) {
-                        $item = sanitize_text_field($item);
-                    }
-                });
-                $value = (string) wp_json_encode($value);
-            }
-            if (is_bool($value)) {
-                $value = $value ? '1' : '0';
-            }
-            $out[$key] = (string) $value;
-        }
-        return $hasAny ? $out : null;
-    }
-
-    /**
-     * Persists the extracted Stripe meta for a link.
-     *
-     * @param integer                    $linkId The link ID.
-     * @param array<string, string>|null $meta   The extracted Stripe meta, or null to leave unchanged.
-     *
-     * @return void
-     */
-    private function persistStripeMeta(int $linkId, ?array $meta): void
-    {
-        if ($meta === null) {
-            return;
-        }
-        $metas = $this->metas();
-        foreach (self::STRIPE_META_KEYS as $key) {
-            if (!array_key_exists($key, $meta)) {
-                continue;
-            }
-            $value = $meta[$key];
-            if ($value === '' || $value === '0') {
-                $metas->delete($linkId, $key);
-            } else {
-                $metas->set($linkId, $key, $value);
-            }
-        }
-
-        // Mirror v3: flag `prli_has_recurring_prettypay_link` whenever a
-        // subscription-type price is saved so Settings → Payments can prompt
-        // the merchant to configure the Stripe Customer Portal.
-        if (isset($meta['stripe_line_items'])) {
-            $decoded = json_decode($meta['stripe_line_items'], true);
-            if (is_array($decoded)) {
-                foreach ($decoded as $item) {
-                    if (
-                        is_array($item)
-                        && isset($item['price']['recurring'])
-                        && is_array($item['price']['recurring'])
-                    ) {
-                        update_option('prli_has_recurring_prettypay_link', true);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Attaches stored Stripe meta values to a link payload.
-     *
-     * @param  integer              $linkId The link ID.
-     * @param  array<string, mixed> $link   The link payload.
-     * @return array<string, mixed>
-     */
-    private function attachStripeMeta(int $linkId, array $link): array
-    {
-        $all = $this->metas()->all($linkId);
-        foreach (self::STRIPE_META_KEYS as $key) {
-            $raw = $all[$key] ?? null;
-            if ($raw === null) {
-                $link[$key] = $this->defaultMetaValue($key);
-                continue;
-            }
-            $link[$key] = $this->decodeMeta($key, $raw);
-        }
-        return $link;
-    }
-
-    /**
-     * Returns the default value for a Stripe meta key.
-     *
-     * @param  string $key The Stripe meta key.
-     * @return mixed
-     */
-    private function defaultMetaValue(string $key)
-    {
-        switch ($key) {
-            case 'stripe_line_items':
-                return [];
-            case 'stripe_shipping_address_allowed_countries':
-                return [];
-            case 'stripe_trial_period_days':
-            case 'stripe_thank_you_page_id':
-                return 0;
-            case 'stripe_custom_text':
-                return '';
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * Decodes a stored Stripe meta value into its typed form.
-     *
-     * @param  string $key The Stripe meta key.
-     * @param  string $raw The raw stored meta value.
-     * @return mixed
-     */
-    private function decodeMeta(string $key, string $raw)
-    {
-        if ($key === 'stripe_line_items') {
-            $decoded = json_decode($raw, true);
-            return is_array($decoded) ? $decoded : [];
-        }
-        if ($key === 'stripe_shipping_address_allowed_countries') {
-            return $raw === '' ? [] : array_values(array_filter(array_map('trim', explode(',', $raw))));
-        }
-        if ($key === 'stripe_custom_text') {
-            return $raw;
-        }
-        if ($key === 'stripe_trial_period_days' || $key === 'stripe_thank_you_page_id') {
-            return (int) $raw;
-        }
-        // Boolean-ish toggles.
-        return $raw === '1';
+        return $this->container->get(StripeLinkMeta::class);
     }
 
     /**
@@ -623,7 +393,7 @@ class LinksController extends BaseController
      */
     private function attachAllMeta(int $linkId, array $link): array
     {
-        $link = $this->attachStripeMeta($linkId, $link);
+        $link = $this->stripeMeta()->attach($linkId, $link);
         /**
          * Filter: prli_link_response_attach
          *
@@ -635,52 +405,5 @@ class LinksController extends BaseController
          */
         $link = (array) apply_filters('prli_link_response_attach', $link, $linkId);
         return $link;
-    }
-
-    /**
-     * Run the `prli_validate_link` extension filter. Extensions push error
-     * strings into the array; a non-empty result aborts the save.
-     *
-     * Signature (back-compatible with v3's one-arg `$errors`):
-     *   apply_filters('prli_validate_link', array $errors, array $data, string $context, int $linkId)
-     *
-     * Legacy listeners declaring a single `$errors` parameter still fire —
-     * PHP ignores the extra args. New listeners can inspect the payload
-     * and the save context.
-     *
-     * @param  array<string, mixed> $data    Payload post-pre_save filter.
-     * @param  string               $context Save context, 'create' or 'update'.
-     * @param  integer              $linkId  Zero on create, link id on update.
-     * @return WP_REST_Response|null 400 response when validation errors
-     *                               exist, null when clean to proceed.
-     */
-    private function runValidationFilter(array $data, string $context, int $linkId): ?WP_REST_Response
-    {
-        /**
-         * Filter: prli_validate_link
-         *
-         * Third-party validation. Push error-message strings into the
-         * array; a non-empty return aborts the save with a 400.
-         *
-         * @param array<int, string>   $errors  Start empty, add messages.
-         * @param array<string, mixed> $data    Payload about to be saved.
-         * @param string               $context 'create' | 'update'.
-         * @param int                  $linkId  0 on create, link id on update.
-         */
-        $errors = (array) apply_filters('prli_validate_link', [], $data, $context, $linkId);
-        if ($errors === []) {
-            return null;
-        }
-        $messages = array_values(array_filter(array_map(
-            static fn ($e) => is_string($e) ? trim($e) : '',
-            $errors
-        )));
-        if ($messages === []) {
-            return null;
-        }
-        return new WP_REST_Response([
-            'error'    => 'validation_failed',
-            'messages' => $messages,
-        ], 400);
     }
 }

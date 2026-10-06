@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Links 4.0.15\n"
+"Project-Id-Version: Pretty Links 4.0.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-05T20:45:44+00:00\n"
+"POT-Creation-Date: 2026-10-06T15:01:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pretty-link\n"
@@ -17,14 +17,17 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: pretty-link.php
-#: src/Admin/Page.php:32
-#: src/Admin/Page.php:67
-#: src/Admin/Pages/Links.php:22
-#: src/Admin/Pages/Links.php:23
-#: src/Admin/Pages/WhatsNew.php:261
+#: src/Admin/Page.php:52
+#: src/Admin/Page.php:94
+#: src/Admin/Page.php:114
+#: src/Admin/Pages/Links.php:31
+#: src/Admin/Pages/Links.php:32
+#: src/Admin/Pages/Links.php:41
+#: src/Admin/Pages/Links.php:42
+#: src/Admin/Pages/WhatsNew.php:254
 #: src/Admin/PluginRow.php:59
-#: src/Admin/TopBar.php:74
-#: src/Onboarding/Wizard.php:452
+#: src/Admin/TopBar.php:71
+#: src/Onboarding/Wizard.php:610
 #: assets/js/build/shared.js
 msgid "Pretty Links"
 msgstr ""
@@ -44,8 +47,26 @@ msgstr ""
 msgid "https://prettylinks.com"
 msgstr ""
 
+#: src/Addons/AddonInstaller.php:45
+#: src/Rest/Controllers/AddonsController.php:280
+msgid "No download URL was provided for this add-on."
+msgstr ""
+
+#. translators: %s: the rejected download host.
+#: src/Addons/AddonInstaller.php:58
+msgid "The add-on download URL is not from an allowed host (%s)."
+msgstr ""
+
+#: src/Addons/AddonInstaller.php:139
+msgid "WordPress could not access the filesystem to install the add-on."
+msgstr ""
+
+#: src/Addons/AddonInstaller.php:185
+msgid "The add-on could not be installed — the package may be unavailable or invalid."
+msgstr ""
+
 #: src/Admin/AdminBar.php:35
-#: src/Onboarding/Wizard.php:468
+#: src/Onboarding/Wizard.php:625
 #: assets/js/build/editor.js
 msgid "Pretty Link"
 msgstr ""
@@ -54,44 +75,44 @@ msgstr ""
 msgid "PrettyPay™ Link"
 msgstr ""
 
-#: src/Admin/Assets.php:431
+#: src/Admin/Assets.php:451
 msgid "302 Found"
 msgstr ""
 
-#: src/Admin/Assets.php:435
+#: src/Admin/Assets.php:455
 msgid "301 Moved Permanently"
 msgstr ""
 
-#: src/Admin/Assets.php:457
-#: src/Admin/Upsell/ProUpsell.php:133
+#: src/Admin/Assets.php:478
+#: src/Admin/Upsell/ProUpsell.php:146
 msgid "Cloaked redirect"
 msgstr ""
 
-#: src/Admin/Assets.php:462
-#: src/Admin/Upsell/ProUpsell.php:137
+#: src/Admin/Assets.php:483
+#: src/Admin/Upsell/ProUpsell.php:150
 msgid "Meta Refresh redirect"
 msgstr ""
 
-#: src/Admin/Assets.php:467
-#: src/Admin/Upsell/ProUpsell.php:141
+#: src/Admin/Assets.php:488
+#: src/Admin/Upsell/ProUpsell.php:154
 msgid "JavaScript redirect"
 msgstr ""
 
-#: src/Admin/Assets.php:472
-#: src/Admin/Upsell/ProUpsell.php:145
+#: src/Admin/Assets.php:493
+#: src/Admin/Upsell/ProUpsell.php:158
 msgid "Pixel redirect"
 msgstr ""
 
-#: src/Admin/Assets.php:477
-#: src/Admin/Upsell/ProUpsell.php:149
+#: src/Admin/Assets.php:498
+#: src/Admin/Upsell/ProUpsell.php:162
 msgid "Pretty Bar redirect"
 msgstr ""
 
-#: src/Admin/Assets.php:499
+#: src/Admin/Assets.php:515
 msgid "307 Temporary Redirect (legacy)"
 msgstr ""
 
-#: src/Admin/Assets.php:520
+#: src/Admin/Assets.php:532
 msgid "PrettyPay™ Link (Stripe)"
 msgstr ""
 
@@ -105,7 +126,7 @@ msgstr ""
 
 #: src/Admin/Dashboard.php:127
 #: src/Editor/ClassicEditor.php:113
-#: src/Onboarding/views/first-link.php:34
+#: src/Onboarding/views/first-link.php:41
 #: assets/js/build/editor.js
 #: assets/js/build/shared.js
 msgid "Target URL"
@@ -123,80 +144,72 @@ msgstr ""
 msgid "Create Pretty Link"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:103
-msgid "Pretty Links: a database migration didn't finish."
-msgstr ""
-
-#: src/Admin/MigrationHealth.php:104
-msgid "Some data may be incomplete until it does. It retries automatically — you can also retry now, or see the error details in Site Health."
-msgstr ""
-
-#: src/Admin/MigrationHealth.php:106
-msgid "Retry migration"
-msgstr ""
-
-#: src/Admin/MigrationHealth.php:108
-msgid "View error details in Site Health"
-msgstr ""
-
-#: src/Admin/MigrationHealth.php:131
+#: src/Admin/MigrationHealth.php:42
 msgid "Core (Lite)"
 msgstr ""
 
-#. translators: suffix appended to Pro-locked options in the Lite dropdown.
-#: src/Admin/MigrationHealth.php:132
-#: src/Admin/Pages/WhatsNew.php:293
-#: src/Admin/Upsell/ProUpsell.php:558
-#: src/Licensing/PlanCatalog.php:218
-#: assets/js/build/shared.js
-msgid "Pro"
+#: src/Admin/MigrationHealth.php:130
+msgid "Pretty Links: a database migration didn't finish."
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:141
+#: src/Admin/MigrationHealth.php:131
+msgid "Some data may be incomplete until it does. It retries automatically — you can also retry now, or see the error details in Site Health."
+msgstr ""
+
+#: src/Admin/MigrationHealth.php:133
+msgid "Retry migration"
+msgstr ""
+
+#: src/Admin/MigrationHealth.php:135
+msgid "View error details in Site Health"
+msgstr ""
+
+#: src/Admin/MigrationHealth.php:165
 msgid "migration"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:142
+#: src/Admin/MigrationHealth.php:166
 msgid "not run yet"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:148
+#: src/Admin/MigrationHealth.php:172
 msgid "schema version"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:149
+#: src/Admin/MigrationHealth.php:173
 msgid "unknown"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:158
+#: src/Admin/MigrationHealth.php:182
 msgid "status"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:160
+#: src/Admin/MigrationHealth.php:184
 msgid "In progress (runs on the next request)"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:161
+#: src/Admin/MigrationHealth.php:185
 msgid "OK"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:167
+#: src/Admin/MigrationHealth.php:191
 msgid "failed step"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:174
+#: src/Admin/MigrationHealth.php:198
 msgid "Pretty Links — Migration"
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:175
+#: src/Admin/MigrationHealth.php:199
 msgid "Status of the Pretty Links database migrations. A failed step shows the exact database error and retries automatically; use the Retry button in the admin notice to run it now. If the same error keeps recurring, the underlying data likely needs manual repair — send this error to support."
 msgstr ""
 
-#: src/Admin/MigrationHealth.php:192
+#: src/Admin/MigrationHealth.php:216
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: src/Admin/Page.php:81
+#: src/Admin/Page.php:115
+#: src/Admin/Page.php:129
 #: assets/js/build/dashboard.js
 msgid "Dashboard"
 msgstr ""
@@ -217,13 +230,13 @@ msgstr ""
 
 #: src/Admin/Pages/Addons.php:22
 #: src/Admin/Pages/Addons.php:23
-#: src/Onboarding/views/features.php:91
+#: src/Onboarding/views/features.php:92
 #: assets/js/build/addons.js
 msgid "Add-ons"
 msgstr ""
 
-#: src/Admin/Pages/Clicks.php:47
-#: src/Admin/Pages/Clicks.php:48
+#: src/Admin/Pages/Clicks.php:42
+#: src/Admin/Pages/Clicks.php:43
 #: assets/js/build/clicks.js
 msgid "Click History"
 msgstr ""
@@ -258,7 +271,7 @@ msgid "What's New"
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:61
-#: src/Onboarding/Wizard.php:88
+#: src/Onboarding/Wizard.php:96
 msgid "You do not have permission to access this page."
 msgstr ""
 
@@ -367,7 +380,7 @@ msgid "Send visitors across several destinations and see which one performs best
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:144
-#: src/Admin/Upsell/ProUpsell.php:161
+#: src/Admin/Upsell/ProUpsell.php:174
 msgid "Smart targeting"
 msgstr ""
 
@@ -400,7 +413,7 @@ msgid "Turn keywords into links automatically across posts, pages, custom post t
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:164
-#: src/Admin/Upsell/ProUpsell.php:181
+#: src/Admin/Upsell/ProUpsell.php:198
 msgid "Link health monitoring"
 msgstr ""
 
@@ -409,7 +422,7 @@ msgid "Scheduled checks catch broken destinations before your visitors do, with 
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:169
-#: src/Admin/Upsell/ProUpsell.php:222
+#: src/Admin/Upsell/ProUpsell.php:239
 msgid "Link categories"
 msgstr ""
 
@@ -418,7 +431,7 @@ msgid "Organize hundreds or thousands of links into categories, then filter the 
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:174
-#: src/Admin/Upsell/ProUpsell.php:165
+#: src/Admin/Upsell/ProUpsell.php:178
 msgid "Expiring links"
 msgstr ""
 
@@ -435,7 +448,7 @@ msgid "Go beyond 301/302/307 with cloak, JavaScript, and Pretty Bar redirects. M
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:184
-#: src/Admin/Upsell/ProUpsell.php:242
+#: src/Admin/Upsell/ProUpsell.php:259
 msgid "Redirect turbo mode"
 msgstr ""
 
@@ -461,7 +474,7 @@ msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:206
 #: src/Admin/Upsell/LinkInBioLocked.php:28
-#: src/Admin/Upsell/ProUpsell.php:206
+#: src/Admin/Upsell/ProUpsell.php:223
 #: src/Licensing/PlanCatalog.php:90
 msgid "Link in Bio"
 msgstr ""
@@ -472,7 +485,7 @@ msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:211
 #: src/Admin/Upsell/DeveloperToolsLocked.php:30
-#: src/Admin/Upsell/ProUpsell.php:214
+#: src/Admin/Upsell/ProUpsell.php:231
 #: src/Licensing/PlanCatalog.php:96
 msgid "Developer Tools"
 msgstr ""
@@ -482,7 +495,7 @@ msgid "A documented REST API and webhook events for when links are added, update
 msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:216
-#: src/Admin/Upsell/ProUpsell.php:202
+#: src/Admin/Upsell/ProUpsell.php:219
 #: src/Licensing/PlanCatalog.php:108
 #: assets/js/build/shared.js
 msgid "Splash Pages"
@@ -494,7 +507,7 @@ msgstr ""
 
 #: src/Admin/Pages/WhatsNew.php:221
 #: src/Admin/Upsell/ProductDisplaysLocked.php:31
-#: src/Admin/Upsell/ProUpsell.php:210
+#: src/Admin/Upsell/ProUpsell.php:227
 #: src/Licensing/PlanCatalog.php:102
 msgid "Product Displays"
 msgstr ""
@@ -523,56 +536,64 @@ msgstr ""
 msgid "Add a self-service link manager to a front-end page so logged-in users can create and manage their own short links without ever seeing wp-admin. Pair it with %1$sMemberPress%2$s to charge for access and run your own branded link-shortening service."
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:262
+#: src/Admin/Pages/WhatsNew.php:255
 msgid "What's new in Pretty Links 4.0"
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:264
+#: src/Admin/Pages/WhatsNew.php:257
 msgid "We rebuilt Pretty Links from scratch to make it faster and easier to use. Here's what's new."
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:269
+#: src/Admin/Pages/WhatsNew.php:262
 msgid "In every install"
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:271
+#: src/Admin/Pages/WhatsNew.php:264
 msgid "This is the new foundation under both the free and Pro versions. It's faster, safer, and easier to work in day to day."
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:285
+#: src/Admin/Pages/WhatsNew.php:278
 msgid "Unlock even more with Pro"
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:288
+#: src/Admin/Pages/WhatsNew.php:281
 msgid "Pro builds on the same foundation with extra tools for affiliate marketers and content creators."
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:314
+#. translators: suffix appended to Pro-locked options in the Lite dropdown.
+#: src/Admin/Pages/WhatsNew.php:286
+#: src/Admin/Upsell/ProUpsell.php:573
+#: src/Licensing/PlanCatalog.php:218
+#: assets/js/build/shared.js
+msgid "Pro"
+msgstr ""
+
+#: src/Admin/Pages/WhatsNew.php:307
 msgid "Pro add-ons"
 msgstr ""
 
 #. Translators: %1$s: opening anchor to the add-ons page, %2$s: closing anchor.
-#: src/Admin/Pages/WhatsNew.php:319
+#: src/Admin/Pages/WhatsNew.php:312
 msgid "Six Pro %1$sadd-ons%2$s take Pretty Links further: hosted bio pages, REST and webhook access, branded splash pages, product cards, a UTM builder on the link form, and a front-end dashboard for your users. Link in Bio and Developer Tools come with the Marketer plan; the rest unlock on Executive (Super Affiliate)."
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:328
+#: src/Admin/Pages/WhatsNew.php:321
 msgid "Add-on"
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:338
+#: src/Admin/Pages/WhatsNew.php:331
 msgid "Manage your links"
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:341
+#: src/Admin/Pages/WhatsNew.php:334
 msgid "View click history"
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:344
+#: src/Admin/Pages/WhatsNew.php:337
 msgid "Review options"
 msgstr ""
 
-#: src/Admin/Pages/WhatsNew.php:347
+#: src/Admin/Pages/WhatsNew.php:340
 msgid "Back to dashboard"
 msgstr ""
 
@@ -593,36 +614,41 @@ msgstr ""
 msgid "Please rate %s on WordPress.org"
 msgstr ""
 
-#: src/Admin/TopBar.php:119
+#: src/Admin/TopBar.php:116
 msgid "Support"
 msgstr ""
 
-#: src/Admin/Upsell/AddonMenuLocked.php:78
+#: src/Admin/Upsell/AddonMenuLocked.php:82
+msgid "ADD-ON"
+msgstr ""
+
+#: src/Admin/Upsell/AddonMenuLocked.php:83
 #: src/Admin/Upsell/CustomReportsLocked.php:44
 msgid "PRO"
 msgstr ""
 
-#: src/Admin/Upsell/AddonMenuLocked.php:129
+#: src/Admin/Upsell/AddonMenuLocked.php:139
 #: assets/js/build/shared.js
 msgid "Already installed."
 msgstr ""
 
-#: src/Admin/Upsell/AddonMenuLocked.php:131
+#: src/Admin/Upsell/AddonMenuLocked.php:141
 msgid "This add-on is on your site but currently deactivated. Activate it to start using it."
 msgstr ""
 
-#: src/Admin/Upsell/AddonMenuLocked.php:139
+#: src/Admin/Upsell/AddonMenuLocked.php:149
 #: assets/js/build/shared.js
 msgid "Activate add-on"
 msgstr ""
 
+#. Translators: %s: add-on name.
 #. translators: %s: add-on name.
-#: src/Admin/Upsell/AddonMenuLocked.php:152
+#: src/Admin/Upsell/AddonMenuLocked.php:162
 #: assets/js/build/shared.js
 msgid "%s is a Pretty Links add-on."
 msgstr ""
 
-#: src/Admin/Upsell/AddonMenuLocked.php:161
+#: src/Admin/Upsell/AddonMenuLocked.php:171
 #: assets/js/build/shared.js
 msgid "View add-ons"
 msgstr ""
@@ -633,208 +659,217 @@ msgid "Custom Reports"
 msgstr ""
 
 #: src/Admin/Upsell/CustomReportsLocked.php:68
-#: src/Admin/Upsell/ProUpsell.php:226
+#: src/Admin/Upsell/ProUpsell.php:243
 msgid "Custom reports & conversions"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:59
+#: src/Admin/Upsell/ProUpsell.php:55
 #: assets/js/build/shared.js
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:134
-msgid "Keep the pretty URL in the address bar and show the destination inside it — hides the final affiliate URL from visitors."
+#: src/Admin/Upsell/ProUpsell.php:147
+msgid "Your domain stays in the address bar instead of the raw affiliate URL, so the link reads as yours. Destinations that refuse framing fall back to a normal redirect."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:138
-msgid "Wipes the Referer header so merchants can't see which page on your site the click came from — protects your traffic sources."
+#: src/Admin/Upsell/ProUpsell.php:151
+msgid "Merchants stop seeing which of your pages sent the click. Keep your best-converting placements to yourself instead of handing rivals a map of what works."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:142
-msgid "Browser-side redirect that evades server-log tracking and some referral-attribution schemes."
+#: src/Admin/Upsell/ProUpsell.php:155
+msgid "Hands the visitor off from the browser rather than the server, with an optional per-link delay so your page can do its work before they move on."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:146
-msgid "Fires one or more tracking pixels before redirecting — use for remarketing or conversion tags."
+#: src/Admin/Upsell/ProUpsell.php:159
+msgid "A link with no destination. Embed it in an email or a page and every load is recorded as a click, so opens and views land in the same reports as everything else."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:150
-msgid "Wraps the destination in a branded top bar, bottom bar, or floating pill with your logo and share buttons."
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:153
-msgid "Keywords & URL replacements"
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:154
-msgid "Auto-linkify words in your content and silently rewrite existing URLs through Pretty Links — hands-off affiliate linking."
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:157
-msgid "Rotation & split testing"
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:158
-msgid "Rotate visitors across multiple destinations and measure which one converts best."
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:162
-msgid "Send visitors to different destinations based on country, device, browser, or time of day."
+#: src/Admin/Upsell/ProUpsell.php:163
+msgid "Stay on screen after the click. Your logo, message and share buttons ride above the destination, turning a click you used to lose into another touch — with a normal redirect as the fallback where framing is refused."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:166
-msgid "Automatically disable a link on a set date or after N clicks — ideal for limited-time promos."
+msgid "Keywords & URL replacements"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:169
-msgid "Per-link QR codes"
+#: src/Admin/Upsell/ProUpsell.php:167
+msgid "Write naturally now, monetize later. Choose a phrase once and matching mentions become tracked links under your replacement rules — including posts you published years ago."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:170
-msgid "Generate PNG or SVG QR codes with optional logo overlay and custom colors."
+msgid "Rotation & split testing"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:173
-msgid "Pretty Bar templates"
+#: src/Admin/Upsell/ProUpsell.php:171
+msgid "Stop guessing which offer performs. Split traffic across destinations, watch the clicks land, and keep the one that actually earns."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:174
-msgid "Branded interstitial overlays with your logo, colors, and optional share buttons."
+#: src/Admin/Upsell/ProUpsell.php:175
+msgid "Send a visitor in Berlin somewhere different from one in Boston. Route by country, device, browser or time of day so nobody lands on an offer they cannot buy."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:177
-msgid "Keyword & URL replacement engine"
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:178
-msgid "Site-wide auto-linkification with throttling, case sensitivity, and disclosure controls."
+#: src/Admin/Upsell/ProUpsell.php:179
+msgid "Promotions that end themselves. Retire a link on a date or after a set number of clicks, so an expired deal never keeps taking traffic."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:182
-msgid "Scheduled health checks catch broken destinations before your visitors do."
+msgid "Per-link QR codes"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:185
-msgid "Auto-create links"
+#: src/Admin/Upsell/ProUpsell.php:183
+msgid "Take a link off the screen and into the world. Generate a PNG or SVG code with your logo and colors for packaging, slides or print, and track the scans like any other click."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:186
-msgid "Turn URL patterns in your content into pretty links automatically as you publish."
+msgid "Pretty Bar templates"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:187
+msgid "Brand the handoff once. Build the bar with your logo, colors and buttons, and every Pretty Bar link uses it, falling back to a normal redirect where the destination refuses framing."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:190
+msgid "Social share buttons"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:191
+msgid "Turn readers into distributors. Where a post has a pretty link, the share bar points at it, so every share people spread lands back in your click reports; posts without one share the plain permalink."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:194
-msgid "UTM Builder"
+msgid "Keyword & URL replacement engine"
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:195
-msgid "Build Google Analytics UTM parameters (source, medium, campaign, content, term, ID) right on the link form — no manual URL editing, no broken tags."
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:198
-msgid "User Links — front-end dashboard"
+msgid "Monetize an entire archive without opening a single old post. Set the rules once and links appear site-wide, with throttling and disclosure controls to keep it tasteful."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:199
-#: src/Licensing/PlanCatalog.php:121
-msgid "Drop a self-service pretty-link manager onto a front-end page so logged-in users create and manage their own shortlinks without ever touching wp-admin."
+msgid "A dead destination is a commission you never hear about. Scheduled checks find the broken ones and email you the list before your readers find them for you."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:202
+msgid "Auto-create links"
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:203
-msgid "Show a branded interstitial page (heading, media, CTAs, optional countdown) before forwarding visitors — perfect for affiliate disclosures, choose-your-own-destination, or video gates."
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:207
-msgid "Build branded /bio/{slug}/ landing pages — profile, stacked buttons, social-icon row — every click tracked through Pretty Links."
+msgid "New posts arrive already earning. Publish, and the pretty links are created for you instead of waiting for someone to remember."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:211
-msgid "Drop styled product cards/grids into any post, page, or Bio page via shortcode or Gutenberg block — every CTA tracked as a pretty link."
+msgid "UTM Builder"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:212
+#: src/Licensing/PlanCatalog.php:115
+msgid "Campaign data you can actually trust. Build source, medium, campaign, content, term and ID tags on the link form itself, so your reports never hinge on someone hand-editing a URL correctly."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:215
-msgid "Public REST API with bearer-token auth and outbound HMAC-signed webhooks — connect Pretty Links to Make, Zapier, n8n, custom dashboards, and CI pipelines."
+msgid "User Links — front-end dashboard"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:218
-msgid "Alternate short domain"
+#: src/Admin/Upsell/ProUpsell.php:216
+msgid "Let your team or members make their own short links on a front-end page. They get self-service, you keep one tracked, branded link namespace and never hand out wp-admin logins."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:219
-msgid "Serve pretty URLs on a second domain you own (e.g. short.yoursite.com) without moving WordPress."
+#: src/Admin/Upsell/ProUpsell.php:220
+msgid "Own the moment before the handoff. A branded page with your message, media and calls to action, plus an optional countdown, does your disclosure and your pitch on the way out."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:223
-msgid "Organize hundreds or thousands of links with first-class categories. Filter dashboard and reports at a glance."
+#: src/Admin/Upsell/ProUpsell.php:224
+#: src/Licensing/PlanCatalog.php:91
+msgid "One link for every social profile, and it is yours rather than a rented page. Profile, stacked buttons and social icons on your own domain, with every tap tracked."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:227
-msgid "Aggregate clicks across any set of links and track real conversion goals via a one-line pixel on your thank-you page."
+#: src/Admin/Upsell/ProUpsell.php:228
+msgid "Turn a mention into a storefront. Drop styled product cards or grids into any post, page or Bio page by shortcode or block, with every button tracked as a pretty link."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:230
-msgid "Zero platform fee on PrettyPay"
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:231
-msgid "Pretty Links Pro removes the 3% platform fee added to every PrettyPay checkout — you keep every dollar after Stripe's own fees."
-msgstr ""
-
-#: src/Admin/Upsell/ProUpsell.php:234
-msgid "Bookmarklet"
+#: src/Admin/Upsell/ProUpsell.php:232
+msgid "Wire Pretty Links into the rest of your stack. A token-authenticated REST API and signed webhooks connect it to Make, Zapier, n8n, your dashboards or your CI."
 msgstr ""
 
 #: src/Admin/Upsell/ProUpsell.php:235
-msgid "Drag a button to your bookmarks bar and create a pretty link for any page you're browsing with one click."
+msgid "Alternate short domain"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:238
+#: src/Admin/Upsell/ProUpsell.php:236
+msgid "Ship links on a short domain you already own, like go.yourbrand.com, without moving WordPress or running a second install."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:240
+msgid "Keep a thousand links findable. Group them by campaign, client or partner, then filter the dashboard and reports down to just that set."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:244
+msgid "Show conversions, not just traffic. Roll clicks up across any group of links and record real conversions with a one-line pixel on your thank-you page."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:247
+msgid "Zero platform fee on PrettyPay"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:248
+msgid "Keep the whole sale. Pro drops the 3% platform fee from every PrettyPay checkout, so past a few hundred dollars a month the upgrade has already paid for itself."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:251
+msgid "Bookmarklet"
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:252
+msgid "Make a link while you are reading the page. One click from your bookmarks bar, no tab switching, no copy and paste back into wp-admin."
+msgstr ""
+
+#: src/Admin/Upsell/ProUpsell.php:255
 msgid "Duplicate keywords"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:239
-msgid "Find keywords assigned to more than one link and resolve the conflicts so auto-replacements stay unambiguous."
+#: src/Admin/Upsell/ProUpsell.php:256
+msgid "Find the phrases claimed by more than one link and settle them, so automatic replacements always point where you meant."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:243
-msgid "Short-circuits redirects before the rest of WordPress loads via a must-use plugin — dramatically faster on high-traffic sites."
+#: src/Admin/Upsell/ProUpsell.php:260
+msgid "Serve redirects before WordPress even boots. On a busy site that is the difference between a redirect that feels instant and one that waits on a full page load."
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:354
+#: src/Admin/Upsell/ProUpsell.php:374
 #: assets/js/build/shared.js
 msgid "Upgrade to Pretty Links Pro"
 msgstr ""
 
 #. Translators: %s: plan label, e.g. "Marketer".
-#: src/Admin/Upsell/ProUpsell.php:426
+#: src/Admin/Upsell/ProUpsell.php:446
 msgid "Upgrade to %s to finish setup"
 msgstr ""
 
 #. Translators: %s: plan label.
-#: src/Admin/Upsell/ProUpsell.php:431
+#: src/Admin/Upsell/ProUpsell.php:451
 msgid "Upgrade to %s"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:503
-#: src/Onboarding/views/features.php:102
+#: src/Admin/Upsell/ProUpsell.php:518
+#: src/Onboarding/views/features.php:103
 msgid "Already active"
 msgstr ""
 
-#: src/Admin/Upsell/ProUpsell.php:503
+#: src/Admin/Upsell/ProUpsell.php:518
 msgid "Pro add-on"
 msgstr ""
 
 #. Translators: %s: feature name, e.g. "Link health monitoring".
-#: src/Admin/Upsell/ProUpsell.php:547
+#: src/Admin/Upsell/ProUpsell.php:562
 msgid "%s (Pro feature)"
 msgstr ""
 
-#: src/Compat/AddonCompatibilityGuard.php:340
+#: src/Compat/AddonCompatibilityGuard.php:354
 msgid "The following Pretty Links add-on was deactivated because it is not compatible with Pretty Links 4.0. It must be updated before it can be reactivated:"
 msgid_plural "The following Pretty Links add-ons were deactivated because they are not compatible with Pretty Links 4.0. They must be updated before they can be reactivated:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Compat/AddonCompatibilityGuard.php:357
+#: src/Compat/AddonCompatibilityGuard.php:371
 msgid "Dismiss this notice"
 msgstr ""
 
@@ -876,8 +911,8 @@ msgid "Nofollow"
 msgstr ""
 
 #: src/Editor/ClassicEditor.php:111
-#: src/Onboarding/views/features.php:73
-#: src/Onboarding/Wizard.php:864
+#: src/Onboarding/views/features.php:74
+#: src/Onboarding/Wizard.php:1154
 #: assets/js/build/editor.js
 msgid "Sponsored"
 msgstr ""
@@ -941,43 +976,59 @@ msgstr ""
 msgid "Pretty Links sets one of these short-lived cookies on every redirect to suppress duplicate click rows from rapid browser retries, prefetch, or accidental double-clicks."
 msgstr ""
 
-#. translators: %s: licensed edition name.
-#: src/Licensing/EditionMismatch.php:122
+#. Translators: %s: licensed edition name.
+#: src/Licensing/EditionMismatch.php:129
 msgid "Install %s now."
 msgstr ""
 
-#: src/Licensing/EditionMismatch.php:130
+#: src/Licensing/EditionMismatch.php:137
 msgid "Pretty Links edition mismatch."
 msgstr ""
 
-#. translators: %1$s: installed edition name, %2$s: licensed edition name
-#: src/Licensing/EditionMismatch.php:134
+#. Translators: %1$s: installed edition name, %2$s: licensed edition name.
+#: src/Licensing/EditionMismatch.php:140
 msgid "You have %1$s installed, but your license is for %2$s."
 msgstr ""
 
-#. translators: %1$s: installed edition name, %2$s: licensed edition name
-#: src/Licensing/EditionMismatch.php:173
+#. Translators: %1$s: installed edition name, %2$s: licensed edition name.
+#: src/Licensing/EditionMismatch.php:302
 msgid "Heads up: you have %1$s installed but your license is for %2$s. Install the correct edition to resume updates."
 msgstr ""
 
-#: src/Licensing/InstallLicensedEdition.php:37
+#: src/Licensing/InstallLicensedEdition.php:42
 msgid "No licensed edition download URL is available. Try refreshing your license."
 msgstr ""
 
-#: src/Licensing/InstallLicensedEdition.php:71
+#: src/Licensing/InstallLicensedEdition.php:54
+msgid "The licensed edition download URL is not from an allowed host."
+msgstr ""
+
+#: src/Licensing/InstallLicensedEdition.php:111
 msgid "The installer failed with no error message."
 msgstr ""
 
-#: src/Licensing/InstallLicensedEdition.php:81
+#: src/Licensing/InstallLicensedEdition.php:121
 msgid "Installed successfully, but the plugin file could not be located."
 msgstr ""
 
-#: src/Licensing/LicenseManager.php:197
-msgid "License key deactivated"
+#: src/Licensing/LicenseManager.php:341
+msgid "License activated, but its details could not be loaded from the licensing server. They will appear on the next successful check."
 msgstr ""
 
-#. translators: %s: error message returned by the mothership.
-#: src/Licensing/LicenseManager.php:277
+#: src/Licensing/LicenseManager.php:419
+msgid "Activation failed. Double-check the key and try again, or contact support if it keeps failing."
+msgstr ""
+
+#: src/Licensing/LicenseManager.php:588
+msgid "Your wp-config.php defines PRLI_MOTHERSHIP_DOMAIN, which Pretty Links no longer reads. Licensing is talking to the production server. Replace it with PRLI_MOTHERSHIP_API_BASE_URL (a full URL ending in /api/v1/)."
+msgstr ""
+
+#: src/Licensing/LicenseManager.php:976
+msgid "PRETTYLINK_LICENSE_KEY and PRLI_LICENSE_KEY are both set to different license keys. Pretty Links cannot apply either one — remove one of them."
+msgstr ""
+
+#. translators: %s: error message returned by the licenses server.
+#: src/Licensing/LicenseManager.php:1012
 msgid "Error with PRETTYLINK_LICENSE_KEY: %s"
 msgstr ""
 
@@ -1001,24 +1052,20 @@ msgstr ""
 msgid "Pro Developer"
 msgstr ""
 
-#: src/Licensing/PlanCatalog.php:91
-msgid "Publish a hosted mini-site of your best pretty links — one URL for every platform that only allows a single link."
-msgstr ""
-
 #: src/Licensing/PlanCatalog.php:97
-msgid "REST API keys, webhook dispatch, and programmatic link management for developers building on top of Pretty Links."
+msgid "Wire Pretty Links into the rest of your stack. Token-authenticated REST endpoints and signed webhooks connect it to Make, Zapier, n8n, your own dashboards or your CI."
 msgstr ""
 
 #: src/Licensing/PlanCatalog.php:103
-msgid "Insert rich product cards (image, price, buy button) that auto-update from your affiliate feeds and track clicks as pretty links."
+msgid "Turn a mention into a storefront. Build product cards with image, price and buy button, drop them into any post by shortcode or block, and track every click through as a pretty link."
 msgstr ""
 
 #: src/Licensing/PlanCatalog.php:109
-msgid "Show a branded interstitial (heading, media, CTAs, optional countdown) before forwarding visitors — affiliate disclosures, choose-your-own-destination, video gates."
+msgid "Own the moment before the handoff. A branded page carries your disclosure, your pitch and your calls to action, with an optional countdown, instead of dumping visitors straight onto someone else's site."
 msgstr ""
 
-#: src/Licensing/PlanCatalog.php:115
-msgid "Build Google Analytics UTM parameters (source, medium, campaign, content, term, ID) right on the link form — no manual URL editing."
+#: src/Licensing/PlanCatalog.php:121
+msgid "Let your team or members make their own short links on a front-end page. They get self-service, you keep one branded, tracked link namespace and hand out no wp-admin logins."
 msgstr ""
 
 #: src/Onboarding/views/category.php:20
@@ -1034,10 +1081,10 @@ msgid "You didn't create a link in the previous step — skip this and add categ
 msgstr ""
 
 #: src/Onboarding/views/category.php:49
-#: src/Onboarding/views/features.php:117
-#: src/Onboarding/views/finish.php:102
-#: src/Onboarding/views/license.php:58
-#: src/Onboarding/views/paylinks.php:68
+#: src/Onboarding/views/features.php:118
+#: src/Onboarding/views/finish.php:140
+#: src/Onboarding/views/license.php:57
+#: src/Onboarding/views/paylinks.php:67
 #: assets/js/build/options.js
 msgid "Continue"
 msgstr ""
@@ -1103,127 +1150,148 @@ msgstr ""
 msgid "Finish Setup"
 msgstr ""
 
-#: src/Onboarding/views/features.php:22
+#: src/Onboarding/views/features.php:23
 msgid "Choose your features"
 msgstr ""
 
-#: src/Onboarding/views/features.php:23
+#: src/Onboarding/views/features.php:24
 msgid "Pick the features you want on. You can change any of these later under Pretty Links → Settings."
 msgstr ""
 
-#: src/Onboarding/views/features.php:27
+#: src/Onboarding/views/features.php:28
 msgid "MonsterInsights installed and activated."
 msgstr ""
 
-#: src/Onboarding/views/features.php:31
+#: src/Onboarding/views/features.php:32
 msgid "We couldn't install MonsterInsights automatically. Install it manually from Plugins → Add New."
 msgstr ""
 
-#: src/Onboarding/views/features.php:51
-#: src/Onboarding/Wizard.php:858
+#: src/Onboarding/views/features.php:52
+#: src/Onboarding/Wizard.php:1148
 msgid "Link Tracking"
 msgstr ""
 
-#: src/Onboarding/views/features.php:52
+#: src/Onboarding/views/features.php:53
 msgid "Track click counts and unique visitors on every link."
 msgstr ""
 
-#: src/Onboarding/views/features.php:53
+#: src/Onboarding/views/features.php:54
 msgid "Every click on a Pretty Link is recorded with the visitor's IP, user agent, referrer, and timestamp so you can see exactly which campaigns are earning attention. Leave this on if you want the Reports page to show anything — without it, click counts stay at zero. Tracking runs on your own server, so data never leaves the site."
 msgstr ""
 
-#: src/Onboarding/views/features.php:62
-#: src/Onboarding/Wizard.php:861
+#: src/Onboarding/views/features.php:63
+#: src/Onboarding/Wizard.php:1151
 msgid "No Follow"
 msgstr ""
 
-#: src/Onboarding/views/features.php:63
+#: src/Onboarding/views/features.php:64
 msgid "Add rel=\"nofollow\" to every link by default."
 msgstr ""
 
-#: src/Onboarding/views/features.php:64
+#: src/Onboarding/views/features.php:65
 msgid "Tells search engines not to pass your site's ranking authority to the destination. Essential for affiliate, sponsored, or user-generated links so Google doesn't treat them as editorial endorsements — leaving affiliate links \"followed\" can trigger manual penalties. You can still override this per-link for trusted partners."
 msgstr ""
 
-#: src/Onboarding/views/features.php:74
+#: src/Onboarding/views/features.php:75
 msgid "Add rel=\"sponsored\" to every link by default."
 msgstr ""
 
-#: src/Onboarding/views/features.php:75
+#: src/Onboarding/views/features.php:76
 msgid "The modern, Google-blessed signal for paid or affiliate relationships (introduced 2019). It communicates intent more precisely than nofollow alone and is what Google actually prefers on monetised links. Most affiliate marketers enable both — nofollow protects ranking authority, sponsored declares the commercial relationship."
 msgstr ""
 
-#: src/Onboarding/views/features.php:96
+#: src/Onboarding/views/features.php:97
 msgid "MonsterInsights"
 msgstr ""
 
-#: src/Onboarding/views/features.php:97
+#: src/Onboarding/views/features.php:98
 msgid "Install the free Google Analytics plugin for deeper traffic insights alongside Pretty Links stats."
 msgstr ""
 
-#: src/Onboarding/views/features.php:98
+#: src/Onboarding/views/features.php:99
 msgid "Pretty Links counts your clicks, but MonsterInsights shows what visitors do next — which pages they read, how long they stay, whether they convert. Together you get both sides of the funnel: which links pull traffic in, and what that traffic actually does on your site."
 msgstr ""
 
-#: src/Onboarding/views/finish.php:23
-msgid "Welcome back!"
+#: src/Onboarding/views/finish.php:27
+msgid "Your license is active. Turn on the features you selected earlier and install the add-ons they need."
 msgstr ""
 
-#: src/Onboarding/views/finish.php:24
-msgid "We finished setting up the features you selected."
+#: src/Onboarding/views/finish.php:28
+#: src/Onboarding/Wizard.php:1056
+msgid "Working…"
 msgstr ""
 
 #: src/Onboarding/views/finish.php:29
-msgid "Some add-ons couldn't be installed automatically. You can install them manually from Pretty Links → Add-ons."
+msgid "Finish setup"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:51
+msgid "All set!"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:52
+msgid "We finished setting up the features and add-ons you selected."
 msgstr ""
 
 #. translators: %s: Pretty Links plan label (e.g. "Pro").
-#: src/Onboarding/views/finish.php:39
+#: src/Onboarding/views/finish.php:62
 msgid "Some of the features you selected need Pretty Links %s. Upgrade to finish your setup — we'll bring you right back here and turn them on for you."
 msgstr ""
 
-#: src/Onboarding/views/finish.php:50
+#: src/Onboarding/views/finish.php:73
 msgid "Here's what's ready"
 msgstr ""
 
-#: src/Onboarding/views/finish.php:55
+#: src/Onboarding/views/finish.php:78
 msgid "Your first Pretty Link"
 msgstr ""
 
-#: src/Onboarding/views/finish.php:59
+#: src/Onboarding/views/finish.php:82
 msgid "No link created yet — you can add one from Pretty Links → Add New."
 msgstr ""
 
-#: src/Onboarding/views/finish.php:64
-#: src/Onboarding/Wizard.php:469
+#: src/Onboarding/views/finish.php:87
+#: src/Onboarding/Wizard.php:626
 msgid "Category"
 msgstr ""
 
-#: src/Onboarding/views/finish.php:71
-#: src/Onboarding/Wizard.php:466
+#: src/Onboarding/views/finish.php:94
+#: src/Onboarding/Wizard.php:623
 #: assets/js/build/options.js
 msgid "License"
 msgstr ""
 
-#: src/Onboarding/views/finish.php:72
+#: src/Onboarding/views/finish.php:95
 msgid "Activated"
 msgstr ""
 
-#: src/Onboarding/views/finish.php:78
+#: src/Onboarding/views/finish.php:101
 msgid "Stripe"
 msgstr ""
 
 #. translators: %s: Stripe account name
-#: src/Onboarding/views/finish.php:84
+#: src/Onboarding/views/finish.php:107
 msgid "Connected (%s)"
 msgstr ""
 
-#: src/Onboarding/views/finish.php:88
+#: src/Onboarding/views/finish.php:111
 msgid "Connected"
 msgstr ""
 
-#: src/Onboarding/views/finish.php:96
+#: src/Onboarding/views/finish.php:119
 msgid "Features enabled"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:126
+msgid "Add-ons installed"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:133
+msgid "Add-ons not installed"
+msgstr ""
+
+#: src/Onboarding/views/finish.php:135
+msgid "Install from Pretty Links → Add-ons."
 msgstr ""
 
 #: src/Onboarding/views/first-link.php:17
@@ -1235,87 +1303,93 @@ msgid "Paste any URL and we'll create a short, branded link on your domain. You 
 msgstr ""
 
 #. translators: %s: pretty link URL
-#: src/Onboarding/views/first-link.php:26
+#: src/Onboarding/views/first-link.php:33
 msgid "Your first link is ready: %s"
 msgstr ""
 
-#: src/Onboarding/views/first-link.php:39
+#: src/Onboarding/views/first-link.php:46
 msgid "Name (optional)"
 msgstr ""
 
-#: src/Onboarding/views/first-link.php:46
+#: src/Onboarding/views/first-link.php:53
+msgid "Save Link"
+msgstr ""
+
+#: src/Onboarding/views/first-link.php:53
 msgid "Create Link"
 msgstr ""
 
-#: src/Onboarding/views/first-link.php:49
-#: src/Onboarding/views/license.php:62
-#: src/Onboarding/views/paylinks.php:68
+#: src/Onboarding/views/first-link.php:56
+#: src/Onboarding/views/license.php:61
+#: src/Onboarding/views/paylinks.php:67
 #: src/Onboarding/views/welcome.php:29
+#: src/Onboarding/Wizard.php:1062
 msgid "Skip for now"
 msgstr ""
 
-#: src/Onboarding/views/license.php:19
+#: src/Onboarding/views/license.php:18
 #: assets/js/build/options.js
 msgid "Activate your license"
 msgstr ""
 
-#: src/Onboarding/views/license.php:23
+#: src/Onboarding/views/license.php:22
 #: assets/js/build/options.js
 msgid "License activated."
 msgstr ""
 
 #. translators: %s: product name
-#: src/Onboarding/views/license.php:34
+#: src/Onboarding/views/license.php:33
 msgid "Plan: %s"
 msgstr ""
 
-#: src/Onboarding/views/license.php:42
+#: src/Onboarding/views/license.php:41
 msgid "Enter your Pretty Links Pro license key to unlock automatic updates and Pro features. This step is optional — you can activate a key later under Pretty Links → Settings."
 msgstr ""
 
-#: src/Onboarding/views/license.php:46
+#: src/Onboarding/views/license.php:45
 msgid "Activation failed. Double-check the key and try again."
 msgstr ""
 
-#: src/Onboarding/views/license.php:50
+#: src/Onboarding/views/license.php:49
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:30
 #: assets/js/build/options.js
 msgid "License Key"
 msgstr ""
 
-#: src/Onboarding/views/license.php:58
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:765
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:788
+#: src/Onboarding/views/license.php:57
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:664
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:703
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:80
 #: assets/js/build/addons.js
 msgid "Activate"
 msgstr ""
 
-#: src/Onboarding/views/paylinks.php:21
+#: src/Onboarding/views/paylinks.php:20
 msgid "Set up PrettyPay™ Links"
 msgstr ""
 
-#: src/Onboarding/views/paylinks.php:22
+#: src/Onboarding/views/paylinks.php:21
 msgid "PrettyPay™ Links turn any Pretty Link into a Stripe checkout — perfect for selling digital goods, donations, or one-off charges without a full store."
 msgstr ""
 
-#: src/Onboarding/views/paylinks.php:27
+#: src/Onboarding/views/paylinks.php:26
 msgid "Start accepting payments right away. A small platform fee applies per sale; Stripe's own processing fees also apply."
 msgstr ""
 
 #. translators: %s: Stripe account name
-#: src/Onboarding/views/paylinks.php:44
+#: src/Onboarding/views/paylinks.php:43
 msgid "Stripe connected (%s). You can create PrettyPay™ Links right after setup."
 msgstr ""
 
-#: src/Onboarding/views/paylinks.php:48
+#: src/Onboarding/views/paylinks.php:47
 msgid "Stripe connected. You can create PrettyPay™ Links right after setup."
 msgstr ""
 
-#: src/Onboarding/views/paylinks.php:56
+#: src/Onboarding/views/paylinks.php:55
 msgid "Connecting Stripe uses a secure Caseproof handoff — you'll enroll your account, then land on Stripe to finish the connection."
 msgstr ""
 
-#: src/Onboarding/views/paylinks.php:64
+#: src/Onboarding/views/paylinks.php:63
 #: assets/js/build/options.js
 #: assets/js/build/shared.js
 msgid "Connect Stripe"
@@ -1338,41 +1412,82 @@ msgstr ""
 msgid "Pretty Links 4.0 is here — rebuilt admin, faster redirects, and new click analytics. %1$sSee what's new%2$s."
 msgstr ""
 
-#: src/Onboarding/Wizard.php:467
+#: src/Onboarding/Wizard.php:624
 msgid "Features"
 msgstr ""
 
-#: src/Onboarding/Wizard.php:470
+#: src/Onboarding/Wizard.php:627
 #: assets/js/build/options.js
 #: assets/js/build/shared.js
 msgid "PrettyPay™"
 msgstr ""
 
-#: src/Onboarding/Wizard.php:471
+#: src/Onboarding/Wizard.php:628
 msgid "Finish"
 msgstr ""
 
-#: src/Onboarding/Wizard.php:472
+#: src/Onboarding/Wizard.php:629
 msgid "Complete"
 msgstr ""
 
-#: src/Onboarding/Wizard.php:524
-#: src/Onboarding/Wizard.php:771
+#: src/Onboarding/Wizard.php:665
+msgid "(completed)"
+msgstr ""
+
+#: src/Onboarding/Wizard.php:689
+#: src/Onboarding/Wizard.php:1045
 msgid "Back"
 msgstr ""
 
-#: src/Onboarding/Wizard.php:824
+#: src/Onboarding/Wizard.php:1114
 msgid "Recommended"
 msgstr ""
 
-#: src/Onboarding/Wizard.php:830
+#: src/Onboarding/Wizard.php:1120
 #: assets/js/build/shared.js
 msgid "More information"
 msgstr ""
 
-#. translators: %1$s opens link tag, %2$s closes link tag
-#: src/Onboarding/Wizard.php:1230
+#. Translators: %1$s opens link tag, %2$s closes link tag.
+#: src/Onboarding/Wizard.php:1588
 msgid "Welcome back! It looks like you didn't finish the Pretty Links setup. %1$sPick up where you left off%2$s."
+msgstr ""
+
+#: src/Rest/Controllers/AddonsController.php:204
+msgid "No add-on was specified to activate."
+msgstr ""
+
+#: src/Rest/Controllers/AddonsController.php:210
+msgid "You do not have permission to activate this add-on."
+msgstr ""
+
+#: src/Rest/Controllers/AddonsController.php:245
+msgid "No add-on was specified to deactivate."
+msgstr ""
+
+#: src/Rest/Controllers/AddonsController.php:251
+msgid "You do not have permission to deactivate this add-on."
+msgstr ""
+
+#: src/Rest/Controllers/AddonsController.php:286
+msgid "You do not have permission to install plugins on this site."
+msgstr ""
+
+#: src/Rest/Controllers/AddonsController.php:295
+msgid "An active Pro license is required to install add-ons."
+msgstr ""
+
+#: src/Rest/Controllers/AddonsController.php:305
+msgid "The add-on could not be installed."
+msgstr ""
+
+#: src/Rest/Controllers/LicenseController.php:89
+msgid "Could not install the licensed edition. Please try again."
+msgstr ""
+
+#: src/Rest/Controllers/LicenseController.php:131
+#: assets/js/build/options.js
+msgid "Enter your license key to activate."
 msgstr ""
 
 #: src/Rest/Controllers/StripeController.php:206
@@ -1469,7 +1584,7 @@ msgid "Afghanistan"
 msgstr ""
 
 #: src/Stripe/data/countries.php:11
-msgid "&#197;land Islands"
+msgid "Åland Islands"
 msgstr ""
 
 #: src/Stripe/data/countries.php:12
@@ -1693,7 +1808,7 @@ msgid "Cuba"
 msgstr ""
 
 #: src/Stripe/data/countries.php:67
-msgid "Cura&Ccedil;ao"
+msgid "Curaçao"
 msgstr ""
 
 #: src/Stripe/data/countries.php:68
@@ -2189,7 +2304,7 @@ msgid "Rwanda"
 msgstr ""
 
 #: src/Stripe/data/countries.php:191
-msgid "Saint Barth&eacute;lemy"
+msgid "Saint Barthélemy"
 msgstr ""
 
 #: src/Stripe/data/countries.php:192
@@ -2225,7 +2340,7 @@ msgid "San Marino"
 msgstr ""
 
 #: src/Stripe/data/countries.php:200
-msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe"
+msgid "São Tomé and Príncipe"
 msgstr ""
 
 #: src/Stripe/data/countries.php:201
@@ -2444,35 +2559,35 @@ msgstr ""
 msgid "Zimbabwe"
 msgstr ""
 
-#: src/Stripe/InvoiceRenderer.php:175
+#: src/Stripe/InvoiceRenderer.php:171
 msgid "Thanks — your payment is complete."
 msgstr ""
 
-#: src/Stripe/InvoiceRenderer.php:176
+#: src/Stripe/InvoiceRenderer.php:172
 msgid "Your order is being processed."
 msgstr ""
 
-#: src/Stripe/InvoiceRenderer.php:182
+#: src/Stripe/InvoiceRenderer.php:178
 msgid "Order ID:"
 msgstr ""
 
-#: src/Stripe/InvoiceRenderer.php:199
+#: src/Stripe/InvoiceRenderer.php:195
 msgid "Subtotal"
 msgstr ""
 
-#: src/Stripe/InvoiceRenderer.php:201
+#: src/Stripe/InvoiceRenderer.php:197
 msgid "Discount"
 msgstr ""
 
-#: src/Stripe/InvoiceRenderer.php:204
+#: src/Stripe/InvoiceRenderer.php:200
 msgid "Tax"
 msgstr ""
 
-#: src/Stripe/InvoiceRenderer.php:206
+#: src/Stripe/InvoiceRenderer.php:202
 msgid "Total"
 msgstr ""
 
-#: src/Stripe/InvoiceRenderer.php:219
+#: src/Stripe/InvoiceRenderer.php:215
 msgid "Manage your subscription"
 msgstr ""
 
@@ -2546,247 +2661,287 @@ msgstr ""
 msgid "ago"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Credentials.php:123
-msgid "Cannot store credentials in database; found in environment variables or constants."
-msgstr ""
-
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:391
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:277
 msgid "Security check failed."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:400
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:286
 msgid "Bad request."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:412
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:298
 msgid "Add-on not found."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:437
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:509
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:565
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:308
+msgid "This add-on requires a license upgrade."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:333
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:405
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:461
 msgid "Invalid add-on type."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:446
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:342
 msgid "Sorry, you don't have the necessary permission to perform this action."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:469
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:365
 msgid "Plugin activated."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:470
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:366
 msgid "Theme activated."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:476
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:372
 msgid "The add-on could not be activated."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:499
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:395
 msgid "Themes cannot be deactivated. Activate a new theme instead."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:518
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:414
 msgid "Sorry, you don't have permission to deactivate addons."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:532
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:428
 msgid "The add-on could not be deactivated."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:540
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:436
 #: vendor-prefixed/caseproof/growth-tools/src/Helper/AddonHelper.php:72
 msgid "Plugin deactivated."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:541
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:437
 #: assets/js/build/addons.js
 msgid "Add-on deactivated."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:574
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:589
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:470
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:485
 msgid "Sorry, you don't have permission to install addons."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:615
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:511
 msgid "Invalid add-on URL."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:626
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:522
 msgid "The add-on was not installed successfully."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:652
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:548
 msgid "Plugin installed and activated."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:653
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:549
 msgid "Theme installed and activated."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:661
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:557
 msgid "Plugin installed."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:662
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:558
 msgid "Theme installed."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:677
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:573
 msgid "Please enter your license key to access add-ons."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:698
-msgid "There was an issue connecting with the API."
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:620
+msgid "Upgrade Required"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:747
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:786
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:622
+msgid "Upgrade"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:643
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:701
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:80
 #: assets/js/build/addons.js
 #: assets/js/build/options.js
 msgid "Active"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:751
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:789
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:645
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:704
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:80
 #: assets/js/build/addons.js
 msgid "Deactivate"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:754
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:790
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:649
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:705
 msgid "Switch Themes"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:759
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:654
 #: vendor-prefixed/caseproof/growth-tools/src/App.php:80
 #: assets/js/build/addons.js
 msgid "Not Installed"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:760
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:655
 #: assets/js/build/addons.js
 msgid "Install Add-on"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:764
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:787
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:658
+msgid "Install Theme"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:663
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:702
 #: assets/js/build/addons.js
 msgid "Inactive"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:791
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:706
 msgid "Processing..."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:792
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:707
 msgid "Could not install theme. Please download and install manually."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:796
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/AddonsManager.php:711
 msgid "Could not install plugin. Please download and install manually."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:347
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:237
 msgid "Plugin update is prevented in development environment to avoid accidental overwrites."
 msgstr ""
 
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:287
+msgid "Visit your account dashboard"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:292
+msgid "Please activate your license to download this update."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:296
+msgid "Your license has expired. Please renew your license to download this update."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:302
+msgid "Your license does not allow downloading this update. Please check your license status."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:392
+msgid "Your license key was overwritten by an environment variable or constant. Please activate your license again."
+msgstr ""
+
 #. Translators: %1$s license key, %2$s product name.
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:424
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:414
 msgid "The license key %1$s has expired. Please renew your license to continue using %2$s."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:432
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:422
 msgid "This issue could have been caused by a change in the license's status or the site may have been disabled from your account dashboard."
 msgstr ""
 
 #. Translators: %s product name.
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:457
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:447
 msgid "During a recent %s license status check an error was encountered."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:464
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:454
 msgid "Visit Account Dashboard"
 msgstr ""
 
 #. Translators: %1$s site name, %2$s product name.
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:490
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:501
 msgid "[WARNING] Error with your %1$s license for %2$s"
 msgstr ""
 
 #. Translators: %1$s product name, %2$s site name, %3$s site URL.
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:498
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:509
 msgid "A recent %1$s license status check on %2$s (%3$s) has encountered an error."
 msgstr ""
 
 #. Translators: %s account dashboard URL.
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:508
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:519
 msgid "Visit Account Dashboard: %s"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:604
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:631
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:658
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:647
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:674
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:701
 msgid "Insufficient permissions"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:610
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:637
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:664
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:653
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:680
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:707
 msgid "Invalid nonce"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:614
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:641
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:657
 msgid "License key and domain are required"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:668
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:687
+msgid "License key and domain are required for deactivation"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:711
 msgid "License status verified successfully"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:671
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:714
 msgid "License could not be verified"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:682
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:726
 msgid "Operation completed successfully"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:683
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:727
 msgid "An error occurred during the operation"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:788
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:869
 msgid "License activated successfully"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:820
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:885
+msgid "Failed to deactivate the license"
+msgstr ""
+
+#. Translators: %1$s opening anchor tag, %2$s closing anchor tag.
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:914
+msgid "The license has been removed from this site, but we could not confirm the activation was released on our licensing server. If this site still appears under your license, you can remove it from your %1$saccount dashboard%2$s."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:926
 msgid "License deactivated successfully"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:998
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1132
 msgid "Insufficient permissions to install plugin"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1002
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1136
 msgid "Invalid download URL"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1017
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1160
 msgid "Plugin installation failed"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1020
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1163
 msgid "Plugin installed successfully"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1060
+#: vendor-prefixed/caseproof/ground-level-mothership/Manager/LicenseManager.php:1203
 msgid "License activated and plugin updated successfully"
 msgstr ""
 
@@ -2794,44 +2949,99 @@ msgstr ""
 msgid "Check License Status"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/views/license-form.php:19
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-activation-form.php:18
+msgid "This license key is defined in an environment variable or constant and cannot be changed here."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-activation-form.php:24
+msgid "License Key:"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-activation-form.php:47
 #: assets/js/build/options.js
 msgid "Activate License"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/views/license-form.php:19
-#: assets/js/build/options.js
-msgid "Deactivate License"
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:24
+msgid "Active License Key Information"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/views/license-form.php:31
-msgid "License Key: "
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:41
+msgid "This license key is defined in an environment variable or constant and cannot be changed from here."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:15
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:60
+msgid "Status"
+msgstr ""
+
+#. Translators: %s: site domain.
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:67
+msgid "Active on %s"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:79
+msgid "Product"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:93
+msgid "Production Activations"
+msgstr ""
+
+#. Translators: 1: used activations, 2: allowed activations.
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:99
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:120
+msgid "<strong>%1$d of %2$d</strong> sites activated"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:114
+msgid "Test Activations"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:135
+msgid "Expires"
+msgstr ""
+
+#. Translators: %s: site domain.
+#: vendor-prefixed/caseproof/ground-level-mothership/views/license-deactivation-form.php:175
+msgid "Deactivate License Key on %s"
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:17
 msgid "Available Add-ons"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:19
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:21
 #: assets/js/build/addons.js
 msgid "Refresh Add-ons"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:23
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:25
 #: assets/js/build/addons.js
 msgid "Search add-ons"
 msgstr ""
 
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:38
+msgid "New version available."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:40
+msgid "Update now"
+msgstr ""
+
 #. Translators: %s: add-on status label.
-#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:62
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:66
 msgid "Status: %s"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:89
-msgid "There were no Add-ons found for your License Key."
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:104
+msgid "No Add-ons found for your License Key."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-resque/Cleaner.php:182
+#: vendor-prefixed/caseproof/ground-level-mothership/views/products.php:107
+msgid "If you were expecting add-ons here, use the \"Refresh Add-ons\" button above to try again."
+msgstr ""
+
+#: vendor-prefixed/caseproof/ground-level-resque/Cleaner.php:189
 msgid "Resque Jobs Cleanup"
 msgstr ""
 
@@ -2849,11 +3059,11 @@ msgstr ""
 msgid "%s is not a valid job object."
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-resque/Worker.php:178
+#: vendor-prefixed/caseproof/ground-level-resque/Worker.php:185
 msgid "Resque Jobs Worker"
 msgstr ""
 
-#: vendor-prefixed/caseproof/ground-level-resque/Worker.php:242
+#: vendor-prefixed/caseproof/ground-level-resque/Worker.php:324
 msgid "No class was specified in the job config"
 msgstr ""
 
@@ -2972,15 +3182,15 @@ msgid "Copy pretty URL"
 msgstr ""
 
 #: assets/js/build/add-new.js
+msgid "Visit link"
+msgstr ""
+
+#: assets/js/build/add-new.js
 msgid "Continue editing"
 msgstr ""
 
 #: assets/js/build/add-new.js
-msgid "Add another"
-msgstr ""
-
-#: assets/js/build/add-new.js
-msgid "Visit link"
+msgid "Create new"
 msgstr ""
 
 #. translators: %s: link slug or name.
@@ -3001,15 +3211,15 @@ msgid "Fill in the target, give it a memorable name, and click Create."
 msgstr ""
 
 #: assets/js/build/add-new.js
+msgid "Create link"
+msgstr ""
+
+#: assets/js/build/add-new.js
 msgid "Save changes"
 msgstr ""
 
 #: assets/js/build/add-new.js
 msgid "Create PrettyPay™ Link"
-msgstr ""
-
-#: assets/js/build/add-new.js
-msgid "Create link"
 msgstr ""
 
 #: assets/js/build/addons.js
@@ -3492,6 +3702,22 @@ msgid "Adds rel=\"sponsored\" to every pretty link, declaring to search engines 
 msgstr ""
 
 #: assets/js/build/options.js
+msgid "Admin menu"
+msgstr ""
+
+#: assets/js/build/options.js
+msgid "Where the Pretty Links menu takes you."
+msgstr ""
+
+#: assets/js/build/options.js
+msgid "Make the links list the first menu item"
+msgstr ""
+
+#: assets/js/build/options.js
+msgid "Clicking \"Pretty Links\" in the sidebar opens your links list instead of the Dashboard. The Dashboard menu item is hidden while this is on — the screen itself stays available at admin.php?page=pretty-link-dashboard."
+msgstr ""
+
+#: assets/js/build/options.js
 msgid "Normal"
 msgstr ""
 
@@ -3617,6 +3843,10 @@ msgid "2 years"
 msgstr ""
 
 #: assets/js/build/options.js
+msgid "Enable auto-delete?"
+msgstr ""
+
+#: assets/js/build/options.js
 msgid "Warning: enabling auto-delete will permanently remove click records older than the selected window. This cannot be undone. Continue?"
 msgstr ""
 
@@ -3649,7 +3879,7 @@ msgid "Filter bots from click counts"
 msgstr ""
 
 #: assets/js/build/options.js
-msgid "When on, Pretty Link blocks 70+ known crawlers and AI scrapers (Googlebot, GPTBot, ClaudeBot, etc.) plus matches custom patterns + CDN bot signals. When off, every hit counts as a real click — useful for security monitoring or comparing pre/post-filter numbers."
+msgid "When on, Pretty Link blocks 70+ known crawlers and AI scrapers (Googlebot, GPTBot, ClaudeBot, etc.) plus matches custom patterns + CDN bot signals. With Extended tracking it also skips clients whose browser and operating system can't be identified. When off, those checks stop (Extended tracking still drops clients Matomo itself identifies as bots) — useful for security monitoring or comparing pre/post-filter numbers."
 msgstr ""
 
 #: assets/js/build/options.js
@@ -3705,7 +3935,7 @@ msgid "Something went wrong. Please try again."
 msgstr ""
 
 #: assets/js/build/options.js
-msgid "Enter your license key to activate."
+msgid "License deactivated on this site."
 msgstr ""
 
 #: assets/js/build/options.js
@@ -3721,11 +3951,27 @@ msgid "Edge updates disabled."
 msgstr ""
 
 #: assets/js/build/options.js
+msgid "Expired"
+msgstr ""
+
+#: assets/js/build/options.js
+msgid "Disabled"
+msgstr ""
+
+#: assets/js/build/options.js
+msgid "Suspended"
+msgstr ""
+
+#: assets/js/build/options.js
 msgid "License status"
 msgstr ""
 
 #: assets/js/build/options.js
 msgid "Status:"
+msgstr ""
+
+#: assets/js/build/options.js
+msgid "Activations:"
 msgstr ""
 
 #: assets/js/build/options.js
@@ -3738,6 +3984,10 @@ msgstr ""
 
 #: assets/js/build/options.js
 msgid "Key:"
+msgstr ""
+
+#: assets/js/build/options.js
+msgid "Deactivate License"
 msgstr ""
 
 #: assets/js/build/options.js
@@ -3769,11 +4019,11 @@ msgid "Unable to start Stripe Connect."
 msgstr ""
 
 #: assets/js/build/options.js
-msgid "Disconnect this site from Stripe?"
+msgid "Disconnect failed."
 msgstr ""
 
 #: assets/js/build/options.js
-msgid "Disconnect failed."
+msgid "Disconnect this site from Stripe?"
 msgstr ""
 
 #: assets/js/build/options.js
@@ -3798,10 +4048,6 @@ msgstr ""
 
 #: assets/js/build/options.js
 msgid "Enabled"
-msgstr ""
-
-#: assets/js/build/options.js
-msgid "Disabled"
 msgstr ""
 
 #: assets/js/build/options.js
@@ -3858,6 +4104,14 @@ msgid "The currency pre-selected when creating a new Stripe product or PrettyPay
 msgstr ""
 
 #: assets/js/build/options.js
+msgid "Disconnect Stripe?"
+msgstr ""
+
+#: assets/js/build/options.js
+msgid "Disconnect"
+msgstr ""
+
+#: assets/js/build/options.js
 msgid "Connected to Stripe"
 msgstr ""
 
@@ -3875,10 +4129,6 @@ msgstr ""
 
 #: assets/js/build/options.js
 msgid "Refresh Stripe Credentials"
-msgstr ""
-
-#: assets/js/build/options.js
-msgid "Disconnect"
 msgstr ""
 
 #: assets/js/build/options.js
@@ -4159,6 +4409,14 @@ msgid "Select row"
 msgstr ""
 
 #: assets/js/build/shared.js
+msgid "Hide details"
+msgstr ""
+
+#: assets/js/build/shared.js
+msgid "Show details"
+msgstr ""
+
+#: assets/js/build/shared.js
 msgid "Last 7 days"
 msgstr ""
 
@@ -4200,11 +4458,24 @@ msgid "Exported %1$s of %2$s rows…"
 msgstr ""
 
 #: assets/js/build/shared.js
+msgid "Clear filters"
+msgstr ""
+
+#. translators: %s: total result count for the current filters.
+#: assets/js/build/shared.js
+msgid "%s Results"
+msgstr ""
+
+#: assets/js/build/shared.js
 msgid "Link Attributes"
 msgstr ""
 
 #: assets/js/build/shared.js
 msgid "Unable to generate slug."
+msgstr ""
+
+#: assets/js/build/shared.js
+msgid "This target URL points back at this Pretty Link, which would redirect in a loop. Change the target URL or the slug."
 msgstr ""
 
 #: assets/js/build/shared.js
@@ -4252,14 +4523,6 @@ msgid "Destination"
 msgstr ""
 
 #: assets/js/build/shared.js
-msgid "Redirect type"
-msgstr ""
-
-#: assets/js/build/shared.js
-msgid "The HTTP status used when redirecting."
-msgstr ""
-
-#: assets/js/build/shared.js
 msgid "Where the pretty link redirects visitors."
 msgstr ""
 
@@ -4269,6 +4532,14 @@ msgstr ""
 
 #: assets/js/build/shared.js
 msgid "Generate"
+msgstr ""
+
+#: assets/js/build/shared.js
+msgid "Redirect type"
+msgstr ""
+
+#: assets/js/build/shared.js
+msgid "The HTTP status used when redirecting."
 msgstr ""
 
 #: assets/js/build/shared.js
@@ -4608,17 +4879,8 @@ msgstr ""
 msgid "Search name, slug, or URL…"
 msgstr ""
 
-#. translators: %s: total result count for the current filters.
-#: assets/js/build/shared.js
-msgid "%s Results"
-msgstr ""
-
 #: assets/js/build/shared.js
 msgid "Status filter"
-msgstr ""
-
-#: assets/js/build/shared.js
-msgid "Clear filters"
 msgstr ""
 
 #: assets/js/build/shared.js
@@ -4728,21 +4990,8 @@ msgstr ""
 msgid "Stripe is not connected. Connect Stripe in Options → Payments before PrettyPay™ Links can accept payments."
 msgstr ""
 
-#. translators: the "3%" is a literal percentage, not a placeholder.
-#: assets/js/build/shared.js
-msgid "A 3% platform fee applies to every checkout"
-msgstr ""
-
-#: assets/js/build/shared.js
-msgid "Pretty Links Pro removes the platform fee — you keep every dollar after Stripe's own processing fees."
-msgstr ""
-
 #: assets/js/build/shared.js
 msgid "Basics"
-msgstr ""
-
-#: assets/js/build/shared.js
-msgid "Internal label that shows in your dashboard."
 msgstr ""
 
 #: assets/js/build/shared.js

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PrettyLinks\Clicks;
 
 use PrettyLinks\Options\Store as OptionsStore;
+use PrettyLinks\Repositories\Links;
 use RuntimeException;
 use wpdb;
 
@@ -121,8 +122,7 @@ class Cleaner
         // nothing to age out — and those metas are the source of truth.
         // Recomputing them from the (unmaintained) prli_links columns here
         // would wipe every count to zero, so skip the trim entirely.
-        $store = new OptionsStore();
-        if ((string) $store->get('extended_tracking', 'normal') === 'count') {
+        if (Links::isCountMode()) {
             return $this->done(0);
         }
 

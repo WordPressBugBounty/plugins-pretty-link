@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @var array<string, mixed>           $opts
  * @var string                         $miInstall
  * @var bool                           $miActive
+ * @var bool                           $canSkip
  */
 
 use PrettyLinks\Onboarding\Wizard;
@@ -114,5 +115,5 @@ do_action('prli_onboarding_features_status', $last);
 </ul>
 
 <?php
-$this->renderFooter(__('Continue', 'pretty-link'), true);
+$this->renderFooter(__('Continue', 'pretty-link'), true, $canSkip);
 $this->closeForm();

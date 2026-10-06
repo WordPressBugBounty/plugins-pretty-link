@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Admin;
 
+use PrettyLinks\Database\Migrator;
+
 /**
  * Surfaces database-migration failures that used to be swallowed silently.
  *
@@ -15,10 +17,9 @@ namespace PrettyLinks\Admin;
  *  - a retry handler (the "trigger it again" mechanism) that re-arms the failed
  *    steps so the next request re-runs them.
  *
- * Both migrators persist their state under a plain option — Lite in
- * `prli_migration_state`, Pro in `prlipro_migration_state`. This class reads
- * those by their literal keys so Lite carries no dependency on the Pro package
- * (same approach the deactivator uses for the Pro cron-hook names).
+ * Each migrator persists its state under a plain option. Lite's is built in;
+ * other plugins add theirs through the `prli_migration_states` filter (Pro
+ * registers `prlipro_migration_state` there), so Lite knows nothing about them.
  */
 class MigrationHealth
 {
@@ -28,18 +29,45 @@ class MigrationHealth
     public const RETRY_ACTION = 'prli_retry_migration';
 
     /**
-     * Migration-state option keys, Lite then Pro.
+     * Every migrator to report on, keyed by tier.
      *
-     * @var list<string>
+     * @return array<string, array{option: string, backoff: string, label: string}>
      */
-    private const STATE_OPTIONS = ['prli_migration_state', 'prlipro_migration_state'];
+    private static function migrators(): array
+    {
+        $migrators = [
+            'lite' => [
+                'option'  => Migrator::OPTION_STATE,
+                'backoff' => Migrator::RETRY_BACKOFF_KEY,
+                'label'   => __('Core (Lite)', 'pretty-link'),
+            ],
+        ];
 
-    /**
-     * Retry-backoff transients cleared on a manual retry so it fires at once.
-     *
-     * @var list<string>
-     */
-    private const BACKOFF_TRANSIENTS = ['prli_migration_retry_after', 'prlipro_migration_retry_after'];
+        /**
+         * Filter: prli_migration_states
+         *
+         * Register another plugin's migrator with the migration notice, Site
+         * Health panel and Retry handler.
+         *
+         * @param array<string, array{option: string, backoff: string, label: string}> $migrators
+         *     Keyed by a short tier id. `option` holds the migrator's state array
+         *     (`version`, `pending`, `steps`, `failures`), `backoff` is the
+         *     retry-backoff transient a manual retry clears, `label` names it.
+         */
+        $filtered = apply_filters('prli_migration_states', $migrators);
+        $out      = [];
+        foreach (is_array($filtered) ? $filtered : [] as $tier => $migrator) {
+            if (!is_array($migrator) || empty($migrator['option'])) {
+                continue;
+            }
+            $out[(string) $tier] = [
+                'option'  => (string) $migrator['option'],
+                'backoff' => (string) ($migrator['backoff'] ?? ''),
+                'label'   => (string) ($migrator['label'] ?? $tier),
+            ];
+        }
+        return $out;
+    }
 
     /**
      * Collect the current {step => error} failures across both migrators.
@@ -49,14 +77,13 @@ class MigrationHealth
     public static function failures(): array
     {
         $out = [];
-        foreach (self::STATE_OPTIONS as $option) {
-            $state = get_option($option);
+        foreach (self::migrators() as $tier => $migrator) {
+            $state = get_option($migrator['option']);
             if (!is_array($state) || empty($state['failures']) || !is_array($state['failures'])) {
                 continue;
             }
-            // Key by "tier:step" so a step name shared by both migrators (e.g.
+            // Key by "tier:step" so a step name shared by two migrators (e.g.
             // clear_legacy_cron_hooks) can't overwrite the other's failure.
-            $tier = $option === 'prlipro_migration_state' ? 'pro' : 'lite';
             foreach ($state['failures'] as $step => $error) {
                 $out[$tier . ':' . (string) $step] = (string) $error;
             }
@@ -127,15 +154,12 @@ class MigrationHealth
      */
     public static function siteHealthInfo(array $info): array
     {
-        $labels = [
-            'prli_migration_state'    => __('Core (Lite)', 'pretty-link'),
-            'prlipro_migration_state' => __('Pro', 'pretty-link'),
-        ];
         $fields = [];
 
-        foreach (self::STATE_OPTIONS as $option) {
-            $state = get_option($option);
-            $tier  = $labels[$option];
+        foreach (self::migrators() as $migrator) {
+            $option = $migrator['option'];
+            $state  = get_option($option);
+            $tier   = $migrator['label'];
             if (!is_array($state)) {
                 $fields[$option . '_version'] = [
                     'label' => sprintf('%s — %s', $tier, __('migration', 'pretty-link')),
@@ -210,12 +234,16 @@ class MigrationHealth
      */
     public static function rearmFailedSteps(): void
     {
-        foreach (self::BACKOFF_TRANSIENTS as $transient) {
-            delete_transient($transient);
+        $migrators = self::migrators();
+        foreach ($migrators as $migrator) {
+            if ($migrator['backoff'] !== '') {
+                delete_transient($migrator['backoff']);
+            }
         }
 
-        foreach (self::STATE_OPTIONS as $option) {
-            $state = get_option($option);
+        foreach ($migrators as $migrator) {
+            $option = $migrator['option'];
+            $state  = get_option($option);
             if (!is_array($state)) {
                 continue;
             }

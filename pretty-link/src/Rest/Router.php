@@ -22,9 +22,23 @@ use WP_REST_Request;
 /**
  * Internal admin REST surface at `/wp-json/pretty-links/v1`. Nonce-gated,
  * capability-checked. NOT the public Developer Tools API.
+ *
+ * Add-ons register their admin routes here too, under their own path prefix
+ * (`/<addon>/...`), by extending `Controllers\BaseController`. That gets them
+ * the shared permission check, `CacheControl`'s cache opt-outs and the
+ * cache-busting `api` client in `@pl/shared` for free. Everything in this
+ * namespace is admin-only, except Pro's anonymous `POST /pro/public-links`;
+ * front-end add-on features use admin-ajax instead.
+ *
+ * @api
  */
 class Router
 {
+    /**
+     * The shared admin REST namespace.
+     *
+     * @api
+     */
     public const NAMESPACE = 'pretty-links/v1';
 
     /**
@@ -72,6 +86,8 @@ class Router
      * Application-password / OAuth requests pass their own credentials and
      * don't need a nonce — checking the configured admin capability is
      * sufficient there.
+     *
+     * @api
      *
      * @param WP_REST_Request $request The incoming REST request.
      *

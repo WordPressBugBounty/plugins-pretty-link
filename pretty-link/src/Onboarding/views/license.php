@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 // View template — $info/$last/$license are local to this included file, not globals.
 $this->openForm();
 ?>

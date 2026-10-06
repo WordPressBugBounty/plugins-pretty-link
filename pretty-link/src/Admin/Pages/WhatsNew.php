@@ -63,7 +63,7 @@ class WhatsNew
 
         self::enqueueAssets();
 
-        $logo         = esc_url(Page::getContainer()->get('BASE_URL') . 'assets/images/logo-horizontal.svg');
+        $logo         = esc_url(PRLI_URL . 'assets/images/logo-horizontal.svg');
         $linksUrl     = esc_url(admin_url('admin.php?page=pretty-link-links'));
         $clicksUrl    = esc_url(admin_url('admin.php?page=pretty-link-clicks'));
         $optionsUrl   = esc_url(admin_url('admin.php?page=pretty-link-options'));
@@ -246,14 +246,7 @@ class WhatsNew
         // a paid, activated license is in place.
         $showUpgradeCta = !ProState::isProInstalledAndActivated();
         $upgradeUrl     = ProUpsell::upgradeUrl('whats-new');
-        $addonsUrl      = esc_url(add_query_arg(
-            [
-                'utm_source'   => 'prli',
-                'utm_medium'   => 'admin',
-                'utm_campaign' => 'whats-new',
-            ],
-            ProUpsell::ADDONS_URL
-        ));
+        $addonsUrl      = esc_url(ProUpsell::tagSalesUrl(ProUpsell::ADDONS_URL, 'whats-new'));
 
         ?>
         <div id="prli-admin-root" class="wrap prli-whats-new-wrap">
@@ -358,8 +351,8 @@ class WhatsNew
      */
     private static function enqueueAssets(): void
     {
-        $base = Page::getContainer()->get('BASE_URL');
-        $path = Page::getContainer()->get('BASE_PATH');
+        $base = PRLI_URL;
+        $path = PRLI_PATH;
         $rel  = 'assets/css/whats-new.css';
         if (is_file($path . $rel)) {
             wp_enqueue_style(

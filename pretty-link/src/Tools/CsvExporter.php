@@ -4,19 +4,12 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Tools;
 
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 // phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
 // Custom plugin tables (prli_*): table names interpolated from $wpdb->prefix (trusted),
-// user values bind through $wpdb->prepare(). No caching: these tables are the source
-// of truth for click/redirect data and must read-through. "meta_key"/"meta_value" here
-// refer to our own prli_link_metas table, not wp_postmeta.
-use PrettyLinks\Options\Store as OptionsStore;
+// user values bind through $wpdb->prepare(). "meta_key"/"meta_value" here refer to our
+// own prli_link_metas table, not wp_postmeta.
 use PrettyLinks\Repositories\Links;
 
 /**
@@ -111,6 +104,7 @@ class CsvExporter extends ChunkedCsvExporter
         $whereSql         = $where ? 'WHERE ' . implode(' AND ', $where) : '';
         $sql              = "SELECT COUNT(*) FROM {$links} {$whereSql}";
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $sql interpolates only the prli_links table name and WHERE fragments built by Links::buildSearchClauses(), which emit %d/%s placeholders and return their values in $params for prepare(); the export must count live rows so it is not cached.
         return (int) ($params ? $wpdb->get_var($wpdb->prepare($sql, ...$params)) : $wpdb->get_var($sql));
     }
 
@@ -131,7 +125,7 @@ class CsvExporter extends ChunkedCsvExporter
         // those values live in prli_link_metas under static-clicks /
         // static-uniques. Substitute the expressions per-mode so the CSV
         // always reflects what the admin UI shows.
-        $isCount = (string) (new OptionsStore())->get('extended_tracking', 'normal') === 'count';
+        $isCount = Links::isCountMode();
         $links   = $wpdb->prefix . 'prli_links';
         $metas   = $wpdb->prefix . 'prli_link_metas';
 
@@ -156,7 +150,8 @@ class CsvExporter extends ChunkedCsvExporter
         $sql              = "SELECT {$baseCols} FROM {$links} {$whereSql} ORDER BY {$links}.id ASC LIMIT %d OFFSET %d";
         $bound            = array_merge($params, [$limit, $offset]);
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $baseCols is built from the COLUMNS whitelist; WHERE uses prepared placeholders from Links::buildSearchClauses.
+        // $baseCols is built from the COLUMNS whitelist; WHERE uses prepared placeholders from Links::buildSearchClauses.
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $sql interpolates only the prli_links/prli_link_metas table names and the COLUMNS whitelist; search values, LIMIT and OFFSET all bind through prepare(); the export must read live rows so it is not cached.
         $rows = $wpdb->get_results($wpdb->prepare($sql, ...$bound), ARRAY_A) ?: [];
 
         // Pre-fill any extra columns added via the columns filter so each

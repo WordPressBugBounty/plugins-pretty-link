@@ -2,12 +2,12 @@
 Contributors: supercleanse, cartpauj
 Donate link: https://prettylinks.com
 Tags: affiliate links, url shortener, link cloaking, link tracking, link management
-Requires at least: 6.0
+Requires at least: 6.5
 Requires PHP: 7.4
-Tested up to: 7.0
-Stable Tag: 4.0.15
+Tested up to: 7.1
+Stable tag: 4.0.16
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 🌠 Shorten, brand, and track any URL on your own domain. Keep your links — and your data — where they belong. 🔗
 
@@ -175,6 +175,32 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.16 =
+* Licensing, plugin updates, and add-on installs now run through our new licensing service. Your existing license key keeps working — no action needed.
+* Country lookups for clicks now only happen in Extended tracking mode. Normal mode no longer sends visitor IP addresses to a geolocation service.
+* Faster redirects: reverse DNS lookups for Extended tracking now run in the background instead of during the click.
+* Fixed links whose target points back to their own pretty URL redirecting forever. The link editor now warns you, and the link stops redirecting instead of looping.
+* Fixed 301 and 307 redirects being sent as 302s when Turbo Mode is on, and Turbo Mode now picks up fixes automatically after updates.
+* Fixed query parameters with special characters (like `%20`) being changed on their way to the target URL.
+* Fixed links with non-Latin slugs (for example Cyrillic or Chinese) not resolving.
+* Fixed language-prefixed links (for example `/nl/go/example` with WPML) all going to the same target.
+* Fixed saving a link with a slug that's already in use. It's now rejected instead of creating a duplicate.
+* Fixed duplicated links missing some of the original link's settings.
+* Fixed click-based link expiration never triggering in Simple tracking mode.
+* Fixed admin screens not loading correctly when the WordPress admin is in a language other than English.
+* Fixed downloading QR codes on some sites.
+* Fixed the onboarding wizard creating duplicate links, and add-ons picked during onboarding not installing or activating. The Finish step now lists the add-ons that were installed.
+* Fixed a Lite install with a Pro license losing the option to install Pro a day after activating the key.
+* Improved the Links list: columns size to their content, long notes no longer break the layout, and the list switches to cards on small screens.
+* The link editor now has a Save button in the header and more room for the Target URL.
+* Charts now label month and year periods correctly, and Click History filters by link and sorts by country.
+* Extended tracking now filters out browsers it can't identify as bots, like 3.x did.
+* Confirmation pop-ups now use the plugin's own dialogs instead of the browser's.
+* Requires WordPress 6.5 or newer.
+* Pro: Custom Reports stay visible in Simple tracking mode, with a note explaining they need Normal or Extended tracking.
+* Pro: Fixed keyword and URL replacement corrupting `&amp;` in post content or linking text inside HTML attributes.
+* Pro: Fixed the broken-links digest email linking to the wrong edit page.
 
 = 4.0.15 =
 * Added an option to record clicks immediately rather than after the page finishes loading. Turn this on if your click counts are stuck at zero — some security and optimization plugins end PHP early and the click was silently discarded. Off by default, because the standard method keeps redirects faster.

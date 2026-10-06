@@ -143,7 +143,7 @@ class CookieYes
                 $wpdb->insert($wpdb->prefix . 'cky_cookies', $row, $formats);
             }
         }
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- CookieYes's own hook; fired so CookieYes flushes its cache after we touch its table.
+        // CookieYes's own hook; fired so CookieYes flushes its cache after we touch its table.
         do_action('cky_after_update_cookie');
     }
 
@@ -160,7 +160,7 @@ class CookieYes
             ['domain' => self::COOKIE_DOMAIN],
             ['%s']
         );
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- CookieYes's own hook; fired so CookieYes flushes its cache after we touch its table.
+        // CookieYes's own hook; fired so CookieYes flushes its cache after we touch its table.
         do_action('cky_after_update_cookie');
     }
 

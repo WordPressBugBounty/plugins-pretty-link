@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\GroundLevel\Mothership\Api\Request;
 
-use PrettyLinks\GroundLevel\Mothership\Api\Request;
 use PrettyLinks\GroundLevel\Mothership\Api\Response;
 
 /**
@@ -12,25 +11,8 @@ use PrettyLinks\GroundLevel\Mothership\Api\Response;
  *
  * @link https://licenses.caseproof.com/help/api-reference#product-insights
  */
-class ProductInsights
+class ProductInsights extends AbstractResource
 {
-    /**
-     * The request instance.
-     *
-     * @var \PrettyLinks\GroundLevel\Mothership\Api\Request
-     */
-    private Request $request;
-
-    /**
-     * Constructor.
-     *
-     * @param \PrettyLinks\GroundLevel\Mothership\Api\Request $request The request instance.
-     */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     /**
      * Get the product insights endpoint.
      *
@@ -50,15 +32,17 @@ class ProductInsights
      * @link https://licenses.caseproof.com/help/api-reference#product-insights-POSTapi-v1-products--product_slug--insights-demographics
      *
      * @param string $productSlug The slug of the product.
-     * @param array  $data        The data to send to the API.
+     * @param array  $body        The body of the request.
+     * @param array  $params      Additional query parameters.
      *
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
      */
-    public function demographics(string $productSlug, array $data = []): Response
+    public function demographics(string $productSlug, array $body = [], array $params = []): Response
     {
         return $this->request->post(
             $this->getEndpoint($productSlug, 'demographics'),
-            $data
+            $body,
+            $params
         );
     }
 
@@ -68,15 +52,17 @@ class ProductInsights
      * @link https://licenses.caseproof.com/help/api-reference#product-insights-POSTapi-v1-products--product_slug--insights-nps
      *
      * @param string $productSlug The slug of the product.
-     * @param array  $data        The data to send to the API.
+     * @param array  $body        The body of the request.
+     * @param array  $params      Additional query parameters.
      *
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
      */
-    public function nps(string $productSlug, array $data = []): Response
+    public function nps(string $productSlug, array $body = [], array $params = []): Response
     {
         return $this->request->post(
             $this->getEndpoint($productSlug, 'nps'),
-            $data
+            $body,
+            $params
         );
     }
 }

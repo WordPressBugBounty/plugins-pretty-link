@@ -60,6 +60,8 @@ class MothershipServiceProvider extends ServiceProvider
             UserAddons::class,
             AddonsManager::class,
             LicenseManager::class,
+            UpdateService::class,
+            LegacyUpdateService::class,
             $this->service(ActivationTransient::class, self::FACTORY),
 
             $this->service(
@@ -102,6 +104,8 @@ class MothershipServiceProvider extends ServiceProvider
         $this->container->get(AdminNotices::class)->addHooks();
         $this->container->get(AddonsManager::class)->addHooks();
         $this->container->get(LicenseManager::class)->addHooks();
+        $this->container->get(UpdateService::class)->addHooks();
+        $this->container->get(LegacyUpdateService::class)->addHooks();
 
         parent::boot();
     }

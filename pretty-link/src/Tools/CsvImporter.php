@@ -11,8 +11,11 @@ use PrettyLinks\Repositories\Links;
  *  - If the row has an `id` that matches an existing link → update.
  *  - Otherwise look up by slug → update if found, create if not.
  *
- * Pro hooks `prli_csv_import_link_saved` to handle extra columns
- * (categories, tags, delay) after every successful create or update.
+ * Each row saves through `Links::save()` with its `prli_links` columns
+ * only. The other columns are CSV vocabulary (pipe-delimited lists, term
+ * slugs) that the save seam's REST-shaped listeners would misread, so
+ * they reach extensions through `prli_csv_import_link_saved` instead,
+ * which fires after the save seam's `prli_link_after_save`.
  */
 class CsvImporter
 {
@@ -82,14 +85,12 @@ class CsvImporter
             }
 
             if ($existing !== null) {
-                $updateData = $row;
-                unset($updateData['id']);
-                $result = $links->update((int) $existing['id'], $updateData);
+                $result = $links->save(self::columns($row), (int) $existing['id']);
                 if ($result === null || (is_array($result) && isset($result['error']))) {
                     $errors[] = [
                         'row'     => $rowNum,
                         'slug'    => $slug ?: (string) $idVal,
-                        'message' => is_array($result) ? (string) ($result['error'] ?? 'update_failed') : 'update_failed',
+                        'message' => self::errorMessage($result, 'update_failed'),
                     ];
                 } else {
                     do_action('prli_csv_import_link_saved', (int) $existing['id'], $row);
@@ -104,12 +105,12 @@ class CsvImporter
                     ];
                     continue;
                 }
-                $result = $links->create($row);
+                $result = $links->save(self::columns($row));
                 if (is_array($result) && isset($result['error'])) {
                     $errors[] = [
                         'row'     => $rowNum,
                         'slug'    => $slug,
-                        'message' => (string) $result['error'],
+                        'message' => self::errorMessage($result, 'insert_failed'),
                     ];
                 } else {
                     $newId = (int) ($result['id'] ?? 0);
@@ -180,6 +181,34 @@ class CsvImporter
         $result           = $this->importRows($rows);
         $result['errors'] = array_merge($countErrors, $result['errors']);
         return $result;
+    }
+
+    /**
+     * The row error for a failed save: the validator's own messages when a
+     * `prli_validate_link` filter rejected the row, else the error code.
+     *
+     * @param  array<string, mixed>|null $result   `Links::save()` result.
+     * @param  string                    $fallback Code used when the result carries none.
+     * @return string
+     */
+    private static function errorMessage(?array $result, string $fallback): string
+    {
+        if (($result['error'] ?? '') === 'validation_failed') {
+            return implode(' ', $result['messages']);
+        }
+        return (string) ($result['error'] ?? $fallback);
+    }
+
+    /**
+     * The row's `prli_links` columns, the part of a CSV row that goes
+     * through the save seam.
+     *
+     * @param  array<string, string> $row CSV row keyed by column name.
+     * @return array<string, string>
+     */
+    private static function columns(array $row): array
+    {
+        return array_intersect_key($row, array_flip(Links::COLUMN_FIELDS));
     }
 
     /**

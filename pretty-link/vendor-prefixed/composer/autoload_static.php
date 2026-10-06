@@ -4,7 +4,7 @@
 
 namespace PrettyLinks\Composer\Autoload;
 
-class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
+class ComposerStaticInit231300d60c81cad67687c4eb7664cfa3
 {
     public static $files = array (
         '6381d01c0284a4425b18527a16135f70' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -98,7 +98,7 @@ class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
     public static $classMap = array (
         'PrettyLinks\\Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'PrettyLinks\\Addons\\AddonInstallSkin' => __DIR__ . '/../..' . '/src/Addons/AddonInstallSkin.php',
-        'PrettyLinks\\Addons\\AddonsService' => __DIR__ . '/../..' . '/src/Addons/AddonsService.php',
+        'PrettyLinks\\Addons\\AddonInstaller' => __DIR__ . '/../..' . '/src/Addons/AddonInstaller.php',
         'PrettyLinks\\Admin\\AdminBar' => __DIR__ . '/../..' . '/src/Admin/AdminBar.php',
         'PrettyLinks\\Admin\\Assets' => __DIR__ . '/../..' . '/src/Admin/Assets.php',
         'PrettyLinks\\Admin\\Dashboard' => __DIR__ . '/../..' . '/src/Admin/Dashboard.php',
@@ -216,6 +216,7 @@ class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
         'PrettyLinks\\GroundLevel\\Mothership\\AbstractPluginConnection' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/AbstractPluginConnection.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Api\\Request' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Api\\RequestFactory' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/RequestFactory.php',
+        'PrettyLinks\\GroundLevel\\Mothership\\Api\\Request\\AbstractResource' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/AbstractResource.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Api\\Request\\LicenseActivations' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/LicenseActivations.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Api\\Request\\Licenses' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/Licenses.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Api\\Request\\ProductInsights' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/ProductInsights.php',
@@ -223,13 +224,16 @@ class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
         'PrettyLinks\\GroundLevel\\Mothership\\Api\\Request\\UserAddons' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/UserAddons.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Api\\Request\\Users' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request/Users.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Api\\Response' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Response.php',
+        'PrettyLinks\\GroundLevel\\Mothership\\Concerns\\BuildsIcons' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Concerns/BuildsIcons.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Credentials' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Credentials.php',
         'PrettyLinks\\GroundLevel\\Mothership\\ExtensionType' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/ExtensionType.php',
+        'PrettyLinks\\GroundLevel\\Mothership\\LegacyUpdateService' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/LegacyUpdateService.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Manager\\AddonInstallSkin' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Manager/AddonInstallSkin.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Manager\\AddonsManager' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Manager/AddonsManager.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Manager\\LicenseManager' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Manager/LicenseManager.php',
         'PrettyLinks\\GroundLevel\\Mothership\\MothershipServiceProvider' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/MothershipServiceProvider.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Transients\\ActivationTransient' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Transients/ActivationTransient.php',
+        'PrettyLinks\\GroundLevel\\Mothership\\UpdateService' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/UpdateService.php',
         'PrettyLinks\\GroundLevel\\Mothership\\Util' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Util.php',
         'PrettyLinks\\GroundLevel\\Package\\Bootstrap' => __DIR__ . '/..' . '/caseproof/ground-level-package/Bootstrap.php',
         'PrettyLinks\\GroundLevel\\Package\\Config' => __DIR__ . '/..' . '/caseproof/ground-level-package/Config.php',
@@ -298,7 +302,6 @@ class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
         'PrettyLinks\\Licensing\\CryptUtil' => __DIR__ . '/../..' . '/src/Licensing/CryptUtil.php',
         'PrettyLinks\\Licensing\\EditionMismatch' => __DIR__ . '/../..' . '/src/Licensing/EditionMismatch.php',
         'PrettyLinks\\Licensing\\InstallLicensedEdition' => __DIR__ . '/../..' . '/src/Licensing/InstallLicensedEdition.php',
-        'PrettyLinks\\Licensing\\LicenseClient' => __DIR__ . '/../..' . '/src/Licensing/LicenseClient.php',
         'PrettyLinks\\Licensing\\LicenseManager' => __DIR__ . '/../..' . '/src/Licensing/LicenseManager.php',
         'PrettyLinks\\Licensing\\MothershipConnector' => __DIR__ . '/../..' . '/src/Licensing/MothershipConnector.php',
         'PrettyLinks\\Licensing\\PlanCatalog' => __DIR__ . '/../..' . '/src/Licensing/PlanCatalog.php',
@@ -318,12 +321,15 @@ class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
         'PrettyLinks\\Redirect\\Geo' => __DIR__ . '/../..' . '/src/Redirect/Geo.php',
         'PrettyLinks\\Redirect\\GeoBackfillJob' => __DIR__ . '/../..' . '/src/Redirect/GeoBackfillJob.php',
         'PrettyLinks\\Redirect\\GeoStore' => __DIR__ . '/../..' . '/src/Redirect/GeoStore.php',
+        'PrettyLinks\\Redirect\\HostBackfillJob' => __DIR__ . '/../..' . '/src/Redirect/HostBackfillJob.php',
         'PrettyLinks\\Redirect\\IpMatcher' => __DIR__ . '/../..' . '/src/Redirect/IpMatcher.php',
         'PrettyLinks\\Redirect\\IpUtil' => __DIR__ . '/../..' . '/src/Redirect/IpUtil.php',
         'PrettyLinks\\Redirect\\ReservedSlugs' => __DIR__ . '/../..' . '/src/Redirect/ReservedSlugs.php',
+        'PrettyLinks\\Redirect\\ReverseDns' => __DIR__ . '/../..' . '/src/Redirect/ReverseDns.php',
         'PrettyLinks\\Repositories\\Clicks' => __DIR__ . '/../..' . '/src/Repositories/Clicks.php',
         'PrettyLinks\\Repositories\\LinkMetas' => __DIR__ . '/../..' . '/src/Repositories/LinkMetas.php',
         'PrettyLinks\\Repositories\\Links' => __DIR__ . '/../..' . '/src/Repositories/Links.php',
+        'PrettyLinks\\Rest\\CacheControl' => __DIR__ . '/../..' . '/src/Rest/CacheControl.php',
         'PrettyLinks\\Rest\\Controllers\\AddonsController' => __DIR__ . '/../..' . '/src/Rest/Controllers/AddonsController.php',
         'PrettyLinks\\Rest\\Controllers\\BaseController' => __DIR__ . '/../..' . '/src/Rest/Controllers/BaseController.php',
         'PrettyLinks\\Rest\\Controllers\\ClicksController' => __DIR__ . '/../..' . '/src/Rest/Controllers/ClicksController.php',
@@ -338,7 +344,6 @@ class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
         'PrettyLinks\\Rest\\Controllers\\ToolsController' => __DIR__ . '/../..' . '/src/Rest/Controllers/ToolsController.php',
         'PrettyLinks\\Rest\\Router' => __DIR__ . '/../..' . '/src/Rest/Router.php',
         'PrettyLinks\\Shortcodes\\Loader' => __DIR__ . '/../..' . '/src/Shortcodes/Loader.php',
-        'PrettyLinks\\Shortcodes\\PostPrettyLink' => __DIR__ . '/../..' . '/src/Shortcodes/PostPrettyLink.php',
         'PrettyLinks\\Shortcodes\\PrettyLink' => __DIR__ . '/../..' . '/src/Shortcodes/PrettyLink.php',
         'PrettyLinks\\Slug\\Generator' => __DIR__ . '/../..' . '/src/Slug/Generator.php',
         'PrettyLinks\\Stripe\\CheckoutRedirect' => __DIR__ . '/../..' . '/src/Stripe/CheckoutRedirect.php',
@@ -352,15 +357,19 @@ class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
         'PrettyLinks\\Stripe\\Helper' => __DIR__ . '/../..' . '/src/Stripe/Helper.php',
         'PrettyLinks\\Stripe\\InvoiceRenderer' => __DIR__ . '/../..' . '/src/Stripe/InvoiceRenderer.php',
         'PrettyLinks\\Stripe\\Jwt' => __DIR__ . '/../..' . '/src/Stripe/Jwt.php',
-        'PrettyLinks\\Support\\HasStaticContainer' => __DIR__ . '/../..' . '/src/Support/HasStaticContainer.php',
+        'PrettyLinks\\Stripe\\LinkMeta' => __DIR__ . '/../..' . '/src/Stripe/LinkMeta.php',
+        'PrettyLinks\\Support\\JobDeadline' => __DIR__ . '/../..' . '/src/Support/JobDeadline.php',
         'PrettyLinks\\Support\\SiteDate' => __DIR__ . '/../..' . '/src/Support/SiteDate.php',
-        'PrettyLinks\\Support\\StaticContainerAwareness' => __DIR__ . '/../..' . '/src/Support/StaticContainerAwareness.php',
         'PrettyLinks\\Tools\\ChunkedCsvExporter' => __DIR__ . '/../..' . '/src/Tools/ChunkedCsvExporter.php',
         'PrettyLinks\\Tools\\ClicksCsvExporter' => __DIR__ . '/../..' . '/src/Tools/ClicksCsvExporter.php',
         'PrettyLinks\\Tools\\CsvExporter' => __DIR__ . '/../..' . '/src/Tools/CsvExporter.php',
         'PrettyLinks\\Tools\\CsvImporter' => __DIR__ . '/../..' . '/src/Tools/CsvImporter.php',
         'PrettyLinks\\Tools\\CsvSampleGenerator' => __DIR__ . '/../..' . '/src/Tools/CsvSampleGenerator.php',
+        'PrettyLinks\\Updates\\AddonCatalog' => __DIR__ . '/../..' . '/src/Updates/AddonCatalog.php',
+        'PrettyLinks\\Updates\\AddonInformation' => __DIR__ . '/../..' . '/src/Updates/AddonInformation.php',
+        'PrettyLinks\\Updates\\AutoUpdatePolicy' => __DIR__ . '/../..' . '/src/Updates/AutoUpdatePolicy.php',
         'PrettyLinks\\Updates\\InPluginMessage' => __DIR__ . '/../..' . '/src/Updates/InPluginMessage.php',
+        'PrettyLinks\\Updates\\PluginInformation' => __DIR__ . '/../..' . '/src/Updates/PluginInformation.php',
         'PrettyLinks\\chillerlan\\QRCode\\Common\\BitBuffer' => __DIR__ . '/..' . '/chillerlan/php-qrcode/src/Common/BitBuffer.php',
         'PrettyLinks\\chillerlan\\QRCode\\Common\\ECICharset' => __DIR__ . '/..' . '/chillerlan/php-qrcode/src/Common/ECICharset.php',
         'PrettyLinks\\chillerlan\\QRCode\\Common\\EccLevel' => __DIR__ . '/..' . '/chillerlan/php-qrcode/src/Common/EccLevel.php',
@@ -430,9 +439,9 @@ class ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc15e3b2d53ee3928dee0ed6c00e43864::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit231300d60c81cad67687c4eb7664cfa3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit231300d60c81cad67687c4eb7664cfa3::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit231300d60c81cad67687c4eb7664cfa3::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace PrettyLinks\Redirect;
 
 // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-// phpcs:disable WordPress.Security.NonceVerification.Recommended
 // $_SERVER values (REMOTE_ADDR, HTTP_USER_AGENT, REQUEST_URI, etc.) are read for
 // click tracking / targeting / UI rendering, not form-submission input. State-changing
 // operations in this class protect with wp_verify_nonce / check_admin_referer.
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+// They ARE unslashed on read: wp_magic_quotes() addslashes()es all of $_SERVER
+// before `init`, and these values are stored verbatim on the click row, so
+// skipping it records `O\'Brien` in the reports (#818). MissingUnslash is
+// deliberately left enabled here so a future read that forgets it fails the
+// check rather than silently persisting core's escaping. Sanitizing is still
+// wrong — see Engine::rawServerString() for why.
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 // phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
@@ -82,7 +81,7 @@ class ClickWriter
         if (!$this->shouldCount($linkId)) {
             return;
         }
-        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? (string) $_SERVER['HTTP_USER_AGENT'] : '';
+        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? (string) wp_unslash((string) $_SERVER['HTTP_USER_AGENT']) : '';
         if (BotDetector::isBot($ua) && !$this->isIpAllowed($this->resolveIp())) {
             self::logBotSkip($linkId, $ua);
             return;
@@ -144,9 +143,12 @@ class ClickWriter
         }
 
         $ip        = $this->resolveIp();
-        $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? (string) $_SERVER['HTTP_USER_AGENT'] : '';
-        $referer   = isset($_SERVER['HTTP_REFERER']) ? (string) $_SERVER['HTTP_REFERER'] : '';
-        $country   = $this->resolveCountry($ip);
+        $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? (string) wp_unslash((string) $_SERVER['HTTP_USER_AGENT']) : '';
+        $referer   = isset($_SERVER['HTTP_REFERER']) ? (string) wp_unslash((string) $_SERVER['HTTP_REFERER']) : '';
+        // Extended tracking is the mode that parses the UA; it's also the only
+        // mode that queues geolocation.
+        $extended  = $parseUserAgent;
+        $country   = $this->resolveCountry($ip, $extended);
         $isBot     = BotDetector::isBot($userAgent);
 
         // IP allow list overrides the bot decision: trust this IP as a human
@@ -158,11 +160,11 @@ class ClickWriter
 
         $userId = get_current_user_id();
         $device = $parseUserAgent ? DeviceDetector::detect($userAgent) : [];
-        $uri    = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
+        $uri    = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash((string) $_SERVER['REQUEST_URI']) : '';
 
         if (
             $parseUserAgent
-            && ($device['is_bot'] ?? false)
+            && self::isDeviceBot($device)
             && !$this->isIpAllowed($ip)
         ) {
             self::logBotSkip($linkId, $userAgent);
@@ -178,7 +180,13 @@ class ClickWriter
                 'created_at'  => current_time('mysql', true),
                 'ip'          => $ip,
                 'vuid'        => $vuid,
-                'host'        => $parseUserAgent ? (string) gethostbyaddr($ip) : '',
+                // Reverse DNS is NOT resolved here. This runs post-response so
+                // the visitor never waits, but the PHP-FPM worker does, and
+                // resolver timeouts are commonly 5s+ — on a spike against IPs
+                // with no PTR record, workers pile up in DNS wait. Extended-mode
+                // rows are stamped later by HostBackfillJob on the Resque
+                // worker, the same treatment the geo lookup already gets.
+                'host'        => '',
                 'uri'         => $uri,
                 'referer'     => $referer,
                 'country'     => $country,
@@ -233,6 +241,14 @@ class ClickWriter
         if ($clickId > 0) {
             do_action('prli_click_written', $linkId, $clickId, $url);
         }
+
+        // Extended mode wants a reverse-DNS name on the row; the worker
+        // resolves it. Throttled to at most one enqueue per minute, and the
+        // jobs cron re-checks anyway if this enqueue fails or the row came
+        // from the turbo dispatcher, which can't enqueue at all.
+        if ($parseUserAgent && $clickId > 0) {
+            HostBackfillJob::requestDrain();
+        }
     }
 
     /**
@@ -241,22 +257,31 @@ class ClickWriter
      * Deliberately never contacts the geolocation endpoint. A click row is a
      * report, not a routing decision — nothing is waiting on it — so a remote
      * lookup here only ever costs latency. Where a CDN header, the cache or
-     * the `plp_locate_by_ip` filter can answer, we use it; otherwise the row
-     * is written with an empty country and the IP is queued for GeoBackfillJob
-     * to resolve and fill in.
+     * the `plp_locate_by_ip` filter can answer, we use it. Otherwise the row
+     * is written with an empty country, and in Extended mode only the IP is
+     * queued for GeoBackfillJob to resolve and fill in.
+     *
+     * Standard mode never queues: geolocation, like reverse DNS and UA
+     * parsing, is an Extended-mode enrichment (v3 recorded no click country
+     * at all), and queueing would send every visitor IP to the remote API
+     * from the default tracking mode.
      *
      * (Geo targeting still resolves synchronously, in Evaluator — it has to
      * pick a destination before it can redirect. Where both run, Geo's
      * per-request memo means only one lookup happens.)
      *
-     * @param  string $ip The resolved client IP.
-     * @return string Uppercase ISO 3166-1 alpha-2 code, or '' if not yet known.
+     * @param  string  $ip       The resolved client IP.
+     * @param  boolean $extended Whether the site is in Extended tracking mode.
+     * @return string Uppercase ISO 3166-1 alpha-2 code, or '' if not known.
      */
-    private function resolveCountry(string $ip): string
+    private function resolveCountry(string $ip, bool $extended): string
     {
         $country = Geo::cachedCountry($ip);
         if ($country !== null) {
             return $country;
+        }
+        if (!$extended) {
+            return '';
         }
 
         GeoStore::queue($ip);
@@ -302,42 +327,165 @@ class ClickWriter
      */
     private function bumpStaticClicks(int $linkId, int $firstClick): void
     {
-        $table    = $this->db->prefix . 'prli_link_metas';
-        $affected = (int) $this->db->query(
+        $this->bumpMetaCounter($linkId, 'static-clicks');
+        if ($firstClick === 1) {
+            $this->bumpMetaCounter($linkId, 'static-uniques');
+        }
+    }
+
+    /**
+     * Add one to a numeric counter stored in `prli_link_metas`, without losing
+     * a concurrent first click.
+     *
+     * The old shape was a read-then-write: UPDATE, and INSERT a row with `1` when
+     * the UPDATE matched nothing. Two simultaneous first-ever clicks both found
+     * nothing to update and both inserted `1`, and `LinkMetas::get()` reads a
+     * single row — so the link was permanently under-counted with a shadow row
+     * beside it.
+     *
+     * A UNIQUE index on (link_id, meta_key) is NOT available as a fix: the table
+     * legitimately holds several rows per key for multi-value metas — that is
+     * what v3's `meta_order` column is for, and `prli-url-replacements` is
+     * written exactly that way. So the insert is made atomic instead, with
+     * `INSERT … SELECT … WHERE NOT EXISTS`.
+     *
+     * How that behaves, because it is not unconditional:
+     *
+     * Under REPEATABLE READ (the MySQL default) the inner SELECT takes shared
+     * next-key locks on the gap where the row would go. Two concurrent statements
+     * both take that S lock, then both need an insert-intention X lock, so they
+     * DEADLOCK and InnoDB kills one. That is the expected path, not an anomaly,
+     * and the loser degrades correctly: `query()` returns false, `(int) false` is
+     * 0, and control falls through to the trailing `incrementMeta()`, which finds
+     * the winner's row and adds this click to it.
+     *
+     * Under READ COMMITTED — which some hosts configure — gap locking is largely
+     * disabled and both seeds can land. What bounds that is `incrementMeta()`
+     * updating EVERY matching row: two seed rows then stay in step, so the count
+     * is permanently off by the single click lost in the race rather than drifting
+     * further apart on every click after it. That is why it must keep touching
+     * every row; narrowing it to one would silently reintroduce the drift.
+     *
+     * @param  integer $linkId The link id whose counter to bump.
+     * @param  string  $key    Counter meta key.
+     * @return void
+     */
+    private function bumpMetaCounter(int $linkId, string $key): void
+    {
+        if ($this->incrementMeta($linkId, $key) > 0) {
+            return;
+        }
+
+        $table = $this->db->prefix . 'prli_link_metas';
+        // Insert the seed row only if nobody else has. `SELECT … FROM (SELECT 1)`
+        // gives the INSERT a one-row source so the WHERE NOT EXISTS decides it.
+        $inserted = (int) $this->db->query(
+            $this->db->prepare(
+                "INSERT INTO {$table} (link_id, meta_key, meta_value, created_at)
+                 SELECT %d, %s, '1', %s FROM (SELECT 1) AS seed
+                  WHERE NOT EXISTS (
+                        SELECT 1 FROM {$table} WHERE link_id = %d AND meta_key = %s
+                  )",
+                $linkId,
+                $key,
+                current_time('mysql', true),
+                $linkId,
+                $key
+            )
+        );
+        if ($inserted > 0) {
+            return;
+        }
+
+        // Someone inserted the seed row while we were deciding — add our click
+        // to theirs instead of dropping it.
+        $this->incrementMeta($linkId, $key);
+    }
+
+    /**
+     * Increment every row holding this counter. Returns rows changed.
+     *
+     * Every row, not one: on a site already carrying shadow rows from the old
+     * race, this keeps them in step so reads stop drifting further apart. It is
+     * also what bounds the READ COMMITTED case described on bumpMetaCounter().
+     *
+     * Note the deliberate asymmetry with `LinkMetas::set()`, which touches ONE row
+     * ordered by id. Both are correct for what they hold: counters want every row,
+     * multi-value metas want one. Safe because this is only ever called with
+     * `static-clicks` and `static-uniques`, which nothing else writes.
+     *
+     * @param  integer $linkId The link id.
+     * @param  string  $key    Counter meta key.
+     * @return integer Rows changed.
+     */
+    private function incrementMeta(int $linkId, string $key): int
+    {
+        $table = $this->db->prefix . 'prli_link_metas';
+        return (int) $this->db->query(
             $this->db->prepare(
                 "UPDATE {$table}
                     SET meta_value = CAST(CAST(meta_value AS UNSIGNED) + 1 AS CHAR)
-                  WHERE link_id = %d AND meta_key = 'static-clicks'",
-                $linkId
+                  WHERE link_id = %d AND meta_key = %s",
+                $linkId,
+                $key
             )
         );
-        if (!$affected) {
-            $this->db->insert($table, [
-                'link_id'    => $linkId,
-                'meta_key'   => 'static-clicks',
-                'meta_value' => '1',
-                'created_at' => current_time('mysql', true),
-            ]);
+    }
+
+    /**
+     * Whether this request will be thrown away by the click filters, without
+     * writing anything or touching a cookie.
+     *
+     * Answers the question the redirect-time filters need: "is this hit going
+     * to be discarded?" — a bot user agent, an excluded IP, or a repeat inside
+     * the dedup window. Callers that carry per-hit state on the redirect path
+     * use it so bots and browser retries don't consume it. Sequential rotation
+     * is the reason it exists: it advanced its persistent round-robin counter
+     * from inside `prli_target_url`, which runs before any of these gates, so
+     * crawlers and deduped repeat visits burned slots and skewed the rotation.
+     *
+     * Says nothing about whether the link tracks clicks at all — a link with
+     * tracking off has no filters to fail, and its hits are all real as far as
+     * rotation is concerned, but that is the caller's check to make (see
+     * `RotationService`, which resolves `prli_track_link` and skips this
+     * entirely when tracking is off).
+     *
+     * Deliberately side-effect free: unlike `resolveDedup()`, this only peeks
+     * at the cookie. `Engine` still owns setting it, exactly once.
+     *
+     * @param  integer $linkId The link id being clicked.
+     * @return boolean True when the hit will not be recorded.
+     */
+    public function isRequestFiltered(int $linkId): bool
+    {
+        if (!$this->shouldCount($linkId)) {
+            return true;
+        }
+        if (isset($_COOKIE['prli_dedup_' . $linkId])) {
+            return true;
         }
 
-        if ($firstClick === 1) {
-            $affected = (int) $this->db->query(
-                $this->db->prepare(
-                    "UPDATE {$table}
-                        SET meta_value = CAST(CAST(meta_value AS UNSIGNED) + 1 AS CHAR)
-                      WHERE link_id = %d AND meta_key = 'static-uniques'",
-                    $linkId
-                )
-            );
-            if (!$affected) {
-                $this->db->insert($table, [
-                    'link_id'    => $linkId,
-                    'meta_key'   => 'static-uniques',
-                    'meta_value' => '1',
-                    'created_at' => current_time('mysql', true),
-                ]);
-            }
+        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? (string) wp_unslash((string) $_SERVER['HTTP_USER_AGENT']) : '';
+        if ($this->isIpAllowed($this->resolveIp())) {
+            // Allow list overrides every bot verdict, same as writeRow().
+            return false;
         }
+        if (BotDetector::isBot($ua)) {
+            return true;
+        }
+
+        // Extended mode has a SECOND bot gate: writeRow() also drops the click
+        // when Matomo's parser says bot or can't identify the client at all
+        // (isDeviceBot()), and that catches crawlers the pattern
+        // matcher above misses. Predicting without it would let those advance the
+        // rotation and then be discarded — the exact bug this method exists to
+        // prevent. Only run in extended mode, since that's the only mode that
+        // parses the UA at all.
+        if ((string) $this->options->get('extended_tracking', 'normal') === 'extended') {
+            return self::isDeviceBot(DeviceDetector::detect($ua));
+        }
+
+        return false;
     }
 
     /**
@@ -376,6 +524,19 @@ class ClickWriter
         }
         $allowList = (string) $this->options->get('whitelist_ips', '');
         return $allowList !== '' && IpMatcher::matchesAny($ip, $allowList);
+    }
+
+    /**
+     * The extended-mode bot verdict from a parsed user agent: Matomo's own
+     * bot flag, or a client it couldn't identify at all (#901). Shared by
+     * writeRow() and the rotation prediction so the two can't disagree.
+     *
+     * @param  array<string, mixed> $device Result of DeviceDetector::detect().
+     * @return boolean True when the click should be treated as a bot.
+     */
+    private static function isDeviceBot(array $device): bool
+    {
+        return ($device['is_bot'] ?? false) || BotDetector::isUnidentifiedClient($device);
     }
 
     /**
@@ -490,7 +651,7 @@ class ClickWriter
          *
          * @param string $ip Detected client IP.
          */
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy v3 Pretty Links public filter; preserved for back-compat.
+        // Legacy v3 Pretty Links public filter; preserved for back-compat.
         return (string) apply_filters('pl_get_current_client_ip', $ip);
     }
 }

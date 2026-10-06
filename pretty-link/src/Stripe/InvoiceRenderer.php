@@ -6,12 +6,6 @@ namespace PrettyLinks\Stripe;
 
 defined('ABSPATH') || exit;
 
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-// phpcs:disable WordPress.Security.NonceVerification.Recommended
-// $_SERVER values (REMOTE_ADDR, HTTP_USER_AGENT, REQUEST_URI, etc.) are read for
-// click tracking / targeting / UI rendering, not form-submission input. State-changing
-// operations in this class protect with wp_verify_nonce / check_admin_referer.
 use PrettyLinks\Stripe\Exceptions\HttpException;
 use PrettyLinks\Stripe\Exceptions\RemoteException;
 
@@ -130,9 +124,11 @@ final class InvoiceRenderer
      */
     private static function sessionIdFromQuery(): ?string
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check for the Stripe-supplied success_url token on the thank-you page; nothing is submitted or changed.
         if (!isset($_GET['prli_session_id'])) {
             return null;
         }
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check for the Stripe-supplied success_url token on the thank-you page; nothing is submitted or changed.
         $raw = sanitize_text_field((string) wp_unslash($_GET['prli_session_id']));
         if (strpos($raw, 'cs_') !== 0) {
             return null;

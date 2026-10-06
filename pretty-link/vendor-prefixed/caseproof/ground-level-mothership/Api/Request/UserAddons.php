@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\GroundLevel\Mothership\Api\Request;
 
-use PrettyLinks\GroundLevel\Mothership\Api\Request;
 use PrettyLinks\GroundLevel\Mothership\Api\Response;
 
 /**
@@ -12,42 +11,26 @@ use PrettyLinks\GroundLevel\Mothership\Api\Response;
  *
  * @link https://licenses.caseproof.com/help/api-reference#users
  */
-class UserAddons
+class UserAddons extends AbstractResource
 {
-    /**
-     * The request instance.
-     *
-     * @var \PrettyLinks\GroundLevel\Mothership\Api\Request
-     */
-    private Request $request;
-
-    /**
-     * Constructor.
-     *
-     * @param \PrettyLinks\GroundLevel\Mothership\Api\Request $request The request instance.
-     */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     /**
      * Create a new user addon.
      *
-     * @param  string $userUUID  The user UUID.
-     * @param  array  $addonData The data to create the user addon.
+     * @param  string $userUUID The user UUID.
+     * @param  array  $body     The body of the request.
+     * @param  array  $params   Additional query parameters.
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
      */
-    public function create(string $userUUID, array $addonData): Response
+    public function create(string $userUUID, array $body, array $params = []): Response
     {
-        return $this->request->post('users/' . $userUUID . '/addons', $addonData);
+        return $this->request->post('users/' . $userUUID . '/addons', $body, $params);
     }
 
     /**
      * Get all user addons.
      *
      * @param  string $userUUID The user UUID.
-     * @param  array  $params   The parameters to get the user addons for.
+     * @param  array  $params   Additional query parameters.
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
      */
     public function list(string $userUUID, array $params = []): Response
@@ -60,7 +43,7 @@ class UserAddons
      *
      * @param  string $userUUID  The user UUID.
      * @param  string $addonUUID The addon UUID.
-     * @param  array  $params    The parameters to get the user addon for.
+     * @param  array  $params    Additional query parameters.
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
      */
     public function get(string $userUUID, string $addonUUID, array $params = []): Response
@@ -73,11 +56,12 @@ class UserAddons
      *
      * @param  string $userUUID  The user UUID.
      * @param  string $addonUUID The addon UUID.
-     * @param  array  $addonData The data to update the user addon.
+     * @param  array  $body      The body of the request.
+     * @param  array  $params    Additional query parameters.
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response
      */
-    public function update(string $userUUID, string $addonUUID, array $addonData): Response
+    public function update(string $userUUID, string $addonUUID, array $body, array $params = []): Response
     {
-        return $this->request->patch('users/' . $userUUID . '/addons/' . $addonUUID, $addonData);
+        return $this->request->patch('users/' . $userUUID . '/addons/' . $addonUUID, $body, $params);
     }
 }

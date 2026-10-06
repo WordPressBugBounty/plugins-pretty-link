@@ -113,7 +113,19 @@ class Response implements Arrayable
     public function getErrorMessage(): string
     {
         $errors = $this->getErrors();
-        $messages = empty($errors) ? [] : array_merge(...array_values($errors));
+        // PL strauss-fixup: tolerate scalar API errors. array_merge(...) here
+        // assumed every value is a list of messages, so a single
+        // {"errors":{"domain":"already active"}} threw an uncaught TypeError on
+        // PHP 8 — escaping WP_REST_Server::dispatch() as a 500 with no JSON
+        // body, on both the REST licence panel and the onboarding wizard.
+        $messages = [];
+        foreach ($errors as $error) {
+            foreach ((array) $error as $message) {
+                if (is_scalar($message)) {
+                    $messages[] = (string) $message;
+                }
+            }
+        }
         $parts = array_filter(array_merge([$this->getMessage()], $messages));
         return implode(' ', $parts);
     }

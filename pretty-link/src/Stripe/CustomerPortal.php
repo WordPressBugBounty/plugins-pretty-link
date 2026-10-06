@@ -39,7 +39,7 @@ final class CustomerPortal
      */
     public static function pageName(): string
     {
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public 3.x filter; renaming would break drop-in compatibility for existing integrations.
+        // Public 3.x filter; renaming would break drop-in compatibility for existing integrations.
         return (string) apply_filters('pl_customer_portal_page_name', 'pl-customer-portal');
     }
 

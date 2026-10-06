@@ -56,11 +56,14 @@ final class Helper
     ];
 
     /**
-     * Returns the list of supported countries.
+     * Returns the unfiltered country list from the data file.
+     *
+     * Use this when labels must match the admin picker and must not be
+     * affected by the Stripe-oriented `prli_countries` filter.
      *
      * @return array<string, string>
      */
-    public static function countries(): array
+    public static function rawCountries(): array
     {
         /**
          * The raw country list from the data file.
@@ -68,13 +71,23 @@ final class Helper
          * @var array<string, string> $countries
          */
         $countries = require __DIR__ . '/data/countries.php';
+        return $countries;
+    }
+
+    /**
+     * Returns the list of supported countries.
+     *
+     * @return array<string, string>
+     */
+    public static function countries(): array
+    {
         /**
          * The filtered country list.
          *
          * @var array<string, string> $filtered
          */
-        $filtered = apply_filters('prli_countries', $countries);
-        return $filtered;
+        $filtered = apply_filters('prli_countries', self::rawCountries());
+        return is_array($filtered) ? $filtered : [];
     }
 
     /**
@@ -93,10 +106,10 @@ final class Helper
         /**
          * The filtered currency list.
          *
-         * @var array<string, string> $filtered
+         * @var mixed $filtered
          */
         $filtered = apply_filters('prli_currencies', $currencies);
-        return $filtered;
+        return is_array($filtered) ? $filtered : $currencies;
     }
 
     /**
@@ -113,10 +126,10 @@ final class Helper
         /**
          * The filtered shipping-country list.
          *
-         * @var array<string, string> $filtered
+         * @var mixed $filtered
          */
         $filtered = apply_filters('prli_stripe_shipping_countries', $countries);
-        return $filtered;
+        return is_array($filtered) ? $filtered : $countries;
     }
 
     /**
@@ -130,9 +143,10 @@ final class Helper
         /**
          * The filtered list of zero-decimal currency codes.
          *
-         * @var list<string> $zero
+         * @var mixed $zero
          */
         $zero = apply_filters('prli_stripe_zero_decimal_currencies', self::ZERO_DECIMAL_CURRENCIES);
+        $zero = is_array($zero) ? $zero : self::ZERO_DECIMAL_CURRENCIES;
         return in_array(strtoupper($currency), $zero, true);
     }
 

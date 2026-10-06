@@ -8,6 +8,7 @@ use PrettyLinks\Clicks\Cleaner;
 use PrettyLinks\Clicks\ClearClicksJob;
 use PrettyLinks\GroundLevel\Resque\ResqueServiceProvider;
 use PrettyLinks\Repositories\Clicks as ClicksRepo;
+use PrettyLinks\Repositories\Links;
 use Throwable;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -37,17 +38,7 @@ class ClicksController extends BaseController
                     'search'    => ['type' => 'string'],
                     'sort'      => [
                         'type' => 'string',
-                        'enum' => [
-                            'ip',
-                            'vuid',
-                            'btype',
-                            'bversion',
-                            'host',
-                            'referer',
-                            'uri',
-                            'created_at',
-                            'link',
-                        ],
+                        'enum' => array_keys(ClicksRepo::SORT_MAP),
                     ],
                     'direction' => [
                         'type' => 'string',
@@ -106,7 +97,7 @@ class ClicksController extends BaseController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        if ($this->isCountMode()) {
+        if (Links::isCountMode()) {
             return new WP_REST_Response(
                 ['message' => 'Click History is not available in Simple tracking mode.'],
                 501
@@ -207,7 +198,7 @@ class ClicksController extends BaseController
         $pending = (int) $wpdb->get_var(
             $wpdb->prepare(
                 // Table name is a trusted, code-derived identifier (not user input).
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Only the Resque jobs table identifier, derived in code from the service provider, is interpolated; the job class name is bound through this prepare() call.
                 "SELECT COUNT(*) FROM {$table} WHERE class = %s AND status IN ('pending', 'working')",
                 ClearClicksJob::class
             )

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Redirect;
 
+use PrettyLinks\Helpers\LinkUrl;
 use PrettyLinks\Options\Store as OptionsStore;
 use wpdb;
 
@@ -23,9 +24,11 @@ class Engine
 {
     /**
      * Characters permitted in a resolvable slug, as the body of a regex
-     * character class (the part inside `[...]`). This is the full RFC 3986
-     * path-segment set — "unreserved" (`A-Za-z0-9` plus `-._~`), sub-delims
-     * (`!$&'()*+,;=`), `:` and `@`, plus the path separator `/`.
+     * character class (the part inside `[...]`). RFC 3986 path punctuation
+     * (`-._~!$&'()*+,;=:@/` plus a literal space) plus Unicode letters and
+     * numbers via `\p{L}\p{N}` (covers Latin/CJK/Cyrillic/Greek and more —
+     * ASCII `A-Za-z0-9` are subsets of those properties) and combining marks
+     * via `\p{M}` so NFD / Indic / Thai / Arabic grapheme clusters stay intact.
      *
      * This reproduces what Pretty Links 3.x accepted. v3 matched incoming
      * requests with `([^\?]*)` (see legacy PrliLink::is_pretty_link) — i.e.
@@ -37,23 +40,114 @@ class Engine
      * resolved verbatim — hence the literal space (`\x20`) below (#751). The
      * v4 rewrite had first narrowed this to `[A-Za-z0-9_\-/]` (any v3 link
      * containing `.`, `=`, `~`, `+`, etc. began returning a 404), and even
-     * after that was widened the space was still missing.
+     * after that was widened the space was still missing. Non-Latin letters
+     * were still stripped on save / rejected on resolve (#861) until `\p{L}`
+     * / `\p{N}` landed.
      *
      * Only the true delimiters are excluded: `?` and `#` (query/fragment —
      * they can never appear in the path wp_parse_url() hands us) and `%`
      * (percent-encoding is decoded before matching; v3's sanitizer stripped
      * literal `%` too). Slugs are only ever used as prepared-statement lookup
-     * keys, so this is an input allow-list, not an escaping boundary. Kept in
-     * sync with Repositories\Links::sanitizeSlug() (strips anything outside
-     * this set on save) and the inlined copy in
-     * pro/src/Redirect/mu-plugin-template.php.stub. Note sanitizeSlug()
-     * normalises whitespace to `-` before that strip, so a stored slug only
-     * contains a space when it was migrated verbatim from v3 — new v4 slugs
-     * never do; the space here is purely to keep those legacy slugs resolvable.
+     * keys, so this is an input allow-list, not an escaping boundary. Write-side
+     * sanitisation goes through {@see canonicalizeSlug()}; the MU stub receives
+     * this class via `%%PRLI_SLUG_CHAR_CLASS%%` at install time. Note
+     * canonicalizeSlug() normalises whitespace to `-` (or a space when
+     * `allow_slug_spaces` is on) before the strip, so a stored slug only
+     * contains a space when that toggle is on or the row was migrated from
+     * v3 — the space in the class keeps those legacy slugs resolvable.
+     *
+     * Every match/replace against this class MUST use the `/u` modifier —
+     * without it `\p{L}`/`\p{N}` do not match non-ASCII. Prefer
+     * {@see matchesSlugCharset()} / {@see stripToSlugCharset()} /
+     * {@see canonicalizeSlug()} so the flag cannot be forgotten. The MU stub
+     * receives the class via `%%PRLI_SLUG_CHAR_CLASS%%` at install time.
      *
      * @var string
      */
-    public const SLUG_CHAR_CLASS = 'A-Za-z0-9_\-/.~!$&\'()*+,;=:@\x20';
+    public const SLUG_CHAR_CLASS = '\p{L}\p{N}\p{M}_\-/.~!$&\'()*+,;=:@\x20';
+
+    /**
+     * Whether `$slug` is non-empty and entirely within {@see SLUG_CHAR_CLASS}.
+     *
+     * Resolve-path check only — does not NFC-normalise. Canonicalisation
+     * (including NFC) happens on write via {@see canonicalizeSlug()} so stored
+     * form does not silently depend on whether `intl` appears later (#861).
+     *
+     * @param  string $slug Candidate slug (already decoded / trimmed by callers).
+     * @return boolean
+     */
+    public static function matchesSlugCharset(string $slug): bool
+    {
+        return $slug !== '' && preg_match('#^[' . self::SLUG_CHAR_CLASS . ']+$#u', $slug) === 1;
+    }
+
+    /**
+     * Strip every character outside {@see SLUG_CHAR_CLASS} from `$slug`.
+     *
+     * Returns `null` when the `/u` regex fails (typically malformed UTF-8) so
+     * callers can surface `invalid_slug` instead of treating the failure as
+     * "everything was stripped" and minting a random ASCII slug (#861).
+     *
+     * @param  string $slug Raw or partially-normalised slug.
+     * @return string|null
+     */
+    public static function stripToSlugCharset(string $slug): ?string
+    {
+        return preg_replace('#[^' . self::SLUG_CHAR_CLASS . ']#u', '', $slug);
+    }
+
+    /**
+     * Canonicalise a user-supplied slug for persistence / QR preview.
+     *
+     * Shared by Links save and QrPreview so both agree on whitespace,
+     * charset strip, NFC (when intl is present), and trim. Returns `null` on
+     * malformed UTF-8; `''` when the input is empty or strips to nothing.
+     *
+     * NFC is write-only: the resolve path matches the stored bytes as-is so
+     * a host that later gains (or loses) `intl` cannot 404 existing links.
+     *
+     * @param  string  $slug        Raw user-supplied slug.
+     * @param  boolean $allowSpaces When true, whitespace collapses to a space
+     *                              (`allow_slug_spaces`); otherwise to `-`.
+     * @return string|null
+     */
+    public static function canonicalizeSlug(string $slug, bool $allowSpaces = false): ?string
+    {
+        $slug = trim($slug);
+        if ($slug === '') {
+            return '';
+        }
+        $slug      = self::normalizeSlugUtf8($slug);
+        $collapsed = preg_replace('/\s+/u', $allowSpaces ? ' ' : '-', $slug);
+        if ($collapsed === null) {
+            return null;
+        }
+        $stripped = self::stripToSlugCharset($collapsed);
+        if ($stripped === null) {
+            return null;
+        }
+        $slug = (string) preg_replace('#/+#', '/', $stripped);
+        $slug = (string) preg_replace('/-+/', '-', $slug);
+        return trim($slug, '-/ ');
+    }
+
+    /**
+     * NFC-normalise a slug when the intl Normalizer is available.
+     *
+     * Used only on the write path ({@see canonicalizeSlug()}). Falls back to
+     * the input unchanged when intl is absent or normalisation fails.
+     *
+     * @param  string $slug Decoded slug candidate.
+     * @return string
+     */
+    private static function normalizeSlugUtf8(string $slug): string
+    {
+        if ($slug === '' || !class_exists(\Normalizer::class)) {
+            return $slug;
+        }
+        $normalized = \Normalizer::normalize($slug, \Normalizer::FORM_C);
+        return is_string($normalized) ? $normalized : $slug;
+    }
 
     /**
      * WordPress database handle.
@@ -75,6 +169,29 @@ class Engine
      * @var array<string, array<string, mixed>|null>
      */
     private array $resolveCache = [];
+
+    /**
+     * Decoded, trimmed request path for this dispatch, exactly as it arrived —
+     * before any home-path or `index.php/` stripping. Set by both slug
+     * extractors, and read by languagePrefixedSlug() so it never has to infer
+     * what was removed. Null until an extractor has run.
+     *
+     * @var string|null
+     */
+    private ?string $requestPath = null;
+
+    /**
+     * Decoded, trimmed path component of `home_url()` for this dispatch.
+     *
+     * Memoised because every caller pays for it twice otherwise, and under WPML
+     * a `home_url()` call is not cheap: its filter builds a
+     * `WPML_Home_Url_Filter_Context` whose `should_not_filter()` walks an
+     * unbounded `debug_backtrace()`. Scoped to one request, where the value
+     * cannot change.
+     *
+     * @var string|null
+     */
+    private ?string $filteredHomePath = null;
 
     /**
      * Idempotent click-write closure for the current dispatch, or null when no
@@ -116,17 +233,8 @@ class Engine
             return;
         }
 
-        // Unslash but do NOT sanitize_text_field() here: that strips `%NN`
-        // octets, which would delete the `%20` a browser sends for a slug with
-        // a space (#751) and mangle any other percent-encoding before we get to
-        // decode it. extractSpecialRouteSlug()/extractSlug() rawurldecode the
-        // path and validate it against the SLUG_CHAR_CLASS allow-list — that
-        // allow-list (plus the prepared-statement lookup) is the security
-        // boundary, so the raw URI is safe to parse. The stub dispatcher
-        // (mu-plugin-template) already reads REQUEST_URI raw for the same reason.
-        $requestUri  = isset($_SERVER['REQUEST_URI'])
-            ? wp_unslash((string) $_SERVER['REQUEST_URI'])
-            : '';
+        // Raw, never sanitized — see rawServerString().
+        $requestUri  = self::rawServerString('REQUEST_URI');
         $specialSlug = $this->extractSpecialRouteSlug($requestUri);
         if ($specialSlug !== null) {
             $link = $this->resolveWithAltDomainFallback($specialSlug['slug']);
@@ -234,7 +342,8 @@ class Engine
         // Build the forwarded param string separately (not yet merged into
         // $target) so that prli_before_redirect receives $target and
         // $paramString as distinct by-reference args — matching v3's signature.
-        $incomingQuery = isset($_SERVER['QUERY_STRING']) ? sanitize_text_field(wp_unslash((string) $_SERVER['QUERY_STRING'])) : '';
+        // Raw, never sanitized — see rawServerString().
+        $incomingQuery = self::rawServerString('QUERY_STRING');
         $paramString   = self::buildForwardedParamString($target, $link, $incomingQuery);
 
         /**
@@ -255,6 +364,22 @@ class Engine
         do_action_ref_array('prli_before_redirect', [&$target, &$paramString, $_GET]);
 
         $target = self::appendParamString($target, $paramString);
+
+        // A link whose target points back at its own pretty URL redirects for
+        // ever — the browser follows, the engine matches the same slug again
+        // (trailing slashes are trimmed, so `/docs` and `/docs/` are one link)
+        // and the loop only ends when the browser gives up. Fall through to
+        // WordPress instead, exactly as an unmatched slug does, so the site
+        // can still serve a real page at that path. No click is recorded: the
+        // redirect never happened. See issue #983.
+        //
+        // Checked here, after `prli_target_url`, `prli_before_redirect` and
+        // param forwarding have all had their say, because any of them can
+        // rewrite the target — and before the cloaked/pixel handlers below,
+        // which exit on their own and would otherwise skip the guard.
+        if (LinkUrl::isSelfReferential($target, (string) ($link['slug'] ?? ''))) {
+            return;
+        }
 
         $this->scheduleClickWrite((int) $link['id'], $link, $target);
 
@@ -364,6 +489,45 @@ class Engine
     }
 
     /**
+     * Read a `$_SERVER` string unslashed but deliberately NOT sanitized.
+     *
+     * Both call sites need the value byte for byte. `sanitize_text_field()`
+     * deletes every `%NN` octet — core's `_sanitize_text_fields()` loops
+     * `preg_match('/%[a-f0-9]{2}/i')` + `str_replace` until none match — which
+     * would drop the `%20` a browser sends for a slug containing a space
+     * (#751) and silently corrupt any percent-encoded value being forwarded to
+     * the destination (#818). It also collapses whitespace runs and trims.
+     *
+     * Not sanitizing here is safe because validation and escaping happen per
+     * context downstream rather than up front. The request path is
+     * rawurldecode()d and matched against the SLUG_CHAR_CLASS allow-list, then
+     * looked up with a prepared statement — that pair is the security
+     * boundary. The forwarded query string is never decoded; it is escaped at
+     * every emit boundary instead: `wp_redirect()` runs
+     * `wp_sanitize_redirect()` (which strips encoded CRLF outright), the raw
+     * `header('Location: ...')` path strips CRLF itself, and the cloaked types
+     * render the target through `esc_url()`/`esc_url_raw()`/`wp_json_encode()`.
+     *
+     * `wp_unslash()` is required: `wp_magic_quotes()` slashes all of
+     * `$_SERVER` in wp-settings.php before `init`, where dispatch() runs. The
+     * turbo dispatcher correctly omits it — mu-plugins load earlier still.
+     *
+     * Kept as one helper on purpose. The rationale was written at the
+     * REQUEST_URI site in #751 and never carried to the QUERY_STRING site 110
+     * lines below, so a later sweep for Plugin Check warnings "fixed" the
+     * unprotected one and shipped #818. One annotated site cannot drift.
+     *
+     * @param string $key Key to read from `$_SERVER`.
+     *
+     * @return string Empty string when the key is absent.
+     */
+    private static function rawServerString(string $key): string
+    {
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Read verbatim by design (#751, #818); sanitizing destroys percent-encoding. Validated and escaped per context downstream — see the docblock above.
+        return isset($_SERVER[$key]) ? (string) wp_unslash((string) $_SERVER[$key]) : '';
+    }
+
+    /**
      * Detects special post-slug routes like `/{slug}/gen_qr_png?download=<nonce>`.
      *
      * Slug can contain slashes (e.g. `go/abcd`) because the prefix is baked
@@ -380,8 +544,9 @@ class Engine
         if ($path === '' || $path === '/') {
             return null;
         }
-        $path = rawurldecode($path);
-        $trim = $this->stripHomePath(trim($path, '/'));
+        $path              = rawurldecode($path);
+        $this->requestPath = trim($path, '/');
+        $trim              = $this->stripHomePath(trim($path, '/'));
         // Strip an `index.php/` prefix (almost-pretty permalinks) for parity
         // with extractSlug(), so `/index.php/{slug}/gen_qr_png` — and its
         // subdirectory form — resolves the special route too.
@@ -400,7 +565,15 @@ class Engine
         if (!in_array($route, $allowedRoutes, true)) {
             return null;
         }
-        if ($slug === '' || !preg_match('#^[' . self::SLUG_CHAR_CLASS . ']+$#', $slug)) {
+
+        // Drop the route segment from the recorded request path: what follows is
+        // resolved as a SLUG, so languagePrefixedSlug() must not hand back a
+        // candidate with `/gen_qr_png` still glued to the end.
+        $arrivedSlash = strrpos((string) $this->requestPath, '/');
+        if ($arrivedSlash !== false) {
+            $this->requestPath = substr((string) $this->requestPath, 0, $arrivedSlash);
+        }
+        if (!self::matchesSlugCharset($slug)) {
             return null;
         }
         return [
@@ -471,6 +644,9 @@ class Engine
             return null;
         }
         $path = rawurldecode($path);
+        // Kept for languagePrefixedSlug(), which must work from the path as it
+        // ARRIVED rather than reconstructing it. See that method.
+        $this->requestPath = trim($path, '/');
 
         $slug = $this->stripHomePath(trim($path, '/'));
         if ($slug === '') {
@@ -490,7 +666,7 @@ class Engine
         }
 
         // Slugs can contain slashes (e.g. `go/abcd`), so `/` is valid here.
-        if (!preg_match('#^[' . self::SLUG_CHAR_CLASS . ']+$#', $slug)) {
+        if (!self::matchesSlugCharset($slug)) {
             return null;
         }
 
@@ -513,10 +689,7 @@ class Engine
      */
     private function stripHomePath(string $slug): string
     {
-        // Decode the home path to match $slug, which the callers have already
-        // decoded: a home path like `/my%20site` must compare against the
-        // decoded request path `my site`.
-        $homePath = trim(rawurldecode((string) wp_parse_url((string) home_url(), PHP_URL_PATH)), '/');
+        $homePath = $this->filteredHomePath();
         if ($homePath === '') {
             return $slug;
         }
@@ -546,9 +719,12 @@ class Engine
 
         $table                     = $this->db->prefix . 'prli_links';
         $sql                       = $this->db->prepare(
+            // Oldest live row wins; no UNIQUE on `slug`, so duplicates remain
+            // possible — see Links::slugTaken() for why (#852).
             "SELECT * FROM {$table}
              WHERE slug = %s
                AND deleted_at IS NULL
+             ORDER BY id ASC
              LIMIT 1",
             $slug
         );
@@ -569,8 +745,16 @@ class Engine
      * single `$prli_blogurl` drove both URL building and request matching; v4
      * split those, so the path is prepended when rendering but not removed
      * when resolving, and the public URL 404s. Restoring the symmetry here
-     * keeps verbatim lookups first (a slug genuinely stored as `go/abcd` still
-     * wins) and only falls back to the stripped form on a miss. See issue #752.
+     * keeps a stored slug like `go/abcd` winning over any inference. See issue
+     * #752 for that half.
+     *
+     * Three tiers, in order:
+     *   1. A language-prefixed candidate, when something has decorated
+     *      `home_url()` for this request — see languagePrefixedSlug() (#850).
+     *      Absent on virtually every site, and skipped entirely on alternate
+     *      domains.
+     *   2. The slug verbatim, as the extractors produced it — today's lookup.
+     *   3. The alternate-domain path stripped (#752).
      *
      * @param string $slug Verbatim slug extracted from the request.
      *
@@ -578,6 +762,18 @@ class Engine
      */
     private function resolveWithAltDomainFallback(string $slug): ?array
     {
+        // A multilingual plugin may have eaten a real part of this slug before
+        // we ever saw it — try to get it back first. See
+        // languagePrefixedSlug() for the whole story; on the overwhelming
+        // majority of sites this returns null and nothing below changes.
+        $prefixed = $this->languagePrefixedSlug($slug);
+        if ($prefixed !== null) {
+            $link = $this->resolve($prefixed);
+            if ($link !== null) {
+                return $link;
+            }
+        }
+
         $link = $this->resolve($slug);
         if ($link !== null) {
             return $link;
@@ -587,6 +783,223 @@ class Engine
             return $this->resolve($stripped);
         }
         return $link;
+    }
+
+    /**
+     * The slug this request would have had if nobody had rewritten
+     * `home_url()`, or null when that can't apply.
+     *
+     * Invariants, for anyone editing this — the rest of the docblock is why:
+     *   - Build from the path as it ARRIVED (`$this->requestPath`); never
+     *     rebuild it from the stripped slug.
+     *   - Remove the RAW home path, never the filtered one.
+     *   - Only act when the filtered path EXTENDS the raw one.
+     *   - Any alternate base opts the site out entirely.
+     *
+     * ## The bug (#850)
+     *
+     * `extractSlug()` removes the site's install directory from the request
+     * path before matching, because stored slugs never include it: on
+     * `example.com/blog`, `/blog/go/abc` has to find the slug `go/abc`. It
+     * learns that directory from `home_url()`.
+     *
+     * WPML filters `home_url()` (at priority -10, in
+     * `wpml-url-filters.class.php`) so it carries the ACTIVE LANGUAGE as a
+     * directory — `https://example.com/nl` on a Dutch request. The stripper
+     * cannot tell that apart from a real install directory, so on
+     * `/nl/go/example` it removes `nl/` and looks up `go/example`.
+     *
+     * For a site that deliberately created `nl/go/example` as its own link with
+     * a Dutch destination, that link becomes unreachable: every language
+     * resolves to the one base slug. Reported by a Pro customer whose Dutch and
+     * German links all served the English target.
+     *
+     * ## Why compare two sources instead of trusting one
+     *
+     * The install directory is knowable from the stored `home` option, which
+     * WPML does not rewrite in this context — its `pre_option_home` callback is
+     * backtrace-gated to calls originating in theme files
+     * (`sitepress.class.php:3425`), so a plugin's `get_option('home')` is
+     * untouched. When the two sources disagree, something is decorating the
+     * filtered one for this request, and the leading segment is suspect.
+     *
+     * Neither source is authoritative — `option_home` is filterable too, core
+     * itself uses it for `WP_HOME` — so the disagreement is used only to decide
+     * whether to TRY an extra lookup. The candidate still has to match a real
+     * row to change anything, and when it doesn't, resolution proceeds exactly
+     * as before. That is what makes this additive: a site with no
+     * language-prefixed links behaves identically to today, including still
+     * serving the base slug for `/nl/go/example`.
+     *
+     * ## Why the raw home path, rather than the path verbatim
+     *
+     * Stripping nothing at all works on a root install, where the raw path is
+     * empty — but not on a subdirectory install, where the request is
+     * `/blog/nl/go/example`. Verbatim gives `blog/nl/go/example`, which can
+     * never match a stored slug, so the fix would silently do nothing there.
+     * Removing the RAW path gives `nl/go/example` on both.
+     *
+     * ## Scope
+     *
+     * Directory-based language negotiation only. WPML's other two modes put the
+     * language in the host (`nl.example.com`) or a query parameter
+     * (`?lang=nl`), leaving the path identical to the default language — there
+     * is no prefix to recover and nothing here fires.
+     *
+     * Alternate domain (Pro) is deliberately excluded, see below.
+     *
+     * @param string $slug Slug as `extractSlug()` produced it.
+     *
+     * @return string|null Language-prefixed candidate, or null when not applicable.
+     */
+    private function languagePrefixedSlug(string $slug): ?string
+    {
+        // Resolved ONCE and reused below. Under WPML every `home_url()` call runs
+        // `WPML_Home_Url_Filter_Context::should_not_filter()`, which walks an
+        // unbounded `debug_backtrace()` — so on exactly the sites this fix
+        // targets, each extra call is a real cost on the redirect path.
+        $homeUrl      = (string) home_url();
+        $filteredPath = $this->filteredHomePath();
+        // No install directory reported means nothing was stripped, so there is
+        // nothing to put back. Also the cheap early exit for the root installs
+        // that most sites are.
+        if ($filteredPath === '') {
+            return null;
+        }
+
+        // Alternate domain: left entirely alone. Pretty URLs on those sites are
+        // built from `prli_pretty_link_base`, NOT `home_url()`, so WPML never
+        // decorates them and `/nl/go/slug` is not a URL such a site emits.
+        // Recovering a prefix that cannot occur would only add lookups, and
+        // stacking a language directory on an alt-domain path
+        // (`/nl/klik/slug`) leaves two prefixes with no way to attribute which
+        // segment belongs to which.
+        //
+        // ANY rewrite of the base opts out, compared whole rather than by path:
+        // a pathless alternate host (`https://short.example.com`) has no path to
+        // notice, and a path that happens to equal the decorated one would be
+        // missed too. On a site with no alternate domain the filter returns
+        // `home_url()` untouched, so the two are identical and this is a no-op.
+        $altBase = (string) apply_filters('prli_pretty_link_base', $homeUrl);
+        // Trailing slashes only, deliberately: `LinkUrl::build()` rtrims this
+        // same base, so a base that differs by nothing but a slash is not an
+        // alternate domain and must not opt the site out.
+        if (rtrim($altBase, '/') !== rtrim($homeUrl, '/')) {
+            return null;
+        }
+
+        // This doubles as the supported escape hatch: a site that wants prefix
+        // recovery off can filter `prli_pretty_link_base` to any base differing
+        // from `home_url()` by more than a trailing slash.
+        //
+        // The flip side, deliberately not normalised away: a filter that only
+        // canonicalises — forcing https, dropping `www` — also opts the site
+        // out, silently. Scheme and host are left in the comparison because we
+        // cannot tell that apart from a deliberate alternate host, and opting
+        // out is the safe direction; the cost is that such a site keeps the
+        // pre-#850 behaviour.
+        //
+        // WPML leaves `option_home` alone on this path, but other plugins may
+        // filter it — and if both sources end up agreeing, recovery is skipped
+        // and the original bug persists for that site. Not universal coverage.
+        $rawPath = $this->homePath((string) get_option('home'));
+        if ($rawPath === $filteredPath) {
+            // Sources agree: the leading segment really is the install
+            // directory. This is every non-multilingual site, and every
+            // default-language request on a multilingual one.
+            return null;
+        }
+
+        // Only when the decorated path EXTENDS the real one — `blog` becoming
+        // `blog/nl`, which is the shape a language directory produces. Anything
+        // else is an unrelated rewrite (raw `blog`, filtered `portal`) whose
+        // segments we have no business reinterpreting.
+        if ($rawPath !== '' && strpos($filteredPath . '/', $rawPath . '/') !== 0) {
+            return null;
+        }
+
+        // Derived from the path as it ARRIVED, never rebuilt from the stripped
+        // slug. Re-prepending `$filteredPath` would assume `extractSlug()` had
+        // removed it, and it only does so when the request actually starts with
+        // it — `stripHomePath()` returns the path untouched otherwise. On a
+        // request that carries no language segment while `home_url()` is
+        // decorated, that assumption invents a prefix which was never there and
+        // hands the resulting row priority over the real match.
+        if ($this->requestPath === null) {
+            return null;
+        }
+        $prefixed = self::removeLeadingSegment($this->requestPath, $rawPath);
+
+        // Parity with the extractors: `index.php/` is a web-server artifact of
+        // almost-pretty permalinks, never part of a stored slug. It sits AFTER
+        // the language segment here (`nl/index.php/go/abc`), because the
+        // extractors strip the home path first and this candidate keeps the
+        // segment they removed — so match the first segment-aligned occurrence
+        // rather than only a leading one. `index.php` cannot be a legitimate
+        // slug segment, so this is unambiguous.
+        $prefixed = (string) preg_replace('#(^|/)index\.php/#', '$1', $prefixed, 1);
+
+        // Nothing recovered (the request had no extra segment) or identical to
+        // what we are already about to try.
+        return ($prefixed === '' || $prefixed === $slug) ? null : $prefixed;
+    }
+
+    /**
+     * Decoded, trimmed path component of a URL, for comparing home paths.
+     *
+     * Decoded because the callers compare against an already-decoded request
+     * path: a home path of `/my%20site` has to match `my site`.
+     *
+     * @param string $url URL to take the path from.
+     *
+     * @return string
+     */
+    private function homePath(string $url): string
+    {
+        return trim(rawurldecode((string) wp_parse_url($url, PHP_URL_PATH)), '/');
+    }
+
+    /**
+     * `home_url()`'s path for this dispatch, resolved once.
+     *
+     * Decoded to match the callers, which have already decoded the request
+     * path: a home path of `/my%20site` must compare against `my site`.
+     *
+     * @return string
+     */
+    private function filteredHomePath(): string
+    {
+        if ($this->filteredHomePath === null) {
+            $this->filteredHomePath = $this->homePath((string) home_url());
+        }
+        return $this->filteredHomePath;
+    }
+
+    /**
+     * Remove a leading path prefix, or return '' when the path IS that prefix.
+     *
+     * The prefix may be multi-segment (`blog`, or `blog/nl` if reused that way).
+     * Only the first occurrence goes, so a slug repeating it (`blog/blog`) still
+     * resolves.
+     *
+     * @param string $slug    Trimmed request path.
+     * @param string $segment Segment to remove, without surrounding slashes.
+     *
+     * @return string
+     */
+    private static function removeLeadingSegment(string $slug, string $segment): string
+    {
+        if ($segment === '') {
+            return $slug;
+        }
+        if ($slug === $segment) {
+            return '';
+        }
+        $prefix = $segment . '/';
+        if (strpos($slug, $prefix) === 0) {
+            return substr($slug, strlen($prefix));
+        }
+        return $slug;
     }
 
     /**

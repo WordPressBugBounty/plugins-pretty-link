@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace PrettyLinks\GroundLevel\Mothership\Manager;
 
 use PrettyLinks\GroundLevel\Mothership\AbstractPluginConnection;
-use PrettyLinks\GroundLevel\Mothership\Api\Request;
-use PrettyLinks\GroundLevel\Mothership\Api\Response;
+use PrettyLinks\GroundLevel\Mothership\Api\Request\Products;
+use PrettyLinks\GroundLevel\Mothership\Credentials;
 use PrettyLinks\GroundLevel\Mothership\ExtensionType;
+use PrettyLinks\GroundLevel\Mothership\Util;
 use PrettyLinks\GroundLevel\Support\Concerns\Hookable;
 use PrettyLinks\GroundLevel\Support\Models\Hook;
 use PrettyLinks\GroundLevel\Support\View;
@@ -20,39 +21,32 @@ class AddonsManager
     use Hookable;
 
     /**
-     * Suffix for the cache key for the Products API response.
+     * Suffix for the cache key for the licensed add-ons response.
      *
      * @var string
      */
-    protected const CACHE_KEY_PRODUCTS = '-mosh-products';
+    protected const CACHE_KEY_ADDONS = '-mosh-addons';
 
     /**
-     * Suffix for the cache key for the update check.
-     *
-     * @var string
-     */
-    protected const CACHE_KEY_UPDATE_CHECK = '-mosh-addons-update-check';
-
-    /**
-     * The duration of the cache for the Products API response, default 60 minutes.
+     * Cache TTL in minutes for a successful add-ons response.
      *
      * @var integer
      */
-    protected const CACHE_DURATION_MINUTES = 60;
+    protected const CACHE_TTL_MINUTES = 60;
 
     /**
-     * The duration of the cache for the update check, default 30 minutes.
+     * Cache TTL in minutes for an errored add-ons response (debounces retries).
      *
      * @var integer
      */
-    protected const UPDATE_CHECK_DURATION_MINUTES = 30;
+    protected const ERROR_TTL_MINUTES = 5;
 
     /**
-     * The duration of the negative cache after a failed API request, default 5 minutes.
+     * Page size for the bulk products list.
      *
      * @var integer
      */
-    protected const ERROR_CACHE_DURATION_MINUTES = 5;
+    protected const PER_PAGE = 100;
 
     /**
      * The plugin connection.
@@ -62,11 +56,18 @@ class AddonsManager
     private AbstractPluginConnection $plugin;
 
     /**
-     * The request instance.
+     * The credentials instance.
      *
-     * @var Request
+     * @var Credentials
      */
-    private Request $request;
+    private Credentials $credentials;
+
+    /**
+     * The products API.
+     *
+     * @var Products
+     */
+    private Products $products;
 
     /**
      * The view instance for rendering templates.
@@ -74,6 +75,13 @@ class AddonsManager
      * @var View
      */
     private View $view;
+
+    /**
+     * The Mothership utility instance.
+     *
+     * @var Util
+     */
+    private Util $util;
 
     /**
      * The product object for the AJAX request.
@@ -85,15 +93,24 @@ class AddonsManager
     /**
      * Constructor.
      *
-     * @param AbstractPluginConnection $plugin  The plugin connection.
-     * @param Request                  $request The request instance.
-     * @param View                     $view    The view instance for rendering templates.
+     * @param AbstractPluginConnection $plugin      The plugin connection.
+     * @param Credentials              $credentials The credentials instance.
+     * @param Products                 $products    The products API.
+     * @param View                     $view        The view instance for rendering templates.
+     * @param Util                     $util        The Mothership utility instance.
      */
-    public function __construct(AbstractPluginConnection $plugin, Request $request, View $view)
-    {
-        $this->plugin  = $plugin;
-        $this->request = $request;
-        $this->view    = $view;
+    public function __construct(
+        AbstractPluginConnection $plugin,
+        Credentials $credentials,
+        Products $products,
+        View $view,
+        Util $util
+    ) {
+        $this->plugin      = $plugin;
+        $this->credentials = $credentials;
+        $this->products    = $products;
+        $this->view        = $view;
+        $this->util        = $util;
     }
 
     /**
@@ -106,274 +123,143 @@ class AddonsManager
         return [
             new Hook(
                 Hook::TYPE_ACTION,
-                'wp_ajax_mosh_addon_activate',
+                "wp_ajax_{$this->plugin->pluginId}_addon_activate",
                 [$this, 'ajaxAddonActivate']
             ),
             new Hook(
                 Hook::TYPE_ACTION,
-                'wp_ajax_mosh_addon_deactivate',
+                "wp_ajax_{$this->plugin->pluginId}_addon_deactivate",
                 [$this, 'ajaxAddonDeactivate']
             ),
             new Hook(
                 Hook::TYPE_ACTION,
-                'wp_ajax_mosh_addon_install',
+                "wp_ajax_{$this->plugin->pluginId}_addon_install",
                 [$this, 'ajaxAddonInstall']
-            ),
-            new Hook(
-                Hook::TYPE_FILTER,
-                'site_transient_update_themes',
-                [$this, 'addonsUpdateThemes']
-            ),
-            new Hook(
-                Hook::TYPE_FILTER,
-                'site_transient_update_plugins',
-                [$this, 'addonsUpdatePlugins']
             ),
         ];
     }
 
     /**
-     * Update the plugins transient with the available add-ons.
+     * Returns the connected product's add-ons.
      *
-     * @param  mixed $transient The update plugins transient.
-     * @return mixed            The modified transient.
+     * Cached for {@see self::CACHE_TTL_MINUTES} minutes on success. On error the last cached
+     * list (or an empty list) is kept for {@see self::ERROR_TTL_MINUTES} minutes.
+     *
+     * @param  boolean $cached Whether to use the cached add-ons list.
+     * @return array<object> List of add-on product objects.
      */
-    public function addonsUpdatePlugins($transient)
+    public function getAddons(bool $cached = false): array
     {
-        return $this->updateTransient($transient, ExtensionType::PLUGIN());
+        $cacheKey     = $this->plugin->pluginId . self::CACHE_KEY_ADDONS;
+        $cachedAddons = get_transient($cacheKey);
+
+        if ($cached && is_array($cachedAddons)) {
+            return $cachedAddons;
+        }
+
+        $addons = $this->fetchAddons(! $cached);
+
+        if (null === $addons) {
+            // On error, keep any previously cached list.
+            $addons = is_array($cachedAddons) ? $cachedAddons : [];
+            set_transient($cacheKey, $addons, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS);
+
+            return $addons;
+        }
+
+        set_transient($cacheKey, $addons, self::CACHE_TTL_MINUTES * MINUTE_IN_SECONDS);
+
+        return $addons;
     }
 
     /**
-     * Update the themes transient with the available add-ons.
+     * Fetches the connected product's add-ons from the API.
      *
-     * @param  mixed $transient The update themes transient.
-     * @return mixed            The modified transient.
+     * Each add-on object exposes the latest version on a `version` property.
+     * Add-ons that require a license upgrade are typed `upgrade-addon` and listed last.
+     *
+     * @return array<object>|null The add-ons, or null on a fetch error.
      */
-    public function addonsUpdateThemes($transient)
+    private function fetchAddons(bool $fresh = false): ?array
     {
-        return $this->updateTransient($transient, ExtensionType::THEME());
-    }
+        // PL strauss-fixup: cache semantics. getAddons(false) skipped this
+        // manager's transient but not the API client's, so a forced refresh
+        // replayed the same cached body. Bypass both.
+        $products = $fresh ? $this->products->fresh() : $this->products;
 
-    /**
-     * Update the transient with the available add-ons.
-     *
-     * @param  mixed         $transient     The transient to update.
-     * @param  ExtensionType $extensionType The extension type being updated.
-     * @return mixed                        The modified transient.
-     */
-    protected function updateTransient($transient, ExtensionType $extensionType)
-    {
-        if (! $this->hasActiveLicense() || ! is_object($transient)) {
-            return $transient;
+        $response = $products->getRelations($this->plugin->productId, [
+            '_embed'   => 'version-latest',
+            'per_page' => self::PER_PAGE,
+        ]);
+
+        $products = [];
+        while (true) {
+            if ($response->isError()) {
+                return null;
+            }
+
+            $products = array_merge($products, $response->getData('products', []));
+            if (! $response->hasNext()) {
+                break;
+            }
+
+            $next = $response->next();
+            if (null === $next) {
+                break;
+            }
+
+            $response = $next;
         }
 
-        if (! isset($transient->response) || ! is_array($transient->response)) {
-            $transient->response = [];
-        }
-
-        $response = $this->getAddons(true);
-
-        if ($response->isError()) {
-            return $transient;
-        }
-
-        $products = $this->filterProductsByExtensionType($response->getData('products', []), $extensionType);
-        return (! empty($products)) ? $this->injectUpdates($products, $transient, $extensionType) : $transient;
-    }
-
-    /**
-     * Returns the modified update transient with add-on updates.
-     *
-     * @param  array         $products      The products to check.
-     * @param  mixed         $transient     The transient to update.
-     * @param  ExtensionType $extensionType The extension type to filter by.
-     * @return mixed                        The modified transient.
-     */
-    protected function injectUpdates(array $products, $transient, ExtensionType $extensionType)
-    {
-        foreach ($products ?? [] as $product) {
-            $mainFile      = $product->main_file ?? ''; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
-            $versionLatest = $product->_embedded->{'version-latest'}->number ?? '';
-            $urlLatest     = $product->_embedded->{'version-latest'}->url ?? '';
-            $item          = null;
-            // Plugins use the main file while themes use the directory name.
-            $transientKey = $extensionType->equals(ExtensionType::THEME(), false) ? dirname($mainFile) : $mainFile;
-
-            if (
-                empty($mainFile) ||
-                empty($versionLatest) ||
-                empty($urlLatest) ||
-                ! isset($transient->checked[$transientKey])
-            ) {
+        $addons   = [];
+        $upgrades = [];
+        foreach ($products as $product) {
+            if ('addon' !== $product->type) {
                 continue;
             }
 
-            if ($extensionType->equals(ExtensionType::PLUGIN(), false)) {
-                $item = (object) [
-                    'id'           => $mainFile,
-                    'slug'         => dirname($mainFile),
-                    'plugin'       => $mainFile,
-                    'new_version'  => $versionLatest,
-                    'package'      => $urlLatest,
-                    'url'          => '',
-                    'tested'       => '',
-                    'requires_php' => '',
-                    'icons'        => [
-                        '2x' => $product->image,
-                        '1x' => $product->image,
-                    ],
-                ];
-            } elseif ($extensionType->equals(ExtensionType::THEME(), false)) {
-                $item = [
-                    'theme'        => dirname($mainFile),
-                    'new_version'  => $versionLatest,
-                    'package'      => $urlLatest,
-                    'url'          => '',
-                    'requires'     => '',
-                    'requires_php' => '',
-                    'icons'        => [
-                        '2x' => $product->image,
-                        '1x' => $product->image,
-                    ],
-                ];
-            }
+            $version          = $product->_embedded->{'version-latest'} ?? null;
+            $product->version = isset($version, $version->product) ? $version : null;
+            unset($product->_embedded->{'version-latest'});
 
-            if (! is_null($item)) {
-                if (version_compare($transient->checked[$transientKey], $versionLatest, '>=')) {
-                    $transient->no_update[$transientKey] = $item; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- WordPress data structure.
-                } else {
-                    $transient->response[$transientKey] = $item;
-                }
+            if ($product->version) {
+                $addons[] = $product;
+            } else {
+                $product->type = 'upgrade-addon';
+                $upgrades[]    = $product;
             }
         }
 
-        return $transient;
+        return array_merge($addons, $upgrades);
     }
 
     /**
-     * Get the add-ons from the API.
-     *
-     * @param  boolean $cached Whether to use the cached products or not.
-     * @return Response The add-ons response.
-     */
-    public function getAddons(bool $cached = false): Response
-    {
-        if ($cached && $this->cachedResponseIsValid()) {
-            $response = $this->getCachedApiResponse();
-            if (!is_null($response)) {
-                return $response;
-            }
-        }
-
-        $args['_embed'] = 'version-latest';
-        $response       = $this->request->get('products', $args);
-        $cacheDuration  = $response->isError() ? self::ERROR_CACHE_DURATION_MINUTES : self::CACHE_DURATION_MINUTES;
-
-        set_transient(
-            $this->plugin->pluginId . self::CACHE_KEY_PRODUCTS,
-            $response,
-            $cacheDuration * MINUTE_IN_SECONDS
-        );
-
-        $this->markCacheRefreshed($cacheDuration);
-
-        return $response;
-    }
-
-    /**
-     * Get the cached API response.
-     *
-     * @return Response|null The cached API response, or null if unavailable.
-     */
-    protected function getCachedApiResponse(): ?Response
-    {
-        $cached = get_transient($this->plugin->pluginId . self::CACHE_KEY_PRODUCTS);
-
-        return $cached instanceof Response ? $cached : null;
-    }
-
-    /**
-     * Clears the cache.
+     * Clears the cached add-ons response.
      *
      * @return void
      */
     public function clearCache(): void
     {
-        delete_transient($this->plugin->pluginId . self::CACHE_KEY_PRODUCTS);
-        delete_transient($this->plugin->pluginId . self::CACHE_KEY_UPDATE_CHECK);
+        delete_transient($this->plugin->pluginId . self::CACHE_KEY_ADDONS);
     }
 
     /**
-     * Check if the cached API response is valid.
+     * Gets an add-on by slug.
      *
-     * @return boolean
-     */
-    protected function cachedResponseIsValid(): bool
-    {
-        $updateCheckTransient = get_transient($this->plugin->pluginId . self::CACHE_KEY_UPDATE_CHECK);
-        return (false !== $updateCheckTransient);
-    }
-
-    /**
-     * Mark the cached API response valid for a designated period.
+     * @param string  $slug   The slug of the add-on to get.
+     * @param boolean $cached Whether to look up in the cached add-ons. Default true.
      *
-     * @param  integer $minutes Optionally set the duration of the cache, default 30 minutes.
-     * @return boolean          True if the transient was set, false otherwise.
+     * @return object|null The add-on object, or null if not found.
      */
-    protected function markCacheRefreshed(int $minutes = 30): bool
+    public function getAddon(string $slug, bool $cached = true): ?object
     {
-        return set_transient(
-            $this->plugin->pluginId . self::CACHE_KEY_UPDATE_CHECK,
-            null,
-            $minutes * MINUTE_IN_SECONDS
-        );
-    }
-
-    /**
-     * Check if the license for the product exists and is active.
-     *
-     * @return boolean
-     */
-    protected function hasActiveLicense(): bool
-    {
-        return $this->plugin->getLicenseKey() && $this->plugin->getLicenseActivationStatus();
-    }
-
-    /**
-     * Filter products by extension type.
-     *
-     * @param  array         $products      The products to filter.
-     * @param  ExtensionType $extensionType The extension type to filter by.
-     * @return array
-     */
-    protected function filterProductsByExtensionType(array $products, ExtensionType $extensionType): array
-    {
-        return array_values(
-            array_filter($products, function ($product) use ($extensionType) {
-                return ($product->extension_type ?? false) === $extensionType->getValue(); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
-            })
-        );
-    }
-
-    /**
-     * Get a product by slug.
-     *
-     * @param  string $slug The slug of the product to get.
-     * @return object|null The product, or null if not found.
-     */
-    protected function getProductBySlug(string $slug): ?object
-    {
-        $apiResponse = $this->getAddons(true);
-        $result      = null;
-
-        foreach ($apiResponse->getData('products', []) as $product) {
-            if (! empty($product->slug) && $product->slug === $slug) {
-                $result = $product;
-                break;
+        foreach ($this->getAddons($cached) as $addon) {
+            if ($slug === $addon->slug) {
+                return $addon;
             }
         }
 
-        return $result;
+        return null;
     }
 
     /**
@@ -403,13 +289,23 @@ class AddonsManager
         }
 
         $slug              = sanitize_text_field(wp_unslash($_POST['slug'] ?? ''));
-        $this->ajaxProduct = $this->getProductBySlug($slug);
+        $this->ajaxProduct = $this->getAddon($slug);
 
         if (! $this->ajaxProduct) {
             wp_send_json_error(
                 new \WP_Error(
                     'addon_not_found',
                     esc_html__('Add-on not found.', 'pretty-link')
+                )
+            );
+        }
+
+        // Upgrade add-ons cannot be installed or managed here.
+        if ('upgrade-addon' === $this->ajaxProduct->type) {
+            wp_send_json_error(
+                new \WP_Error(
+                    'upgrade_required',
+                    esc_html__('This add-on requires a license upgrade.', 'pretty-link')
                 )
             );
         }
@@ -606,9 +502,9 @@ class AddonsManager
             $installer = new \Theme_Upgrader(new AddonInstallSkin());
         }
 
-        $addonUrl = $this->ajaxProduct->_embedded->{'version-latest'}->url ?? '';
+        $addonUrl = $this->ajaxProduct->version->url ?? '';
 
-        if (! filter_var($addonUrl, FILTER_VALIDATE_URL)) {
+        if (! $this->util->isAllowedDownloadUrl($addonUrl)) {
             wp_send_json_error(
                 new \WP_Error(
                     'invalid_addon_url',
@@ -673,7 +569,7 @@ class AddonsManager
      */
     public function generateAddonsHtml(): string
     {
-        if (! $this->plugin->getLicenseKey()) {
+        if (! $this->credentials->getLicenseKey()) {
             return '<div class="notice notice-error is-dismissible"><p>' . esc_html__(
                 'Please enter your license key to access add-ons.',
                 'pretty-link'
@@ -688,27 +584,18 @@ class AddonsManager
                 'grdlvl_mosh_refresh_addons'
             )
         ) {
-            delete_transient($this->plugin->pluginId . self::CACHE_KEY_PRODUCTS);
-        }
-
-        $addons = $this->getAddons(true);
-        if ($addons->isError()) {
-            return sprintf(
-                '<div class=""><p>%s <b>%s</b></p></div>',
-                esc_html__('There was an issue connecting with the API.', 'pretty-link'),
-                esc_html($addons->getMessage())
-            );
+            $this->clearCache();
         }
 
         $this->enqueueAssets();
-        $products = $this->prepareProductsForDisplay($addons->getData('products', []));
+        $products = $this->prepareProductsForDisplay($this->getAddons(true));
 
         return $this->view->render('products.php', ['products' => $products]);
     }
 
     /**
-     * Prepare the addons for display. Remove parent products and any addons that may be missing
-     * required data, and add data for installation status, text, and icon class.
+     * Prepare the addons for display. Skip any addons that are missing required data,
+     * and add data for installation status, text, and icon class.
      *
      * @param  array $products The products to prepare. Each product is a StdClass object.
      * @return array           The prepared products.
@@ -717,10 +604,9 @@ class AddonsManager
     {
         $products = array_values(
             array_filter($products, function ($product) {
-                $isAddon          = ! empty($product->type) && 'addon' === $product->type;
                 $hasMainFile      = ! empty($product->main_file); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
                 $hasExtensionType = ! empty($product->extension_type); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
-                return $isAddon && $hasMainFile && $hasExtensionType;
+                return $hasMainFile && $hasExtensionType;
             })
         );
 
@@ -728,6 +614,16 @@ class AddonsManager
         $themeUpdates  = get_site_transient('update_themes');
 
         foreach ($products as $product) {
+            if ('upgrade-addon' === $product->type) {
+                $product->updateAvailable = false;
+                $product->status          = 'upgrade';
+                $product->statusLabel     = esc_html__('Upgrade Required', 'pretty-link');
+                $product->iconClass       = 'dashicons dashicons-unlock';
+                $product->buttonLabel     = esc_html__('Upgrade', 'pretty-link');
+                $product->upgradeUrl      = $this->plugin->getAccountUrl();
+                continue;
+            }
+
             $mainFile      = $product->main_file ?? false; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
             $extensionType = $product->extension_type ?? false; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
             if (ExtensionType::PLUGIN === $extensionType) {
@@ -745,11 +641,10 @@ class AddonsManager
             if ($installed && $active) {
                 $product->status      = 'active';
                 $product->statusLabel = esc_html__('Active', 'pretty-link');
+                $product->iconClass   = 'dashicons dashicons-no-alt';
+                $product->buttonLabel = esc_html__('Deactivate', 'pretty-link');
 
-                if (ExtensionType::PLUGIN === $extensionType) {
-                    $product->iconClass   = 'dashicons dashicons-no-alt';
-                    $product->buttonLabel = esc_html__('Deactivate', 'pretty-link');
-                } else {
+                if (ExtensionType::THEME === $extensionType) {
                     $product->iconClass   = 'dashicons dashicons-admin-appearance';
                     $product->buttonLabel = esc_html__('Switch Themes', 'pretty-link');
                 }
@@ -758,6 +653,10 @@ class AddonsManager
                 $product->iconClass   = 'dashicons dashicons-download';
                 $product->statusLabel = esc_html__('Not Installed', 'pretty-link');
                 $product->buttonLabel = esc_html__('Install Add-on', 'pretty-link');
+
+                if (ExtensionType::THEME === $extensionType) {
+                    $product->buttonLabel = esc_html__('Install Theme', 'pretty-link');
+                }
             } else {
                 $product->status      = 'inactive';
                 $product->iconClass   = 'dashicons dashicons-yes-alt';
@@ -777,10 +676,26 @@ class AddonsManager
     public function enqueueAssets(): void
     {
         wp_enqueue_style('dashicons');
-        wp_enqueue_script('mosh-addons-js', plugin_dir_url(__FILE__) . '../assets/addons.js', [], null, true);
-        wp_enqueue_style('mosh-addons-css', plugin_dir_url(__FILE__) . '../assets/addons.css');
+        wp_enqueue_script(
+            'mosh-addons-js',
+            plugin_dir_url(__FILE__) . '../assets/addons.js',
+            [],
+            filemtime(__DIR__ . '/../assets/addons.js'),
+            true
+        );
+        wp_enqueue_style(
+            'mosh-addons-css',
+            plugin_dir_url(__FILE__) . '../assets/addons.css',
+            [],
+            filemtime(__DIR__ . '/../assets/addons.css')
+        );
         wp_localize_script('mosh-addons-js', 'MoshAddons', [
             'ajax_url'              => admin_url('admin-ajax.php'),
+            'actions'               => [
+                'activate'   => "{$this->plugin->pluginId}_addon_activate",
+                'deactivate' => "{$this->plugin->pluginId}_addon_deactivate",
+                'install'    => "{$this->plugin->pluginId}_addon_install",
+            ],
             'themes_url'            => admin_url('themes.php'),
             'nonce'                 => wp_create_nonce('mosh_addons'),
             'active'                => esc_html__('Active', 'pretty-link'),

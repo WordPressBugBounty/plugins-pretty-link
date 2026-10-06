@@ -17,6 +17,5 @@ class Loader
     public static function register(): void
     {
         add_shortcode(PrettyLink::TAG, [PrettyLink::class, 'render']);
-        add_shortcode(PostPrettyLink::TAG, [PostPrettyLink::class, 'render']);
     }
 }

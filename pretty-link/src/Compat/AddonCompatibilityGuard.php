@@ -56,11 +56,12 @@ class AddonCompatibilityGuard
     private const DISMISS_NONCE = 'prli_dismiss_addon_compat';
 
     /**
-     * Lowest add-on version compatible with this core. v4 add-ons report
-     * 4.0.0+; the legacy .org builds report 1.x/2.x, so version_compare cleanly
-     * separates them.
+     * Lowest add-on major version compatible with this core. v4 add-ons report
+     * 4.x; the legacy .org builds report 1.x/2.x. Only the major number is
+     * compared, so `4`, `4.0`, `v4.0.0` and `4.0.0-rc1` all count as 4.0 —
+     * `version_compare()` against `4.0.0` would reject every one of them.
      */
-    private const MIN_VERSION = '4.0.0';
+    private const MIN_MAJOR = 4;
 
     /**
      * Capability gate for seeing and dismissing the notice.
@@ -121,7 +122,7 @@ class AddonCompatibilityGuard
                 continue;
             }
 
-            if (version_compare($version, self::MIN_VERSION, '>=')) {
+            if (self::isCompatible($version)) {
                 // Updated to a compatible build — the notice no longer
                 // applies, regardless of whether it's currently active.
                 unset($deactivated[$basename]);
@@ -162,6 +163,19 @@ class AddonCompatibilityGuard
         } else {
             update_option(self::NOTICE_OPTION, $deactivated, false);
         }
+    }
+
+    /**
+     * Whether an add-on version header belongs to a 4.0+ build.
+     *
+     * @param string $version The add-on's Version header (non-empty).
+     *
+     * @return boolean
+     */
+    private static function isCompatible(string $version): bool
+    {
+        // Leading integer of the header, not version_compare() special-suffix order.
+        return (int) ltrim($version, 'vV') >= self::MIN_MAJOR;
     }
 
     /**

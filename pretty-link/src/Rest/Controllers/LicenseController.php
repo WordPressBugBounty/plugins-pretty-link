@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Rest\Controllers;
 
-use PrettyLinks\Licensing\AuthClient;
 use PrettyLinks\Licensing\InstallLicensedEdition;
 use PrettyLinks\Licensing\LicenseManager;
 use WP_REST_Request;
@@ -50,22 +49,6 @@ class LicenseController extends BaseController
             ],
         ]);
 
-        register_rest_route($this->namespace(), '/license/connect', [
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [$this, 'connect'],
-                'permission_callback' => $this->permission(),
-            ],
-        ]);
-
-        register_rest_route($this->namespace(), '/license/disconnect', [
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [$this, 'disconnect'],
-                'permission_callback' => $this->permission(),
-            ],
-        ]);
-
         register_rest_route($this->namespace(), '/license/edge-updates', [
             [
                 'methods'             => WP_REST_Server::CREATABLE,
@@ -97,10 +80,13 @@ class LicenseController extends BaseController
     {
         $result = (new InstallLicensedEdition())->install();
         if (empty($result['success'])) {
+            // `message` so @wordpress/api-fetch surfaces it as `err.message`
+            // for the edition-mismatch notice's install CTA (NoticeStrip).
             return new WP_REST_Response(
                 [
-                    'success' => false,
-                    'error'   => $result['error'] ?? 'install_failed',
+                    'code'    => 'install_failed',
+                    'message' => (string) ($result['error']
+                        ?? __('Could not install the licensed edition. Please try again.', 'pretty-link')),
                 ],
                 500
             );
@@ -140,11 +126,21 @@ class LicenseController extends BaseController
         $body = (array) $request->get_json_params();
         $key  = sanitize_text_field((string) ($body['key'] ?? ''));
         if ($key === '') {
-            return new WP_REST_Response(['error' => 'key_required'], 400);
+            return new WP_REST_Response([
+                'code'    => 'key_required',
+                'message' => __('Enter your license key to activate.', 'pretty-link'),
+            ], 400);
         }
         $response = $this->manager()->activate($key);
         if (isset($response['error'])) {
-            return new WP_REST_Response($response, 400);
+            // Surface the licenses-server message (LicenseManager::activate()
+            // carries Response::getErrorMessage() through). Use the `message`
+            // key so @wordpress/api-fetch exposes it as the rejected error's
+            // `.message` for the React notice strip.
+            return new WP_REST_Response([
+                'code'    => 'activation_failed',
+                'message' => (string) $response['error'],
+            ], 400);
         }
         return new WP_REST_Response([
             'success' => true,
@@ -160,39 +156,14 @@ class LicenseController extends BaseController
      */
     public function deactivate(): WP_REST_Response
     {
+        // The facade always clears local state (even when the server refuses),
+        // so this is always a success from the site's perspective; the message
+        // tells the user if the activation may still be in use remotely.
         $response = $this->manager()->deactivate();
         return new WP_REST_Response([
             'success' => true,
             'result'  => $response,
             'license' => $this->manager()->currentLicense(),
-        ]);
-    }
-
-    /**
-     * Returns the OAuth connect URL.
-     *
-     * @return WP_REST_Response
-     */
-    public function connect(): WP_REST_Response
-    {
-        $return  = admin_url('admin.php?page=pretty-link-options');
-        $authUrl = $this->auth()->connectUrl($return);
-        return new WP_REST_Response([
-            'url' => esc_url_raw($authUrl),
-        ]);
-    }
-
-    /**
-     * Disconnects the current OAuth connection.
-     *
-     * @return WP_REST_Response
-     */
-    public function disconnect(): WP_REST_Response
-    {
-        $response = $this->auth()->disconnect();
-        return new WP_REST_Response([
-            'success' => !empty($response['disconnected']),
-            'result'  => $response,
         ]);
     }
 
@@ -209,8 +180,12 @@ class LicenseController extends BaseController
         $edge = !empty($body['edge']);
         update_option(LicenseManager::OPTION_EDGE_UPDATES, $edge);
 
-        // Refresh the plugin-update transient so the new channel takes effect
-        // on the Plugins page without waiting for the 12h cache to expire.
+        // Clear WP's update cache so the new release channel (stable vs edge)
+        // is re-resolved by ground-level-mothership's UpdateService on the next
+        // check, rather than waiting for the cache to expire.
+        wp_clean_update_cache();
+
+        // Retained for extensibility; add-ons may still listen for the toggle.
         do_action('prli_license_edge_updates_changed', $edge);
 
         return new WP_REST_Response([
@@ -227,20 +202,6 @@ class LicenseController extends BaseController
      */
     private function manager(): LicenseManager
     {
-        return $this->container->has(LicenseManager::class)
-            ? $this->container->get(LicenseManager::class)
-            : new LicenseManager();
-    }
-
-    /**
-     * Resolves the auth client from the container.
-     *
-     * @return AuthClient
-     */
-    private function auth(): AuthClient
-    {
-        return $this->container->has(AuthClient::class)
-            ? $this->container->get(AuthClient::class)
-            : new AuthClient();
+        return $this->container->get(LicenseManager::class);
     }
 }

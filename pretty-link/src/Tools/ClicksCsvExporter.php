@@ -6,9 +6,7 @@ namespace PrettyLinks\Tools;
 
 use PrettyLinks\Support\SiteDate;
 
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -117,13 +115,12 @@ class ClicksCsvExporter extends ChunkedCsvExporter
                 ORDER BY c.created_at DESC
                 LIMIT %d";
         global $wpdb;
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $rows = $wpdb->get_results(
             $wpdb->prepare($sql, ...array_merge($params, [$maxRows])),
             ARRAY_A
         ) ?: [];
 
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- php://temp is an in-memory stream used to build the CSV in RAM, not a file on disk that WP_Filesystem could open.
         $fh = fopen('php://temp', 'w+');
         if ($fh === false) {
             return '';
@@ -141,7 +138,7 @@ class ClicksCsvExporter extends ChunkedCsvExporter
         }
         rewind($fh);
         $out = stream_get_contents($fh);
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closes the in-memory php://temp stream opened above, which WP_Filesystem does not manage.
         fclose($fh);
         return is_string($out) ? $out : '';
     }
@@ -184,7 +181,6 @@ class ClicksCsvExporter extends ChunkedCsvExporter
                   FROM {$wpdb->prefix}prli_clicks c
                   LEFT JOIN {$wpdb->prefix}prli_links l ON c.link_id = l.id
                   {$whereSql}";
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         return (int) $wpdb->get_var(
             $params ? $wpdb->prepare($sql, ...$params) : $sql
         );
@@ -215,7 +211,6 @@ class ClicksCsvExporter extends ChunkedCsvExporter
                 ORDER BY c.created_at DESC, c.id DESC
                 LIMIT %d OFFSET %d";
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         return $wpdb->get_results(
             $wpdb->prepare($sql, ...array_merge($params, [$limit, $offset])),
             ARRAY_A

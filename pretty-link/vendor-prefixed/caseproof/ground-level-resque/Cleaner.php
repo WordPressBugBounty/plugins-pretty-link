@@ -134,7 +134,9 @@ class Cleaner
         $this->deleteCompletedAfter = $deleteCompletedAfter;
         $this->deleteFailedAfter    = $deleteFailedAfter;
         $this->addHooks();
-        $this->scheduleEvents();
+        if (\did_action('init')) {
+            $this->scheduleEvents();
+        }
     }
 
     /**
@@ -149,6 +151,11 @@ class Cleaner
                 Hook::TYPE_FILTER,
                 'cron_schedules',
                 [$this, 'intervals']
+            ),
+            new Hook(
+                Hook::TYPE_ACTION,
+                'init',
+                [$this, 'scheduleEvents']
             ),
             new Hook(
                 Hook::TYPE_ACTION,

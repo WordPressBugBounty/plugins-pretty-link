@@ -1,13 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Add-ons products grid view.
  *
  * @var array<object> $products The prepared product objects for display.
  */
+
+declare(strict_types=1);
+
 ?>
+
 <div id="mosh-admin-addons" class="wrap">
     <h1>
         <form method="post" action="">
@@ -33,8 +35,10 @@ declare(strict_types=1);
                         <?php if ($product->updateAvailable) : ?>
                         <div class="update-message notice inline notice-warning notice-alt mosh-product-update-message">
                             <p>
-                                New version available.
-                                <button class="button-link mosh-product-update-button" type="button">Update now</button>
+                                <?php esc_html_e('New version available.', 'pretty-link'); ?>
+                                <button class="button-link mosh-product-update-button" type="button">
+                                    <?php esc_html_e('Update now', 'pretty-link'); ?>
+                                </button>
                             </p>
                         </div>
                         <?php endif; ?>
@@ -56,19 +60,29 @@ declare(strict_types=1);
                         <div class="mosh-product-actions mosh-clearfix">
                             <div class="mosh-product-status">
                                 <strong>
-                            <?php
-                            printf(
-                                // Translators: %s: add-on status label.
-                                esc_html__('Status: %s', 'pretty-link'),
-                                sprintf(
-                                    '<span class="mosh-product-status-label">%s</span>',
-                                    esc_html($product->statusLabel)
-                                )
-                            );
-                            ?>
+                                <?php
+                                printf(
+                                    // Translators: %s: add-on status label.
+                                    esc_html__('Status: %s', 'pretty-link'),
+                                    sprintf(
+                                        '<span class="mosh-product-status-label">%s</span>',
+                                        esc_html($product->statusLabel)
+                                    )
+                                );
+                                ?>
                                 </strong>
                             </div>
                             <div class="mosh-product-action">
+                                <?php if ('upgrade' === $product->status) : ?>
+                                <a class="button button-primary mosh-product-upgrade"
+                                    href="<?php echo esc_url($product->upgradeUrl); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <i class="<?php echo esc_attr($product->iconClass); ?>"></i>
+                                    <?php echo esc_html($product->buttonLabel); ?>
+                                </a>
+                                <?php else : ?>
                                 <button type="button"
                                     data-slug="<?php echo esc_attr($product->slug); ?>"
                                     data-extension-type="<?php
@@ -78,14 +92,23 @@ declare(strict_types=1);
                                     <i class="<?php echo esc_attr($product->iconClass); ?>"></i>
                                     <?php echo esc_html($product->buttonLabel); ?>
                                 </button>
-                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
+                </div>
                 <?php endforeach; ?>
             </div>
         </div>
     <?php else : ?>
-        <h3><?php esc_html_e('There were no Add-ons found for your License Key.', 'pretty-link'); ?></h3>
+        <h3><?php esc_html_e('No Add-ons found for your License Key.', 'pretty-link'); ?></h3>
+        <p>
+            <?php
+                esc_html_e(
+                    'If you were expecting add-ons here, use the "Refresh Add-ons" button above to try again.',
+                    'pretty-link'
+                );
+            ?>
+        </p>
     <?php endif; ?>
 </div>

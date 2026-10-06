@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Admin;
 
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 // phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
@@ -76,6 +71,7 @@ class ReviewNotice
         // At least one click must exist. EXISTS with LIMIT 1 is the cheapest
         // way to confirm the plugin has been used without scanning the table.
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- prli_clicks is a Pretty Links table with no WP API, and this single-row existence probe runs at most once per admin page load, so a cache layer would cost more than it saves.
         return $wpdb->get_var("SELECT 1 FROM {$wpdb->prefix}prli_clicks LIMIT 1") !== null;
     }
 

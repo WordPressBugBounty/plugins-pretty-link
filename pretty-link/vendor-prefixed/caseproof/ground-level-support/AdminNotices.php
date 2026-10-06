@@ -30,13 +30,22 @@ class AdminNotices
     private string $prefix;
 
     /**
+     * The capability required to view and dismiss notices.
+     *
+     * @var string
+     */
+    private string $capability;
+
+    /**
      * Constructor.
      *
-     * @param string $prefix The prefix used for option keys and AJAX actions.
+     * @param string $prefix     The prefix used for option keys and AJAX actions.
+     * @param string $capability The capability required to view and dismiss notices.
      */
-    public function __construct(string $prefix)
+    public function __construct(string $prefix, string $capability = 'manage_options')
     {
-        $this->prefix = $prefix;
+        $this->prefix     = $prefix;
+        $this->capability = $capability;
     }
 
     /**
@@ -115,6 +124,10 @@ class AdminNotices
      */
     public function render(): void
     {
+        if (!current_user_can($this->capability)) {
+            return;
+        }
+
         $notices = $this->getAll();
 
         if (empty($notices)) {
@@ -167,6 +180,10 @@ class AdminNotices
     ): void {
         $notices = $this->getAll();
 
+        if (!in_array($type, [self::SUCCESS, self::WARNING, self::ERROR, self::INFO], true)) {
+            $type = self::INFO;
+        }
+
         $notices[$key] = [
             'message' => $message,
             'type'    => $type,
@@ -209,6 +226,10 @@ class AdminNotices
     public function ajaxDismiss(): void
     {
         check_ajax_referer($this->ajaxAction());
+
+        if (!current_user_can($this->capability)) {
+            wp_send_json_error(null, 403);
+        }
 
         $key = sanitize_text_field(wp_unslash($_POST['key'] ?? ''));
 

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace PrettyLinks\Rest\Controllers;
 
 // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -16,6 +14,7 @@ namespace PrettyLinks\Rest\Controllers;
 // user values bind through $wpdb->prepare(). No caching: these tables are the source
 // of truth for click/redirect data and must read-through. "meta_key"/"meta_value" here
 // refer to our own prli_link_metas table, not wp_postmeta.
+use PrettyLinks\Repositories\Links;
 use PrettyLinks\Support\SiteDate;
 use PrettyLinks\Tools\ClicksCsvExporter;
 use WP_REST_Request;
@@ -32,8 +31,12 @@ class ReportsController extends BaseController
     public function register(): void
     {
         $common = [
-            'from' => ['type' => 'string'],
-            'to'   => ['type' => 'string'],
+            'from'     => ['type' => 'string'],
+            'to'       => ['type' => 'string'],
+            // Optional comma-separated link ids. Dashboard omits this and
+            // stays site-wide; Click History can send the same filter
+            // the Table tab already uses.
+            'link_ids' => $this->linkIdsArg(),
         ];
 
         register_rest_route($this->namespace(), '/reports/counters', [
@@ -96,7 +99,8 @@ class ReportsController extends BaseController
      * from the fast-read counters on prli_links — the counters accumulate
      * forever and have no notion of "last 30 days", so they can't answer
      * range queries. `total_links` is the current live-link count, which
-     * is range-independent.
+     * is range-independent; with `link_ids` it counts only those ids that
+     * still live.
      *
      * Simple (count-only) tracking mode never inserts prli_clicks rows, so
      * `clicks` and `uniques` come from the static-clicks / static-uniques
@@ -114,21 +118,77 @@ class ReportsController extends BaseController
         $clicks = $wpdb->prefix . 'prli_clicks';
 
         list($fromDt, $toDt, $fromYmd, $toYmd) = $this->dateBounds($request);
-        $days                                  = SiteDate::calendarDaysInclusive($fromYmd, $toYmd);
 
-        $isCount = $this->isCountMode();
+        $isCount = Links::isCountMode();
+        $linkIds = $this->parseLinkIds($request);
+        list($linkSql, $linkParams) = $this->linkIdInSql('link_id', $linkIds);
+
+        // The "All time" preset sends from=2000-01-01 as a placeholder, so
+        // averaging over the raw range divides by decades of empty days.
+        // Start the average at the first recorded activity instead: the
+        // first click, or in count mode (no click rows) the first counter
+        // write, which seeds the static-clicks meta row's created_at.
+        // Trashed links count, as they do in the sum.
+        //
+        // Count-mode totals are lifetime, with no date filter, so the start
+        // only moves when the range runs through today; for a range ending
+        // earlier, shrinking the days would inflate an already lifetime sum.
+        $firstUtc = '';
+        if (!$isCount) {
+            if ($linkParams === []) {
+                $firstUtc = (string) $wpdb->get_var("SELECT MIN(created_at) FROM {$clicks}");
+            } else {
+                $firstUtc = (string) $wpdb->get_var(
+                    $wpdb->prepare(
+                        "SELECT MIN(created_at) FROM {$clicks} WHERE 1=1 {$linkSql}",
+                        ...$linkParams
+                    )
+                );
+            }
+        } elseif ($toYmd >= SiteDate::todayYmd()) {
+            if ($linkParams === []) {
+                $firstUtc = (string) $wpdb->get_var(
+                    "SELECT MIN(created_at) FROM {$metas}
+                      WHERE meta_key = 'static-clicks' AND CAST(meta_value AS UNSIGNED) > 0"
+                );
+            } else {
+                $firstUtc = (string) $wpdb->get_var(
+                    $wpdb->prepare(
+                        "SELECT MIN(created_at) FROM {$metas}
+                          WHERE meta_key = 'static-clicks' AND CAST(meta_value AS UNSIGNED) > 0
+                            {$linkSql}",
+                        ...$linkParams
+                    )
+                );
+            }
+        }
+        $days = SiteDate::calendarDaysInclusive(self::averageStartYmd($fromYmd, $toYmd, $firstUtc), $toYmd);
 
         // Count (Simple) mode: no per-visit rows exist, so clicks and uniques
         // come from the static-clicks / static-uniques meta counters. Skip
         // the prli_clicks query entirely.
         if ($isCount) {
-            $row         = $wpdb->get_results(
-                "SELECT meta_key, COALESCE(SUM(CAST(meta_value AS UNSIGNED)),0) AS total
-                   FROM {$metas}
-                  WHERE meta_key IN ('static-clicks','static-uniques')
-                  GROUP BY meta_key",
-                ARRAY_A
-            ) ?: [];
+            if ($linkParams === []) {
+                $row = (array) $wpdb->get_results(
+                    "SELECT meta_key, COALESCE(SUM(CAST(meta_value AS UNSIGNED)),0) AS total
+                       FROM {$metas}
+                      WHERE meta_key IN ('static-clicks','static-uniques')
+                      GROUP BY meta_key",
+                    ARRAY_A
+                );
+            } else {
+                $row = (array) $wpdb->get_results(
+                    $wpdb->prepare(
+                        "SELECT meta_key, COALESCE(SUM(CAST(meta_value AS UNSIGNED)),0) AS total
+                           FROM {$metas}
+                          WHERE meta_key IN ('static-clicks','static-uniques')
+                            {$linkSql}
+                          GROUP BY meta_key",
+                        ...$linkParams
+                    ),
+                    ARRAY_A
+                );
+            }
             $meta        = array_column($row, 'total', 'meta_key');
             $clickCount  = (int) ($meta['static-clicks'] ?? 0);
             $uniqueCount = (int) ($meta['static-uniques'] ?? 0);
@@ -136,9 +196,7 @@ class ReportsController extends BaseController
                 'clicks'      => $clickCount,
                 'uniques'     => $uniqueCount,
                 'avg_per_day' => $days > 0 ? $clickCount / $days : 0,
-                'total_links' => (int) $wpdb->get_var(
-                    "SELECT COUNT(*) FROM {$links} WHERE deleted_at IS NULL"
-                ),
+                'total_links' => $this->countLiveLinks($links, $linkIds),
             ]);
         }
 
@@ -147,9 +205,9 @@ class ReportsController extends BaseController
                 "SELECT COUNT(*) AS clicks,
                         COUNT(DISTINCT vuid) AS uniques
                    FROM {$clicks}
-                  WHERE created_at BETWEEN %s AND %s",
-                $fromDt,
-                $toDt
+                  WHERE created_at BETWEEN %s AND %s
+                    {$linkSql}",
+                ...array_merge([$fromDt, $toDt], $linkParams)
             ),
             ARRAY_A
         ) ?: [
@@ -161,9 +219,7 @@ class ReportsController extends BaseController
             'clicks'      => (int) ($row['clicks'] ?? 0),
             'uniques'     => (int) ($row['uniques'] ?? 0),
             'avg_per_day' => $days > 0 ? ((int) ($row['clicks'] ?? 0)) / $days : 0,
-            'total_links' => (int) $wpdb->get_var(
-                "SELECT COUNT(*) FROM {$links} WHERE deleted_at IS NULL"
-            ),
+            'total_links' => $this->countLiveLinks($links, $linkIds),
         ]);
     }
 
@@ -182,14 +238,17 @@ class ReportsController extends BaseController
 
         list($fromDt, $toDt) = $this->dateBounds($request);
         $limit               = max(1, min(100, (int) $request->get_param('limit')));
+        $linkIds             = $this->parseLinkIds($request);
         // ORDER BY direction is an enum, not a placeholder — wpdb::prepare()
         // cannot parameterize column names or direction keywords.
         $dir = $request->get_param('sort') === 'bottom' ? 'ASC' : 'DESC';
 
+        list($linkInSql, $linkInParams) = $this->linkIdInSql('li.id', $linkIds);
+
         // Count (Simple) mode: no per-visit rows exist, so the prli_clicks
         // INNER JOIN would return empty. Read clicks and uniques from the
         // static-clicks / static-uniques meta instead.
-        if ($this->isCountMode()) {
+        if (Links::isCountMode()) {
             $metas = $wpdb->prefix . 'prli_link_metas';
             $rows  = (array) $wpdb->get_results(
                 $wpdb->prepare(
@@ -201,9 +260,10 @@ class ReportsController extends BaseController
                        LEFT JOIN {$metas} lmu ON lmu.link_id = li.id AND lmu.meta_key = 'static-uniques'
                       WHERE li.deleted_at IS NULL
                         AND COALESCE(CAST(lmc.meta_value AS UNSIGNED), 0) > 0
+                        {$linkInSql}
                       ORDER BY clicks {$dir}, li.id ASC
                       LIMIT %d",
-                    $limit
+                    ...array_merge($linkInParams, [$limit])
                 ),
                 ARRAY_A
             );
@@ -229,12 +289,11 @@ class ReportsController extends BaseController
                    INNER JOIN {$clicks} cl ON cl.link_id = li.id
                   WHERE li.deleted_at IS NULL
                     AND cl.created_at BETWEEN %s AND %s
+                    {$linkInSql}
                   GROUP BY li.id
                   ORDER BY clicks {$dir}, li.id ASC
                   LIMIT %d",
-                $fromDt,
-                $toDt,
-                $limit
+                ...array_merge([$fromDt, $toDt], $linkInParams, [$limit])
             ),
             ARRAY_A
         );
@@ -254,22 +313,55 @@ class ReportsController extends BaseController
     }
 
     /**
-     * Resolve site-local YYYY-MM-DD from/to into inclusive UTC MySQL datetimes
-     * plus the normalized calendar days (for avg_per_day). Missing/malformed
-     * values fall back to last-30-days.
+     * The first day to average over: the range start, or the site-local day
+     * of the first recorded activity when that's later and inside the range.
      *
-     * @param WP_REST_Request $request The incoming REST request.
+     * This applies to any range that starts before the first activity, not
+     * just the All-time placeholder: days before anything was recorded are
+     * left out of avg_per_day, while the chart still plots the full range.
      *
-     * @return array{0:string,1:string,2:string,3:string} UTC start, UTC end, from Y-m-d, to Y-m-d.
+     * @param string $fromYmd  Range start, site-local Y-m-d.
+     * @param string $toYmd    Range end, site-local Y-m-d.
+     * @param string $firstUtc Earliest activity as a UTC MySQL datetime, or ''.
+     *
+     * @return string Site-local Y-m-d.
      */
-    private function dateBounds(WP_REST_Request $request): array
+    private static function averageStartYmd(string $fromYmd, string $toYmd, string $firstUtc): string
     {
-        list($from, $to) = SiteDate::resolvePickerRange(
-            (string) $request->get_param('from'),
-            (string) $request->get_param('to')
-        );
+        if ($firstUtc === '') {
+            return $fromYmd;
+        }
+        $firstYmd = get_date_from_gmt($firstUtc, 'Y-m-d');
+        if (!is_string($firstYmd) || preg_match('/^\d{4}-\d{2}-\d{2}$/', $firstYmd) !== 1) {
+            return $fromYmd;
+        }
+        return $firstYmd > $fromYmd && $firstYmd <= $toYmd ? $firstYmd : $fromYmd;
+    }
 
-        return [SiteDate::dayStartUtc($from), SiteDate::dayEndUtc($to), $from, $to];
+    /**
+     * Live-link count for the KPI. When scoped to specific ids,
+     * this is the count of those ids that still exist (not the site total).
+     *
+     * @param string $links   Prefixed prli_links table name.
+     * @param int[]  $linkIds Parsed link ids; empty means site-wide.
+     *
+     * @return integer
+     */
+    private function countLiveLinks(string $links, array $linkIds): int
+    {
+        global $wpdb;
+        list($idSql, $idParams) = $this->linkIdInSql('id', $linkIds);
+        if ($idParams === []) {
+            return (int) $wpdb->get_var(
+                "SELECT COUNT(*) FROM {$links} WHERE deleted_at IS NULL"
+            );
+        }
+        return (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$links} WHERE deleted_at IS NULL {$idSql}",
+                ...$idParams
+            )
+        );
     }
 
     /**
@@ -281,16 +373,7 @@ class ReportsController extends BaseController
      */
     public function exportClicks(WP_REST_Request $request): WP_REST_Response
     {
-        $rawIds  = (string) $request->get_param('link_ids');
-        $linkIds = [];
-        if ($rawIds !== '') {
-            foreach (explode(',', $rawIds) as $id) {
-                $int = (int) trim($id);
-                if ($int > 0) {
-                    $linkIds[] = $int;
-                }
-            }
-        }
+        $linkIds = $this->parseLinkIds($request);
         $args         = [
             'from'     => (string) $request->get_param('from'),
             'to'       => (string) $request->get_param('to'),
@@ -300,7 +383,7 @@ class ReportsController extends BaseController
             'search'   => (string) $request->get_param('search'),
             'unique'   => (bool) $request->get_param('unique'),
         ];
-        $args['mode'] = $this->trackingMode();
+        $args['mode'] = Links::trackingMode();
 
         $exporter = new ClicksCsvExporter();
 
@@ -318,6 +401,6 @@ class ReportsController extends BaseController
             return new WP_REST_Response($exporter->chunk($args, $offset, $limit));
         }
 
-        return new WP_REST_Response(['csv' => $exporter->export($args, $this->trackingMode())]);
+        return new WP_REST_Response(['csv' => $exporter->export($args, $args['mode'])]);
     }
 }

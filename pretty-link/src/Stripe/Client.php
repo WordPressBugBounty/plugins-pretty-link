@@ -156,18 +156,20 @@ final class Client
 
         $app = $userAgent['application'];
 
-        /**
-         * Filtered Stripe request headers.
-         *
-         * @var array<string, string> $headers
-         */
-        $headers = apply_filters('prli_stripe_request_headers', [
+        $defaults = [
             'Authorization'              => 'Basic ' . base64_encode(self::secretKey() . ':'),
             'Stripe-Version'             => self::API_VERSION,
             'User-Agent'                 => $app['name'] . '/' . $app['version'] . ' (' . $app['url'] . ')',
             'X-Stripe-Client-User-Agent' => (string) wp_json_encode($userAgent),
-        ]);
+        ];
 
-        return $headers;
+        /**
+         * Filtered Stripe request headers.
+         *
+         * @var mixed $headers
+         */
+        $headers = apply_filters('prli_stripe_request_headers', $defaults);
+
+        return is_array($headers) ? $headers : $defaults;
     }
 }

@@ -50,6 +50,22 @@ class Request
     private int $cacheTtl;
 
     /**
+     * Extra headers applied to outgoing requests. Populated by {@see self::withHeader()}.
+     *
+     * @var array<string, string>
+     */
+    private array $extraHeaders = [];
+
+    /**
+     * Whether to return responses from the cache, if available.
+     *
+     * If `true`, the response will be retrieved from the cache, if available, otherwise a new request will be made.
+     *
+     * @var boolean
+     */
+    private bool $skipCache = false;
+
+    /**
      * Constructor.
      *
      * @param AbstractPluginConnection $plugin      The plugin connection.
@@ -73,7 +89,7 @@ class Request
      * Perform a GET request.
      *
      * @param  string $endpoint The API endpoint to request.
-     * @param  array  $params   The query parameters to add to the URL.
+     * @param  array  $params   Additional query parameters.
      * @return Response
      */
     public function get(string $endpoint, array $params = []): Response
@@ -89,11 +105,12 @@ class Request
      *
      * @param  string $endpoint The API endpoint to request.
      * @param  array  $body     The body of the request.
+     * @param  array  $params   Additional query parameters.
      * @return Response
      */
-    public function post(string $endpoint, array $body = []): Response
+    public function post(string $endpoint, array $body = [], array $params = []): Response
     {
-        return $this->makeRequest('POST', $endpoint, $body);
+        return $this->makeRequest('POST', $endpoint, $body, $params);
     }
 
     /**
@@ -101,11 +118,12 @@ class Request
      *
      * @param  string $endpoint The API endpoint to request.
      * @param  array  $body     The body of the request.
+     * @param  array  $params   Additional query parameters.
      * @return Response
      */
-    public function patch(string $endpoint, array $body = []): Response
+    public function patch(string $endpoint, array $body = [], array $params = []): Response
     {
-        return $this->makeRequest('PATCH', $endpoint, $body);
+        return $this->makeRequest('PATCH', $endpoint, $body, $params);
     }
 
     /**
@@ -113,11 +131,12 @@ class Request
      *
      * @param  string $endpoint The API endpoint to request.
      * @param  array  $body     The body of the request.
+     * @param  array  $params   Additional query parameters.
      * @return Response
      */
-    public function put(string $endpoint, array $body = []): Response
+    public function put(string $endpoint, array $body = [], array $params = []): Response
     {
-        return $this->makeRequest('PUT', $endpoint, $body);
+        return $this->makeRequest('PUT', $endpoint, $body, $params);
     }
 
     /**
@@ -125,11 +144,113 @@ class Request
      *
      * @param  string $endpoint The API endpoint to request.
      * @param  array  $body     The body of the request.
+     * @param  array  $params   Additional query parameters.
      * @return Response
      */
-    public function delete(string $endpoint, array $body = []): Response
+    public function delete(string $endpoint, array $body = [], array $params = []): Response
     {
-        return $this->makeRequest('DELETE', $endpoint, $body);
+        return $this->makeRequest('DELETE', $endpoint, $body, $params);
+    }
+
+    /**
+     * Returns a copy of this Request with caching disabled for the next request.
+     *
+     * This is useful for making a one-off request that should be retrieved from the API, bypassing the cache whether
+     * or not it is available.
+     *
+     * This does NOT affect the cache TTL for the next request so the response will still be cached when the instance
+     * TTL is greater than 0. To retrieve from the API and skip cache storage, chain {@see self::noStore()} to this
+     * method.
+     *
+     * The original instance is not mutated.
+     *
+     * ```
+     * $request->fresh()->get('/endpoint');
+     * ```
+     *
+     * @return self A cloned Request with caching disabled.
+     */
+    public function fresh(): self
+    {
+        $clone            = clone $this;
+        $clone->skipCache = true;
+        return $clone;
+    }
+
+    /**
+     * Returns a copy of this Request with the cache TTL set to 0.
+     *
+     * The original instance is not mutated. Useful for one-off, per-call requests that should not be stored in the cache.
+     *
+     * ```
+     * $request->noStore()->get('/endpoint');
+     * ```
+     *
+     * @return self
+     */
+    public function noStore(): self
+    {
+        return $this->withCacheTtl(0);
+    }
+
+    /**
+     * Returns a copy of this Request with the given header applied to subsequent calls.
+     *
+     * The original instance is not mutated. Useful for one-off, per-call headers:
+     *
+     * ```
+     * $request->withHeader('X-Foo', 'bar')->post('/endpoint', $body);
+     * ```
+     *
+     * @param  string $name  The header name.
+     * @param  string $value The header value.
+     * @return self   A cloned Request carrying the header.
+     */
+    public function withHeader(string $name, string $value): self
+    {
+        $clone                      = clone $this;
+        $clone->extraHeaders[$name] = $value;
+        return $clone;
+    }
+
+    /**
+     * Returns a copy of this Request with the cache TTL set to the given value.
+     *
+     * By default, all GET requests are cached for {@see self::PARAM_CACHE_TTL}, this method is useful when you wish
+     * to modify the cache TTL for a single one-off request or when caching should be disabled for a single request.
+     *
+     * To skip storing a response in the cache, pass `0` as the TTL or use the convenience method {@see self::noStore()}.
+     *
+     * The original instance is NOT mutated.
+     *
+     * Only GET requests are affected by the cache. Chaining this method before any non-GET request will have no effect.
+     *
+     * ```
+     * $request->withCacheTtl(600)->get('/endpoint');
+     * ```
+     *
+     * @param  integer $ttl The cache TTL in seconds.
+     * @return self
+     */
+    public function withCacheTtl(int $ttl): self
+    {
+        $clone           = clone $this;
+        $clone->cacheTtl = $ttl;
+        return $clone;
+    }
+
+    /**
+     * Returns a copy of this Request with the `X-Proxy-License-Key` header set.
+     *
+     * Used in the Email/Token auth strategy to attribute a request to a specific user's
+     * license.
+     *
+     * @param  string $licenseKey The user's license key to proxy as.
+     * @return self   A cloned Request carrying the header.
+     */
+    public function withProxyLicense(string $licenseKey): self
+    {
+        return $this->withHeader('X-Proxy-License-Key', $licenseKey);
     }
 
     /**
@@ -138,14 +259,19 @@ class Request
      * @param  string $method   The HTTP method to use.
      * @param  string $endpoint The API endpoint to request.
      * @param  array  $body     The body of the request.
+     * @param  array  $params   Additional query parameters.
      * @return Response
      */
-    private function makeRequest(string $method, string $endpoint, array $body = []): Response
+    private function makeRequest(string $method, string $endpoint, array $body = [], array $params = []): Response
     {
+        if (!empty($params)) {
+            $endpoint = add_query_arg($params, $endpoint);
+        }
+
         $url  = $this->util->getApiBaseUrl() . ltrim($endpoint, '/');
         $args = [
             'method'  => $method,
-            'headers' => $this->getAuthHeaders(),
+            'headers' => array_merge($this->getAuthHeaders(), $this->extraHeaders),
         ];
 
         if (!empty($body)) {
@@ -167,26 +293,72 @@ class Request
      */
     private function makeCachedGetRequest(string $endpoint): Response
     {
-        if ($this->cacheTtl > 0) {
-            $cacheKey = implode('_', [
-                $this->plugin->pluginId,
-                'mothership',
-                self::API_CACHE_ID,
-                md5($endpoint),
-            ]);
+        // PL strauss-fixup: cache semantics. A zero TTL now means "don't read
+        // either". Previously noStore()/withCacheTtl(0) still served from
+        // cache, so only fresh() bypassed — and nothing called it.
+        $storeInCache    = $this->cacheTtl > 0;
+        $returnFromCache = false === $this->skipCache && $this->cacheTtl > 0;
 
+        $cacheKey = $storeInCache || $returnFromCache ? $this->buildCacheKey($endpoint) : null;
+
+        if ($returnFromCache) {
             $cachedResponse = get_transient($cacheKey);
             if ($cachedResponse instanceof Response) {
                 return $cachedResponse;
             }
-
-            $response = $this->makeRequest('GET', $endpoint);
-            if (! $response->isError()) {
-                set_transient($cacheKey, $response, $this->cacheTtl);
-            }
-            return $response;
         }
-        return $this->makeRequest('GET', $endpoint);
+
+        $response = $this->makeRequest('GET', $endpoint);
+        if ($storeInCache) {
+            // PL strauss-fixup: cache semantics. Errors were never cached, so a
+            // licensing server that hangs was re-hit on every update pass and
+            // every catalog read, at the full HTTP timeout each time. Damp that
+            // with a flat five-minute negative cache, deliberately independent
+            // of the success TTL (60s) which is far too short to damp anything;
+            // develop bounded the equivalent path at 20 minutes, and five
+            // matches AddonsManager's own error TTL.
+            //
+            // Server-side failures only. A 4xx is an authoritative answer about
+            // state the user can change with the next click, and the licence
+            // activation lookup shares this cache key between
+            // maybeRecoverActivation() and checkLicenseActivationStatus() — so
+            // a 404 cached before an activation would be replayed after it and
+            // revoke the licence that had just been activated, with a notice
+            // and a warning email. Transport failures arrive as 500 (see
+            // handleWpError), so the hanging-server case this exists for is
+            // still covered.
+            if (!$response->isClientError()) {
+                $ttl = $response->isServerError() ? 5 * MINUTE_IN_SECONDS : $this->cacheTtl;
+                set_transient($cacheKey, $response, $ttl);
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Build the transient cache key for a GET request.
+     *
+     * The hash covers the full outgoing request URL and headers (auth + per-call
+     * extras) so responses fetched under one auth context cannot be served to
+     * callers in another.
+     *
+     * @param  string $endpoint The API endpoint being requested.
+     * @return string
+     */
+    private function buildCacheKey(string $endpoint): string
+    {
+        $url     = $this->util->getApiBaseUrl() . ltrim($endpoint, '/');
+        $headers = array_change_key_case(
+            array_merge($this->getAuthHeaders(), $this->extraHeaders),
+            CASE_LOWER
+        );
+        ksort($headers);
+        return implode('_', [
+            $this->plugin->pluginId,
+            'mothership',
+            self::API_CACHE_ID,
+            md5($url . '|' . serialize($headers)),
+        ]);
     }
 
     /**
@@ -199,7 +371,7 @@ class Request
         $headers = [];
 
         $licenseKey       = $this->credentials->getLicenseKey();
-        $activationDomain = rawurlencode($this->credentials->getActivationDomain());
+        $activationDomain = rawurlencode($this->credentials->getDomain());
         if ($licenseKey && $activationDomain) {
             return [
                 'Authorization' => 'Basic ' . base64_encode("$activationDomain:$licenseKey"),
@@ -209,10 +381,6 @@ class Request
         $email    = $this->credentials->getEmail();
         $apiToken = $this->credentials->getApiToken();
         if ($email && $apiToken) {
-            // Email/API Token authentication.
-            if (!empty(Credentials::getProxyLicenseKey())) {
-                $headers['X-Proxy-License-Key'] = Credentials::getProxyLicenseKey();
-            }
             $headers['Authorization'] = 'Basic ' . base64_encode("$email:$apiToken");
         }
         return $headers;

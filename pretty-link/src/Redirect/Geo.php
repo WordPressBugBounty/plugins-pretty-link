@@ -6,13 +6,6 @@ namespace PrettyLinks\Redirect;
 
 use PrettyLinks\Options\Store as OptionsStore;
 
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-// phpcs:disable WordPress.Security.NonceVerification.Recommended
-// $_SERVER values (REMOTE_ADDR, HTTP_USER_AGENT, REQUEST_URI, etc.) are read for
-// click tracking / targeting / UI rendering, not form-submission input. State-changing
-// operations in this class protect with wp_verify_nonce / check_admin_referer.
-
 /**
  * Geolocation lookup: CDN headers first, cspf-locate API fallback.
  */
@@ -127,7 +120,8 @@ class Geo
         $country    = '';
         foreach ($candidates as $key) {
             if (!empty($_SERVER[$key])) {
-                $code = strtoupper(substr((string) $_SERVER[$key], 0, 2));
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- CDN geo header read verbatim; the value is truncated to two characters and must pass the /^[A-Z]{2}$/ check below, which is stricter than any sanitizer.
+                $code = strtoupper(substr((string) wp_unslash((string) $_SERVER[$key]), 0, 2));
                 // Cloudflare sends XX (unknown) and T1 (Tor) pseudo-codes; fall
                 // through to the API lookup rather than matching rules on them.
                 // T1 already fails the A-Z check below.
@@ -169,7 +163,7 @@ class Geo
         // documented contract ("md5 of ip") predates block caching and
         // integrations may derive their own transients from it.
         $lockey = $ip !== '' ? self::ipCacheKey($ip) : '';
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- v3 Pretty Links Pro public hook; renaming would break existing integrations.
+        // Legacy v3 Pretty Links Pro public hook; renaming would break existing integrations.
         $loc = apply_filters('plp_locate_by_ip', (object) ['country' => $country], $lockey, null);
 
         // Uppercase once here so every consumer (targeting comparisons,
@@ -217,7 +211,7 @@ class Geo
          *
          * @param string $ip Detected client IP.
          */
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy v3 Pretty Links public filter; preserved for back-compat.
+        // Legacy v3 Pretty Links public filter; preserved for back-compat.
         return (string) apply_filters('pl_get_current_client_ip', $ip);
     }
 
@@ -237,7 +231,8 @@ class Geo
             }
             // First non-empty entry of a comma-separated list; a header of
             // only separators (malformed proxy chain) falls through the ladder.
-            foreach (explode(',', (string) $_SERVER[$key]) as $part) {
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Proxy/CDN client-IP header read verbatim; sanitize_text_field() would mangle an address rather than validate one. The geo lookup gates on isPublicIp() (filter_var/FILTER_VALIDATE_IP), but resolveIp() returns this value unvalidated and it is stored on the click row as-is, so treat it as untrusted downstream.
+            foreach (explode(',', (string) wp_unslash((string) $_SERVER[$key])) as $part) {
                 $part = trim($part);
                 if ($part !== '') {
                     return self::unwrapMappedIpv4($part);

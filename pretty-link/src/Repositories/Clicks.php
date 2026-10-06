@@ -6,11 +6,6 @@ namespace PrettyLinks\Repositories;
 
 use PrettyLinks\Support\SiteDate;
 
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 // phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
@@ -21,6 +16,8 @@ use PrettyLinks\Support\SiteDate;
  * user values bind through $wpdb->prepare(). No caching: these tables are the source
  * of truth for click/redirect data and must read-through. "meta_key"/"meta_value" here
  * refer to our own prli_link_metas table, not wp_postmeta.
+ *
+ * @api
  */
 class Clicks
 {
@@ -31,10 +28,12 @@ class Clicks
      * name in the assembled query. ORDER BY cannot use wpdb::prepare()
      * placeholders for column names, so this allowlist is the injection
      * guard — do not interpolate $sortCol without going through this map.
+     * Public so the REST route builds its `sort` enum from these keys and
+     * the two lists can't drift apart.
      *
      * @var array<string, string>
      */
-    private const SORT_MAP = [
+    public const SORT_MAP = [
         'ip'         => 'cl.ip',
         'vuid'       => 'cl.vuid',
         'btype'      => 'cl.btype',
@@ -133,6 +132,7 @@ class Clicks
         $dir     = isset($args['direction']) && strtolower((string) $args['direction']) === 'asc' ? 'ASC' : 'DESC';
 
         $totalSql = "SELECT COUNT(*) FROM {$clicks} cl LEFT JOIN {$links} li ON cl.link_id = li.id {$whereSql}";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $totalSql is assembled above from $wpdb->prefix table names plus a WHERE clause of literal %d/%s placeholders; every user value travels in $params and binds through prepare(). Plugin-owned prli_clicks/prli_links, so no WP API applies, and the count must read through for an admin list view.
         $total    = (int) $wpdb->get_var($params ? $wpdb->prepare($totalSql, ...$params) : $totalSql);
 
         // V3 parity: attach per-row correlated counts so the click list can
@@ -148,10 +148,12 @@ class Clicks
                     {$whereSql}
                     ORDER BY {$sortCol} {$dir}
                     LIMIT %d OFFSET %d";
+        // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $listSql interpolates only $wpdb->prefix table names and $sortCol/$dir; $sortCol comes exclusively from the SORT_MAP allowlist above (that map is the injection guard, since ORDER BY cannot take a prepare() placeholder) and $dir is the literal 'ASC'/'DESC' from a ternary. Every user value travels in $params and binds through prepare(). Plugin-owned prli_clicks/prli_links, so no WP API applies, and the list must read through.
         $rows    = $wpdb->get_results(
             $wpdb->prepare($listSql, ...array_merge($params, [$perPage, $offset])),
             ARRAY_A
         ) ?: [];
+        // phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
         return [
             'items' => array_map(static function (array $r): array {
@@ -181,5 +183,67 @@ class Clicks
             'total' => $total,
             'pages' => (int) ceil($total / max(1, $perPage)),
         ];
+    }
+
+    /**
+     * The id of a visitor's newest click on a link at or after a UTC time,
+     * or 0 when there is none (an empty vuid never matches). "Newest" is the
+     * highest row id, i.e. the last click written.
+     *
+     * @param integer $linkId   Link identifier.
+     * @param string  $vuid     Visitor id (the `prli_visitor` cookie).
+     * @param string  $sinceUtc UTC MySQL datetime lower bound, inclusive.
+     *
+     * @return integer
+     */
+    public function latestIdForVisitor(int $linkId, string $vuid, string $sinceUtc): int
+    {
+        if ($vuid === '') {
+            return 0;
+        }
+        global $wpdb;
+        $clicks = $wpdb->prefix . 'prli_clicks';
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- plugin-owned table name from $wpdb->prefix; values bind through prepare(); must read through.
+        return (int) $wpdb->get_var($wpdb->prepare(
+            "SELECT id FROM {$clicks}
+              WHERE link_id = %d AND vuid = %s AND created_at >= %s
+           ORDER BY id DESC LIMIT 1",
+            $linkId,
+            $vuid,
+            $sinceUtc
+        ));
+    }
+
+    /**
+     * Distinct non-bot visitors (by vuid) who clicked a link, optionally
+     * bounded by inclusive UTC datetimes. Clicks with no vuid don't count.
+     *
+     * Pass full `Y-m-d H:i:s` UTC datetimes: the bounds compare as strings,
+     * so a date-only upper bound stops at midnight. For site-local calendar
+     * days, convert with `SiteDate::dayStartUtc()` / `SiteDate::dayEndUtc()`.
+     *
+     * @param integer $linkId  Link identifier.
+     * @param string  $fromUtc UTC MySQL datetime lower bound, or '' for none.
+     * @param string  $toUtc   UTC MySQL datetime upper bound, or '' for none.
+     *
+     * @return integer
+     */
+    public function countUniqueVisitors(int $linkId, string $fromUtc = '', string $toUtc = ''): int
+    {
+        global $wpdb;
+        $clicks = $wpdb->prefix . 'prli_clicks';
+        $where  = ['link_id = %d', "vuid <> ''", 'robot = 0'];
+        $params = [$linkId];
+        if ($fromUtc !== '') {
+            $where[]  = 'created_at >= %s';
+            $params[] = $fromUtc;
+        }
+        if ($toUtc !== '') {
+            $where[]  = 'created_at <= %s';
+            $params[] = $toUtc;
+        }
+        $sql = "SELECT COUNT(DISTINCT vuid) FROM {$clicks} WHERE " . implode(' AND ', $where);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $sql holds only the $wpdb->prefix table name and literal placeholder clauses; every value binds through prepare(); must read through.
+        return (int) $wpdb->get_var($wpdb->prepare($sql, ...$params));
     }
 }

@@ -11,6 +11,7 @@ use PrettyLinks\GroundLevel\Mothership\Api\Request\Products;
 use PrettyLinks\GroundLevel\Mothership\Api\Response;
 use PrettyLinks\GroundLevel\Mothership\Credentials;
 use PrettyLinks\GroundLevel\Mothership\Transients\ActivationTransient;
+use PrettyLinks\GroundLevel\Mothership\Util;
 use PrettyLinks\GroundLevel\Support\AdminNotices;
 use PrettyLinks\GroundLevel\Support\Concerns\Hookable;
 use PrettyLinks\GroundLevel\Support\Models\Hook;
@@ -88,6 +89,20 @@ class LicenseManager
     private View $view;
 
     /**
+     * The Mothership utility instance.
+     *
+     * @var Util
+     */
+    private Util $util;
+
+    /**
+     * The result of the most recent form submission handled by {@see self::controller()}.
+     *
+     * @var Result|null
+     */
+    private ?Result $lastFormResult = null;
+
+    /**
      * Constructor.
      *
      * @param AbstractPluginConnection $plugin              The plugin connection.
@@ -99,6 +114,7 @@ class LicenseManager
      * @param ActivationTransient      $activationTransient The activation transient.
      * @param AdminNotices             $adminNotices        The admin notices service.
      * @param View                     $view                The view instance for rendering templates.
+     * @param Util                     $util                The Mothership utility instance.
      */
     public function __construct(
         AbstractPluginConnection $plugin,
@@ -109,7 +125,8 @@ class LicenseManager
         Licenses $licenses,
         ActivationTransient $activationTransient,
         AdminNotices $adminNotices,
-        View $view
+        View $view,
+        Util $util
     ) {
         $this->plugin              = $plugin;
         $this->addonsManager       = $addonsManager;
@@ -120,6 +137,7 @@ class LicenseManager
         $this->activationTransient = $activationTransient;
         $this->adminNotices        = $adminNotices;
         $this->view                = $view;
+        $this->util                = $util;
 
         // Add WP Cron event to check the license status every 12 hours.
         $cronName = $this->plugin->pluginId . '_check_license_activation_status_event';
@@ -152,25 +170,9 @@ class LicenseManager
                 [$this,  'onLicenseRevoked'],
             ),
             new Hook(
-                Hook::TYPE_FILTER,
-                'update_plugins_' . $this->plugin->pluginId,
-                [$this, 'updatePlugin'],
-                10,
-                2
-            ),
-            new Hook(
-                Hook::TYPE_FILTER,
-                'plugins_api',
-                [$this, 'pluginInformation'],
-                10,
-                3
-            ),
-            new Hook(
-                Hook::TYPE_FILTER,
-                'auto_update_plugin',
-                [$this, 'autoUpdatePlugin'],
-                10,
-                2
+                Hook::TYPE_ACTION,
+                'admin_init',
+                [$this, 'onLicenseKeyOverwritten']
             ),
             new Hook(
                 Hook::TYPE_FILTER,
@@ -179,145 +181,33 @@ class LicenseManager
                 10,
                 2
             ),
+            new Hook(
+                Hook::TYPE_ACTION,
+                'admin_enqueue_scripts',
+                [$this, 'enqueueAssets']
+            ),
+            new Hook(
+                Hook::TYPE_ACTION,
+                'in_plugin_update_message-' . $this->plugin->pluginFile,
+                [$this, 'appendLicenseUpdateMessage'],
+                10,
+                2
+            ),
         ];
     }
 
     /**
-     * Checks the Mothership server for plugin updates.
+     * Enqueues the stylesheet and dashicons used by the license views.
      *
-     * Important: the Update URI header must be set in the plugin's main file for this to be triggered.
-     * The header value should match the {@see AbstractPluginConnection::$pluginId}.
-     * For example, if $pluginId is set to 'ground-level-dev', the plugin header should be:
-     * Update URI: ground-level-dev
-     *
-     * Free plugins/editions should omit the Update URI header, and this method will never be hooked,
-     * allowing updates to be handled via the WordPress.org repository as normal.
-     *
-     * The $update array shape when an update is available:
-     *   - id?:            string
-     *   - slug:           string
-     *   - version:        string
-     *   - url:            string
-     *   - package?:       string
-     *   - tested?:        string
-     *   - requires_php?:  string
-     *   - autoupdate?:    bool
-     *   - icons?:         string[]
-     *   - banners?:       string[]
-     *   - banners_rtl?:   string[]
-     *   - translations?:  array
-     *
-     * @param false|array $update     Plugin update data with the latest details. False if no update is available.
-     * @param array       $pluginData Plugin headers.
-     *
-     * @return array|false The update array or false if no update is available.
+     * @return void
      */
-    public function updatePlugin($update, $pluginData)
+    public function enqueueAssets(): void
     {
-        $versionCheck = $this->products->getVersionCheck(
-            $this->plugin->productId,
-            [
-                'prerelease' => $this->plugin->allowPrereleaseVersions(),
-                '_embed'     => 'version',
-            ]
-        );
-        if ($versionCheck->isError()) {
-            return $update;
-        }
-
-        /**
-         * If the embed isn't returned that could be because the user is not authenticated,
-         * the license is expired or disabled, etc... In these scenarios
-         * we'll still return the version number but there won't be anything to download.
-         */
-        $versionLatest = $versionCheck->getEmbed('version');
-        return [
-            'slug'    => $this->plugin->pluginId,
-            'version' => $versionCheck->getData('number', ''),
-            'package' => $versionLatest->url ?? '',
-            'url'     => $pluginData['PluginURI'] ?? '',
-        ];
-    }
-
-    /**
-     * Provides plugin information for the WordPress plugin details modal.
-     *
-     * The $args object properties:
-     *   - slug?:              string
-     *   - per_page?:          int
-     *   - page?:              int
-     *   - number?:            int
-     *   - search?:            string
-     *   - tag?:               string
-     *   - author?:            string
-     *   - user?:              string
-     *   - browse?:            string
-     *   - locale?:            string
-     *   - installed_plugins?: string
-     *   - is_ssl?:            bool
-     *   - fields?:            array {
-     *       short_description, description, sections, tested, requires, requires_php,
-     *       rating, ratings, downloaded, downloadlink, last_updated, added, tags,
-     *       compatibility, homepage, versions, donate_link, reviews, banners, icons,
-     *       active_installs, contributors
-     *   }
-     *
-     * @see https://developer.wordpress.org/reference/hooks/plugins_api/
-     *
-     * @param false|object $result The result object. Default false.
-     * @param string       $action The type of information being requested from the Plugin Installation API.
-     *                             One of 'query_plugins', 'plugin_information', or 'hot_tags'.
-     * @param object       $args   Plugin API arguments.
-     *
-     * @return false|object The plugin information object or the original $result.
-     */
-    public function pluginInformation($result, string $action, $args)
-    {
-        if ($action !== 'plugin_information') {
-            return $result;
-        }
-
-        if (!isset($args->slug) || $args->slug !== $this->plugin->pluginId) {
-            return $result;
-        }
-
-        $product = $this->products->get($this->plugin->productId, ['_embed' => 'version-latest']);
-
-        if ($product->isError()) {
-            return $result;
-        }
-
-        $latestVersion = $product->getEmbed('version-latest');
-        if (is_null($latestVersion)) {
-            return $result;
-        }
-
-        $pluginInfo = (object) [
-            'name'          => $product->getData('name', ''),
-            'slug'          => $args->slug,
-            'version'       => $latestVersion->number ?? '',
-            // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-            'last_updated'  => $latestVersion->created_at ?? '',
-            'download_link' => $latestVersion->url ?? '',
-            'sections'      => [
-                'description' => $product->getData('description', ''),
-            ],
-        ];
-
-        /**
-         * Filters the plugin information displayed in the WordPress plugin details modal.
-         *
-         * Consuming plugins can use this filter to provide additional details
-         * such as author, homepage, banners, and changelog that are not available
-         * from the Mothership API.
-         *
-         * @param object $pluginInfo The plugin information object.
-         * @param object $product    The product data from the Mothership API.
-         */
-        return apply_filters(
-            $this->plugin->pluginId . '_plugin_information',
-            $pluginInfo,
-            $product
+        wp_enqueue_style(
+            "{$this->plugin->pluginId}-grdlvl-mosh-licenses",
+            plugin_dir_url(__FILE__) . '../assets/license.css',
+            ['dashicons'],
+            null
         );
     }
 
@@ -355,41 +245,82 @@ class LicenseManager
     }
 
     /**
-     * Determines whether the plugin should be auto-updated during WordPress background updates.
+     * Appends a license-aware message to the plugin's update row when the download is unavailable.
      *
-     * @param boolean|null $update Whether to auto-update. Null if not yet decided.
-     * @param object       $item   The plugin update object containing plugin, new_version, etc.
+     * @param array  $pluginData The plugin header data. Unused.
+     * @param object $response   The update response object. `package` is empty when the download is blocked.
      *
-     * @return boolean|null Whether to auto-update the plugin.
+     * @return void
      */
-    public function autoUpdatePlugin($update, $item): ?bool
+    public function appendLicenseUpdateMessage(array $pluginData, $response): void
     {
-        if (!isset($item->plugin) || $item->plugin !== $this->plugin->pluginFile) {
-            return $update;
+        if (!empty($response->package)) {
+            return;
+        }
+
+        $message = $this->licenseUpdateMessage();
+
+        if ('' === $message) {
+            return;
+        }
+
+        printf(
+            ' <span class="gl-mosh-license-update-message">%s</span>',
+            wp_kses_post($message)
+        );
+    }
+
+    /**
+     * Builds the license-specific message explaining why an update cannot be downloaded.
+     *
+     * @return string The message HTML, or an empty string when no message applies.
+     */
+    private function licenseUpdateMessage(): string
+    {
+        $accountLink = '';
+        $accountUrl  = $this->plugin->getAccountUrl();
+
+        if ('' !== $accountUrl) {
+            $accountLink = sprintf(
+                ' <a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+                esc_url($accountUrl),
+                esc_html__('Visit your account dashboard', 'pretty-link')
+            );
         }
 
         if (!$this->plugin->getLicenseActivationStatus()) {
-            return $update;
+            return __('Please activate your license to download this update.', 'pretty-link') . $accountLink;
         }
 
-        $policy = $this->plugin->automaticUpdates();
+        if ($this->isLicenseExpired()) {
+            return __(
+                'Your license has expired. Please renew your license to download this update.',
+                'pretty-link'
+            ) . $accountLink;
+        }
 
-        if (AbstractPluginConnection::AUTOMATIC_UPDATE_NONE === $policy) {
+        return __(
+            'Your license does not allow downloading this update. Please check your license status.',
+            'pretty-link'
+        ) . $accountLink;
+    }
+
+    /**
+     * Determines whether the cached license has an expiration date in the past.
+     *
+     * @return boolean
+     */
+    private function isLicenseExpired(): bool
+    {
+        $expiresAt = $this->activationTransient->licenseExpiresAt;
+
+        if ('' === $expiresAt) {
             return false;
         }
 
-        if (AbstractPluginConnection::AUTOMATIC_UPDATE_ALL === $policy) {
-            return true;
-        }
+        $timestamp = strtotime($expiresAt);
 
-        // {@see GroundLevel\Mothership\AbstractPluginConnection::AUTOMATIC_UPDATE_MINOR} policy: allow minor
-        // and patch updates, block major version bumps.
-        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-        $currentMajor = (int) explode('.', $item->Version ?? '0')[0];
-        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-        $newMajor = (int) explode('.', $item->new_version ?? '0')[0];
-
-        return $newMajor === $currentMajor;
+        return false !== $timestamp && $timestamp < time();
     }
 
     /**
@@ -398,7 +329,7 @@ class LicenseManager
     public function onLicenseRevoked(): void
     {
         // Update license status.
-        $this->plugin->updateLicenseActivationStatus(false);
+        $this->plugin->setLicenseActivationStatus(false);
 
         // Notify users.
         $this->notifyLicenseRevoked();
@@ -406,6 +337,65 @@ class LicenseManager
         // Clean up.
         $this->addonsManager->clearCache();
         $this->activationTransient->delete();
+    }
+
+    /**
+     * Marks the license as inactive when the current license key is no longer the one
+     * the site was activated with, and asks the user to activate again.
+     *
+     * This runs on every admin request so we catch the change as soon as an admin user
+     * loads any admin page - for example after a developer adds, edits, or removes a
+     * {$pluginPrefix}_LICENSE_KEY environment variable or constant, overwriting the license
+     * key stored in the database.
+     *
+     * We do not call the Mothership "deactivate" API here. The server still treats the
+     * old key as activated on this site, and we do not want to give up that activation
+     * just because someone toggled a local config value.
+     *
+     * @return void
+     */
+    public function onLicenseKeyOverwritten(): void
+    {
+        if (!$this->plugin->getLicenseActivationStatus()) {
+            return;
+        }
+
+        $cachedKey = $this->activationTransient->licenseKey;
+
+        // Nothing to compare against yet (fresh install or transient not synced).
+        if ('' === $cachedKey) {
+            return;
+        }
+
+        if ($this->credentials->getLicenseKey() === $cachedKey) {
+            return;
+        }
+
+        // PL strauss-fixup: phantom key-overwrite. An environment variable or
+        // constant is the only thing that can replace the key behind the
+        // plugin's back, and the notice below says exactly that. Without this
+        // check any stale transient — a dropped sync, a heartbeat racing a key
+        // change, or another subsite on multisite, where this transient is
+        // network-scoped — deactivates a healthy license and blames a constant
+        // that was never set.
+        $keyOverride = $this->credentials->isCredentialSetInEnvironmentOrConstants('license_key');
+        if (false === $keyOverride || '' === $keyOverride) {
+            return;
+        }
+
+        $this->plugin->setLicenseActivationStatus(false);
+        $this->addonsManager->clearCache();
+        $this->activationTransient->delete();
+
+        $this->adminNotices->flash(
+            'license_key_overwritten',
+            __(
+                // phpcs:ignore Generic.Files.LineLength.TooLong
+                'Your license key was overwritten by an environment variable or constant. Please activate your license again.',
+                'pretty-link'
+            ),
+            AdminNotices::WARNING
+        );
     }
 
     /**
@@ -437,7 +427,7 @@ class LicenseManager
         }
 
         $this->notifyLicenseRevokedNotice($error, $productName, $accountUrl);
-        $this->notifyLicenseRevokedEmail($error, $productName, $accountUrl);
+        $this->notifyLicenseRevokedEmail($error, $productName, $accountUrl, $licenseKey, $isExpired);
     }
 
     /**
@@ -473,15 +463,36 @@ class LicenseManager
     /**
      * Sends an email notification for a revoked or expired license.
      *
-     * @param string $error       The error detail message.
-     * @param string $productName The product name.
-     * @param string $accountUrl  The account dashboard URL.
+     * Throttled to once per 24h per (plugin, license key, revocation type).
+     *
+     * @param string  $error       The error detail message.
+     * @param string  $productName The product name.
+     * @param string  $accountUrl  The account dashboard URL.
+     * @param string  $licenseKey  The license key the email is about.
+     * @param boolean $isExpired   True if the license expired, false if it was invalidated.
      */
     private function notifyLicenseRevokedEmail(
         string $error,
         string $productName,
-        string $accountUrl
+        string $accountUrl,
+        string $licenseKey,
+        bool $isExpired
     ): void {
+        $cooldownKey = sprintf(
+            '%s_license_%s_email_sent_%s',
+            $this->plugin->pluginId,
+            $isExpired ? 'expired' : 'invalidated',
+            md5($licenseKey)
+        );
+
+        // PL strauss-fixup: per-site mail cooldown. get_transient(), not
+        // get_site_transient(): the recipient is the per-site admin_email, so a
+        // network-scoped key lets the first subsite to send silence every other
+        // subsite for 24h — exactly the admins who need to know.
+        if (false !== get_transient($cooldownKey)) {
+            return;
+        }
+
         $siteName = get_bloginfo('name');
         $siteUrl  = home_url();
 
@@ -508,6 +519,13 @@ class LicenseManager
             $body[] = sprintf(__('Visit Account Dashboard: %s', 'pretty-link'), $accountUrl);
         }
 
+        // PL strauss-fixup: per-site mail cooldown. Set BEFORE the send and
+        // regardless of its result. Setting it only on success meant a mailer
+        // that is down, rate-limited or misconfigured never backed off at all,
+        // re-attempting on every status check. A missed warning is
+        // recoverable; a mail loop against a broken SMTP host is not.
+        set_transient($cooldownKey, 1, DAY_IN_SECONDS);
+
         wp_mail(get_option('admin_email'), $subject, implode("\n\n", $body));
     }
 
@@ -525,7 +543,7 @@ class LicenseManager
         }
 
         $licenseKey       = $this->credentials->getLicenseKey();
-        $activationDomain = $this->credentials->getActivationDomain();
+        $activationDomain = $this->credentials->getDomain();
 
         if (empty($licenseKey) || empty($activationDomain)) {
             return false;
@@ -533,28 +551,31 @@ class LicenseManager
 
         $activation = $this->licenseActivations->retrieveLicenseActivation($licenseKey, $activationDomain);
 
-        if ($activation->isError() && in_array($activation->statusCode, [401, 403, 404], true)) {
-            do_action_deprecated(
-                $this->plugin->pluginId . '_license_status_changed',
-                [false, $activation],
-                '4.0.0',
-                'Use the {$pluginId}_active_license_invalidated or {$pluginId}_active_license_expired actions instead.'
-            );
+        if ($activation->isError()) {
+            if (in_array($activation->statusCode, [401, 403, 404], true)) {
+                do_action_deprecated(
+                    $this->plugin->pluginId . '_license_status_changed',
+                    [false, $activation],
+                    '4.0.0',
+                    'Use the {$pluginId}_active_license_invalidated or {$pluginId}_active_license_expired ' .
+                        'actions instead.'
+                );
 
-            if ('license-expired' === $activation->getErrorCode()) {
-                /**
-                 * Fires when an active license is detected as expired during a status check.
-                 *
-                 * @param Response $activation The response from the license activation retrieval API call.
-                 */
-                do_action($this->plugin->pluginId . '_active_license_expired', $activation);
-            } else {
-                /**
-                 * Fires when an active license is detected as invalid during a status check.
-                 *
-                 * @param Response $activation The response from the license activation retrieval API call.
-                 */
-                do_action($this->plugin->pluginId . '_active_license_invalidated', $activation);
+                if ('license-expired' === $activation->getErrorCode()) {
+                    /**
+                     * Fires when an active license is detected as expired during a status check.
+                     *
+                     * @param Response $activation The response from the license activation retrieval API call.
+                     */
+                    do_action($this->plugin->pluginId . '_active_license_expired', $activation);
+                } else {
+                    /**
+                     * Fires when an active license is detected as invalid during a status check.
+                     *
+                     * @param Response $activation The response from the license activation retrieval API call.
+                     */
+                    do_action($this->plugin->pluginId . '_active_license_invalidated', $activation);
+                }
             }
 
             return false;
@@ -590,7 +611,29 @@ class LicenseManager
             $result = $this->handleCheckStatus();
         }
 
-        $this->renderNotice($result);
+        $this->lastFormResult = $result;
+
+        if (!filter_var($_POST['hide_notice'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+            $type = '';
+            if ('deactivate' === $action && $result->isSuccess()) {
+                $data = $result->getData();
+                if (is_array($data) && isset($data['freed']) && false === $data['freed']) {
+                    $type = AdminNotices::WARNING;
+                }
+            }
+
+            $this->renderNotice($result, $type);
+        }
+    }
+
+    /**
+     * Returns the result of the most recent form submission handled by {@see self::controller()}.
+     *
+     * @return Result|null
+     */
+    public function getLastFormResult(): ?Result
+    {
+        return $this->lastFormResult;
     }
 
     /**
@@ -617,7 +660,7 @@ class LicenseManager
         $licenseKey = sanitize_text_field(wp_unslash($_POST['license_key']));
         $domain     = sanitize_text_field(wp_unslash($_POST['activation_domain']));
 
-        return $this->activateLicense($licenseKey, $domain);
+        return $this->activateLicense($licenseKey, $domain, true);
     }
 
     /**
@@ -637,12 +680,12 @@ class LicenseManager
             return Result::failure(__('Invalid nonce', 'pretty-link'));
         }
 
-        if (empty($_POST['license_key']) || empty($_POST['activation_domain'])) {
-            return Result::failure(__('License key and domain are required', 'pretty-link'));
-        }
+        $licenseKey = $this->credentials->getLicenseKey();
+        $domain     = $this->credentials->getDomain();
 
-        $licenseKey = sanitize_text_field(wp_unslash($_POST['license_key']));
-        $domain     = sanitize_text_field(wp_unslash($_POST['activation_domain']));
+        if ('' === $licenseKey || '' === $domain) {
+            return Result::failure(__('License key and domain are required for deactivation', 'pretty-link'));
+        }
 
         return $this->deactivateLicense($licenseKey, $domain);
     }
@@ -675,14 +718,17 @@ class LicenseManager
      * Renders an admin notice based on the result.
      *
      * @param Result $result The result to render.
+     * @param string $type   Override notice type. Optional. Default ''.
      */
-    private function renderNotice(Result $result): void
+    private function renderNotice(Result $result, string $type = ''): void
     {
         $message = $result->isSuccess()
             ? ($result->getMessage() ?: __('Operation completed successfully', 'pretty-link'))
             : ($result->getMessage() ?: __('An error occurred during the operation', 'pretty-link'));
 
-        $type = $result->isSuccess() ? AdminNotices::SUCCESS : AdminNotices::ERROR;
+        if (empty($type)) {
+            $type = $result->isSuccess() ? AdminNotices::SUCCESS : AdminNotices::ERROR;
+        }
 
         $this->adminNotices->flash('license_action_result', $message, $type);
     }
@@ -692,10 +738,10 @@ class LicenseManager
      *
      * @return string The HTML for the form.
      */
-    public function generateLicenseActivationForm(): string
+    public function generateLicenseForm(): string
     {
         if ($this->plugin->getLicenseActivationStatus()) {
-            return $this->generateDisconnectForm();
+            return $this->generateDeactivationForm();
         } else {
             return $this->generateActivationForm();
         }
@@ -708,33 +754,67 @@ class LicenseManager
      */
     public function generateActivationForm(): string
     {
-        $licenseIsStored = $this->credentials->isCredentialSetInEnvironmentOrConstants(
-            Credentials::LICENSE_KEY_BASENAME
-        );
-
-        return $this->view->render('license-form.php', [
+        return $this->view->render('license-activation-form.php', [
             'pluginId'         => $this->plugin->pluginId,
             'licenseKey'       => $this->credentials->getLicenseKey(),
-            'activationDomain' => $this->credentials->getActivationDomain(),
-            'action'           => 'activate',
-            'licenseIsStored'  => $licenseIsStored,
+            'activationDomain' => $this->credentials->getDomain(),
+            'lockLicenseKey'   => $this->isLicenseKeyOverridden(),
         ]);
     }
 
     /**
-     * Generates the HTML for the disconnect form.
+     * Generates the HTML for the deactivation form.
+     *
+     * Includes the active license information box.
      *
      * @return string The HTML for the form.
      */
-    public function generateDisconnectForm(): string
+    public function generateDeactivationForm(): string
     {
-        return $this->view->render('license-form.php', [
+        return $this->view->render('license-deactivation-form.php', [
             'pluginId'         => $this->plugin->pluginId,
-            'licenseKey'       => $this->credentials->getLicenseKey(),
-            'activationDomain' => $this->credentials->getActivationDomain(),
-            'action'           => 'deactivate',
-            'licenseIsStored'  => false,
+            'licenseKeyMasked' => $this->maskLicenseKey($this->activationTransient->licenseKey),
+            'activationDomain' => $this->credentials->getDomain(),
+            'lockLicenseKey'   => $this->isLicenseKeyOverridden(),
+            'activation'       => $this->activationTransient,
         ]);
+    }
+
+    /**
+     * Whether the license key is overridden by an environment variable or constant.
+     *
+     * @return boolean
+     */
+    private function isLicenseKeyOverridden(): bool
+    {
+        // PL strauss-fixup: empty override does not lock the key field. An
+        // exported-but-empty PRLI_LICENSE_KEY= reads as '' here, which is
+        // !== false — so the form went read-only while the write guard and the
+        // overwrite gate both treated the same value as "not set" and let the
+        // key through. Only a non-empty override owns the key.
+        $override = $this->credentials->isCredentialSetInEnvironmentOrConstants(
+            Credentials::LICENSE_KEY_BASENAME
+        );
+
+        return false !== $override && '' !== $override;
+    }
+
+    /**
+     * Masks the license key, preserving dashes and underscores and revealing the last third of the string.
+     *
+     * @param  string $licenseKey The license key to mask.
+     * @return string
+     */
+    private function maskLicenseKey(string $licenseKey): string
+    {
+        if ('' === $licenseKey) {
+            return '';
+        }
+        $len     = strlen($licenseKey);
+        $toShow  = (int) floor($len / 3);
+        $visible = $toShow > 0 ? substr($licenseKey, -$toShow) : '';
+        $masked  = preg_replace('/[^-_]/', '*', substr($licenseKey, 0, $len - $toShow));
+        return $masked . $visible;
     }
 
     /**
@@ -765,9 +845,10 @@ class LicenseManager
             return Result::failure($activation->getErrorMessage());
         }
 
-        $this->plugin->updateLicenseKey($licenseKey);
-        $this->plugin->updateLicenseActivationStatus(true);
+        $this->credentials->setLicenseKey($licenseKey);
+        $this->plugin->setLicenseActivationStatus(true);
         $this->syncActivationTransient();
+        wp_clean_update_cache();
 
         /**
          * Fires after a license is successfully activated.
@@ -791,33 +872,58 @@ class LicenseManager
     /**
      * Deactivates the license.
      *
+     * Deactivating the license on the server may fail for various reasons, however we still want to clear
+     * the local activation data so the user is not blocked from activating a different license on the site.
+     *
      * @param  string $licenseKey The license key.
      * @param  string $domain     The domain.
-     * @return Result The result indicating success or failure.
+     * @return Result The result object.
      */
     public function deactivateLicense(string $licenseKey, string $domain): Result
     {
-        $response = $this->licenseActivations->deactivate($licenseKey, $domain);
-
-        if ($response->isError()) {
-            return Result::failure($response->getErrorMessage());
+        if (!$this->plugin->setLicenseActivationStatus(false)) {
+            return Result::failure(__('Failed to deactivate the license', 'pretty-link'));
         }
 
-        $this->plugin->updateLicenseKey('');
-        $this->plugin->updateLicenseActivationStatus(false);
+        $this->credentials->setLicenseKey('');
         $this->addonsManager->clearCache();
         $this->activationTransient->delete();
+        wp_clean_update_cache();
+
+        $response = $this->licenseActivations->deactivate($licenseKey, $domain);
+
+        $freed = !$response->isError();
+        $data  = compact('freed');
 
         /**
-         * Fires after a license is successfully deactivated.
+         * Fires after a license is deactivated.
+         *
+         * When $freed is false the license was only cleared locally (e.g. an expired license
+         * the API refused to deactivate) and the activation is still in use remotely.
          *
          * @param Response $response   The response from the license deactivation API call.
          * @param string   $licenseKey The license key that was deactivated.
          * @param string   $domain     The domain the license was deactivated for.
+         * @param boolean  $freed      Whether the activation was freed on the licensing server.
          */
-        do_action($this->plugin->pluginId . '_license_deactivated', $response, $licenseKey, $domain);
+        do_action($this->plugin->pluginId . '_license_deactivated', $response, $licenseKey, $domain, $freed);
 
-        return Result::success(__('License deactivated successfully', 'pretty-link'));
+        if ($response->isError()) {
+            $message = sprintf(
+                // Translators: %1$s opening anchor tag, %2$s closing anchor tag.
+                __(
+                    // phpcs:ignore Generic.Files.LineLength.TooLong
+                    'The license has been removed from this site, but we could not confirm the activation was released on our licensing server. If this site still appears under your license, you can remove it from your %1$saccount dashboard%2$s.',
+                    'pretty-link'
+                ),
+                '<a href="' . esc_url($this->plugin->getAccountUrl()) . '" target="_blank" rel="noopener noreferrer">',
+                '</a>'
+            );
+
+            return Result::success($message, $data);
+        }
+
+        return Result::success(__('License deactivated successfully', 'pretty-link'), $data);
     }
 
     /**
@@ -832,7 +938,7 @@ class LicenseManager
      * @param  string $slug The product slug.
      * @return \PrettyLinks\GroundLevel\Mothership\Api\Response The response from the API.
      */
-    private function getVersionLatest(string $slug): Response
+    public function getVersionLatest(string $slug): Response
     {
         $args = [
             'order'    => 'desc',
@@ -871,27 +977,45 @@ class LicenseManager
         }
 
         $response = $this->licenseActivations->retrieveLicenseActivationsMeta($licenseKey, [
-            '_embed' => 'license,license.product',
+            '_embed' => 'license,license.product,license.user',
         ]);
 
         if ($response->isError()) {
+            // PL strauss-fixup: stale transient after failed sync. The return
+            // above is 20 lines before licenseKey is assigned, so without this
+            // a failed sync leaves the cached snapshot claiming to describe the
+            // PREVIOUS key — which is what licenseInfo(), the licence panel and
+            // onLicenseKeyOverwritten() all read.
+            //
+            // Reload from storage first: this instance is not the only one, and
+            // saving it unreloaded would write its empty product fields over
+            // good persisted data. Only correct an EXISTING record for a
+            // different key; creating one here would make exists() true and
+            // stop maybeRefreshLicenseInfo() retrying for a day.
+            $this->activationTransient->load();
+
+            $cachedKey = $this->activationTransient->licenseKey;
+
+            if ($this->activationTransient->exists() && '' !== $cachedKey && $cachedKey !== $licenseKey) {
+                $this->activationTransient->licenseKey = $licenseKey;
+                // These describe the old licence; they must not be attributed
+                // to the new key. The next successful sync refills them.
+                $this->activationTransient->productSlug      = '';
+                $this->activationTransient->productName      = '';
+                $this->activationTransient->licenseStatus    = '';
+                $this->activationTransient->licenseExpiresAt = '';
+                $this->activationTransient->downloadUrl      = '';
+                $this->activationTransient->versionNumber    = '';
+                $this->activationTransient->save();
+            }
+
             return;
         }
 
         $licenseMeta = $response->data;
-        if (is_null($licenseMeta)) {
-            return;
-        }
-
-        $license = $response->getEmbed('license');
-        if (is_null($license)) {
-            return;
-        }
-
-        $product = $response->getEmbed('license.product');
-        if (is_null($product)) {
-            return;
-        }
+        $license     = $response->getEmbed('license');
+        $product     = $response->getEmbed('license.product');
+        $user        = $response->getEmbed('license.user');
 
         // License activation counts.
         $this->activationTransient->prodActivationsAllowed = (int) ($licenseMeta->prod->allowed ?? 0);
@@ -902,13 +1026,16 @@ class LicenseManager
         $this->activationTransient->testActivationsFree    = (int) ($licenseMeta->test->free ?? 0);
 
         // Product data.
-        $this->activationTransient->productSlug = $product->slug;
+        $this->activationTransient->productSlug = $product->slug ?? '';
         $this->activationTransient->productName = $product->name ?? '';
 
         // License data.
         $this->activationTransient->licenseKey       = $licenseKey;
         $this->activationTransient->licenseStatus    = $license->status ?? '';
         $this->activationTransient->licenseExpiresAt = $license->expires_at ?? ''; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+
+        // User data.
+        $this->activationTransient->userEmail = $user->email ?? '';
 
         if (!empty($product->slug)) {
             $version = $this->getVersionLatest($product->slug);
@@ -962,17 +1089,24 @@ class LicenseManager
      */
     public function isIncorrectEditionInstalled()
     {
-        $editions         = $this->getEditions($this->plugin->productId);
-        $installedEdition = $editions[$this->plugin->productId] ?? null;
-        $licenseEdition   = $editions[$this->activationTransient->productSlug] ?? null;
+        $installedProduct = $this->plugin->productId;
+        $licenseProduct   = $this->activationTransient->productSlug;
 
-        // Not enough data to compare.
-        if (is_null($installedEdition) || is_null($licenseEdition)) {
+        if (empty($installedProduct) || empty($licenseProduct)) {
             return false;
         }
 
         // Same edition.
-        if ($installedEdition->slug === $licenseEdition->slug) {
+        if ($installedProduct === $licenseProduct) {
+            return false;
+        }
+
+        $editions         = $this->getEditions($licenseProduct);
+        $installedEdition = $editions[$installedProduct] ?? null;
+        $licenseEdition   = $editions[$licenseProduct] ?? null;
+
+        // Not enough data to compare.
+        if (is_null($installedEdition) || is_null($licenseEdition)) {
             return false;
         }
 
@@ -998,13 +1132,13 @@ class LicenseManager
             return Result::failure(__('Insufficient permissions to install plugin', 'pretty-link'));
         }
 
-        if (!filter_var($downloadUrl, FILTER_VALIDATE_URL) || !str_starts_with($downloadUrl, 'https://')) {
+        if (! $this->util->isAllowedDownloadUrl($downloadUrl)) {
             return Result::failure(__('Invalid download URL', 'pretty-link'));
         }
 
         require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
-        $skin     = new \Automatic_Upgrader_Skin();
+        $skin     = new \WP_Ajax_Upgrader_Skin();
         $upgrader = new \Plugin_Upgrader($skin);
 
         $result = $upgrader->install($downloadUrl, ['overwrite_package' => true]);
@@ -1013,7 +1147,16 @@ class LicenseManager
             return Result::failure($result->get_error_message());
         }
 
-        if (false === $result) {
+        if (is_wp_error($skin->result)) {
+            return Result::failure($skin->result->get_error_message());
+        }
+
+        if ($skin->get_errors()->has_errors()) {
+            return Result::failure($skin->get_error_messages());
+        }
+
+        // Plugin_Upgrader::install() returns null or an empty array when the install never ran.
+        if (true !== $result) {
             return Result::failure(__('Plugin installation failed', 'pretty-link'));
         }
 

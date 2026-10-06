@@ -147,7 +147,7 @@ abstract class ChunkedCsvExporter
         }
         rewind($fh);
         $out = stream_get_contents($fh);
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closes the in-memory php://temp handle opened above; WP_Filesystem has no stream API.
         fclose($fh);
 
         $processed = $offset + count($rows);
@@ -173,7 +173,7 @@ abstract class ChunkedCsvExporter
         $columns = $this->columns($args);
         $total   = $this->totalRows($args);
 
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- In-memory php://temp stream, not a filesystem write; WP_Filesystem has no stream API.
         $fh = fopen('php://temp', 'w+');
         if ($fh === false) {
             return '';
@@ -198,7 +198,7 @@ abstract class ChunkedCsvExporter
 
         rewind($fh);
         $out = stream_get_contents($fh);
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closes the in-memory php://temp handle opened above; WP_Filesystem has no stream API.
         fclose($fh);
         return is_string($out) ? $out : '';
     }

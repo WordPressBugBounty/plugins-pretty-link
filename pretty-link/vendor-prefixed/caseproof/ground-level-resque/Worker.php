@@ -101,7 +101,9 @@ class Worker
         $this->jobsRetryAfter   = $jobsRetryAfter;
         $this->numRetries       = $numRetries;
         $this->addHooks();
-        $this->scheduleEvents();
+        if (\did_action('init')) {
+            $this->scheduleEvents();
+        }
     }
 
     /**
@@ -117,6 +119,11 @@ class Worker
                 Hook::TYPE_FILTER,
                 'cron_schedules',
                 [$this, 'intervals']
+            ),
+            new Hook(
+                Hook::TYPE_ACTION,
+                'init',
+                [$this, 'scheduleEvents']
             ),
             new Hook(
                 Hook::TYPE_ACTION,
@@ -211,15 +218,90 @@ class Worker
      */
     public function run(): void
     {
-        $startTime        = Time::now(Time::FORMAT_TIMESTAMP);
+        // PL strauss-fixup: worker limits. One worker at a time: a second
+        // cron tick while a run is still going skips instead of stacking
+        // another PHP worker on top of it.
+        // Only a definite "held elsewhere" ('0') skips. NULL or an error — e.g.
+        // a Galera cluster without GET_LOCK — runs unlocked, as before, rather
+        // than stopping every job.
+        global $wpdb;
+        // Hashed: MySQL caps lock names at 64 chars, and truncating long table
+        // prefixes could make two sites share a lock.
+        // MySQL named locks are server-wide, so the database name is part of
+        // it: two installs on one server with the same table prefix mustn't
+        // share a lock.
+        $lockName = 'prli_resque_' . substr(hash('sha256', $wpdb->dbname . '|' . $wpdb->prefix . $this->getNormalizedPrefix()), 0, 40);
+        $locked   = $wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s, 0)', $lockName));
+        // Compared as strings: some db.php drop-ins return native ints.
+        if ((string) $locked === '0') {
+            return;
+        }
+        try {
+            $this->runLocked();
+        } finally {
+            unset($GLOBALS['prli_resque_deadline']);
+            if ((string) $locked === '1') {
+                $wpdb->query($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $lockName));
+            }
+        }
+    }
+
+    /**
+     * The worker loop, run while holding the worker lock.
+     */
+    private function runLocked(): void
+    {
+        global $wpdb;
         $maxExecutionTime = (int)(ini_get('max_execution_time') ?? 0);
         $maxExecutionTime = $maxExecutionTime > 0 ? $maxExecutionTime : 60;
         $maxRunTime       = floor($maxExecutionTime * 0.75); // Allow some buffering.
+        // PL strauss-fixup: worker limits. Cap the run (30s, Action Scheduler's
+        // default) so a high max_execution_time can't keep a worker pulling
+        // jobs for minutes.
+        // At least 1s: floor(0.75) on a 1s max_execution_time would be 0 and
+        // no job would ever start.
+        $maxRunTime       = max(1, min($maxRunTime, \PrettyLinks\Support\JobDeadline::budget()));
+        // Publish the deadline so jobs that loop over slow work (DNS, HTTP)
+        // can stop mid-batch (PrettyLinks\Support\JobDeadline). microtime(),
+        // not Time::now(FORMAT_TIMESTAMP): that is current_time(), which adds
+        // the site's GMT offset.
+        $deadline                        = microtime(true) + $maxRunTime;
+        $GLOBALS['prli_resque_deadline'] = $deadline;
+        // Jobs that lost their claim to another worker, skipped for this run.
+        $lostClaims = [];
 
-        while ((Time::now(Time::FORMAT_TIMESTAMP) - $startTime ) <= $maxRunTime) {
+        // PL strauss-fixup: worker limits. Strictly before the published
+        // deadline — the same microtime clock jobs stop mid-batch on — so a
+        // job never starts as the budget expires.
+        // The local copy, so nothing a job does to the global can extend it.
+        while (microtime(true) < $deadline) {
             $jobRaw = $this->nextJobRaw();
             if (empty($jobRaw)) {
                 break;
+            }
+
+            // PL strauss-fixup: worker limits. A job we already lost this run
+            // coming back means our UPDATE can't see it change (a replica or
+            // a query filter) — stop rather than spin until the budget.
+            if (isset($lostClaims[(int) $jobRaw->id])) {
+                break;
+            }
+
+            // Claim atomically: only the worker whose UPDATE flips pending ->
+            // working runs the job. Zero rows ('0' from some db.php drop-ins)
+            // means another worker got it; a query error (false) falls
+            // through and runs it as before.
+            $claimed = $wpdb->query(
+                $wpdb->prepare(
+                    'UPDATE ' . Job::init()->getTable()->getPrefixedName() . ' SET status = %s WHERE id = %d AND status = %s',
+                    JobStatus::WORKING()->getValue(),
+                    (int) $jobRaw->id,
+                    JobStatus::PENDING()->getValue()
+                )
+            );
+            if ($claimed !== false && (string) $claimed === '0') {
+                $lostClaims[(int) $jobRaw->id] = true;
+                continue;
             }
 
             $workedJob = false;

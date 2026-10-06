@@ -9,6 +9,7 @@ use PrettyLinks\Options\Store as OptionsStore;
 use PrettyLinks\Redirect\Engine;
 use PrettyLinks\Redirect\ReservedSlugs;
 use PrettyLinks\Slug\Generator as SlugGenerator;
+use PrettyLinks\Stripe\LinkMeta as StripeLinkMeta;
 
 /**
  * Repository for prli_links. Handles CRUD, soft-delete, bulk operations,
@@ -26,6 +27,8 @@ use PrettyLinks\Slug\Generator as SlugGenerator;
  * interpolated from $wpdb->prefix (trusted) and user values bind through
  * $wpdb->prepare(). No caching layer: these tables are the source of truth
  * for click/redirect data that must read-through.
+ *
+ * @api
  */
 class Links
 {
@@ -33,6 +36,54 @@ class Links
      * Transient caching whether any stored slug contains a literal space.
      */
     private const SPACE_SLUG_TRANSIENT = 'prli_has_space_slug';
+
+    /**
+     * Columns a caller may ask for through `search()`'s `fields` arg.
+     *
+     * @var string[]
+     */
+    private const PROJECTABLE_FIELDS = [
+        'id',
+        'name',
+        'description',
+        'url',
+        'slug',
+        'nofollow',
+        'sponsored',
+        'track_me',
+        'param_forwarding',
+        'redirect_type',
+        'created_at',
+        'updated_at',
+        'group_id',
+        'prettypay_link',
+        'new_window',
+        'clicks',
+        'uniques',
+        'deleted_at',
+        'source',
+    ];
+
+    /**
+     * The payload keys the column write (`create()` / `update()`) reads.
+     * Every other key in a save() payload belongs to an extension.
+     *
+     * @var string[]
+     */
+    public const COLUMN_FIELDS = [
+        'slug',
+        'url',
+        'name',
+        'description',
+        'redirect_type',
+        'param_forwarding',
+        'track_me',
+        'nofollow',
+        'sponsored',
+        'new_window',
+        'prettypay_link',
+        'source',
+    ];
 
     /**
      * Reason the most recent soft/hard delete was blocked by the
@@ -89,6 +140,13 @@ class Links
      * the links list (including Pro `prli_links_query_clauses` filters such
      * as Broken / Expired / Split).
      *
+     * Recognised args include `include` / `exclude` (id allow/deny lists),
+     * `status` ('any', 'trashed', or 'active' — 'active' also drops trashed
+     * rows from an `include` list, which otherwise returns them; 'trashed' is
+     * not applied alongside `include`), `prettypay`, `redirect_type` (string or array => IN),
+     * `redirect_type__not_in` (string or array => NOT IN), `source`,
+     * `search`, `category` and `tag`.
+     *
      * @param  array<string, mixed> $args Search / export args.
      * @return array{0: string[], 1: mixed[]} [$where, $params]
      */
@@ -100,7 +158,9 @@ class Links
 
         // `include` restricts the result to specific link ids. When
         // present we skip the deleted_at filter so hydration of saved
-        // chip selections still resolves names for trashed links.
+        // chip selections still resolves names for trashed links —
+        // unless the caller passes `status => 'active'`, which keeps
+        // trashed rows out (batched "resolve these live links" lookups).
         $include = isset($args['include']) && is_array($args['include'])
             ? array_values(array_filter(array_map('intval', $args['include'])))
             : [];
@@ -112,10 +172,27 @@ class Links
             foreach ($include as $id) {
                 $params[] = $id;
             }
+            if ($status === 'active') {
+                $where[] = 'deleted_at IS NULL';
+            }
         } elseif ($status === 'trashed') {
             $where[] = 'deleted_at IS NOT NULL';
         } else {
             $where[] = 'deleted_at IS NULL';
+        }
+
+        // `exclude` drops specific ids from the result — link pickers use it
+        // to hide the row being edited (or ids already chosen) so a link
+        // can't be pointed at itself. Applies on top of `include`.
+        $exclude = isset($args['exclude']) && is_array($args['exclude'])
+            ? array_values(array_filter(array_map('intval', $args['exclude'])))
+            : [];
+        if ($exclude) {
+            $placeholders = implode(',', array_fill(0, count($exclude), '%d'));
+            $where[]      = "id NOT IN ({$placeholders})";
+            foreach ($exclude as $id) {
+                $params[] = $id;
+            }
         }
 
         if (array_key_exists('prettypay', $args) && $args['prettypay'] !== null && $args['prettypay'] !== '') {
@@ -124,13 +201,34 @@ class Links
                 : 'prettypay_link <> 1';
         }
 
-        // Exact-match filter for the links-list redirect-type dropdown.
-        // Value is a raw redirect_type column value (e.g. '302', '301',
-        // 'cloak', 'pixel', 'prettybar'). Empty / 'all' means no filter.
-        $redirectType = isset($args['redirect_type']) ? (string) $args['redirect_type'] : '';
-        if ($redirectType !== '' && $redirectType !== 'all') {
-            $where[]  = 'redirect_type = %s';
-            $params[] = $redirectType;
+        // Redirect-type filter. Values are raw redirect_type column values
+        // (e.g. '302', '301', 'cloak', 'pixel', 'prettybar').
+        //
+        // `redirect_type` is either a string (the links-list dropdown, where
+        // '' and 'all' mean no filter) or an array, which becomes IN (...).
+        // `redirect_type__not_in` takes the same string-or-array shape and
+        // becomes NOT IN (...), for pickers that must exclude types — e.g.
+        // Splash Pages refusing to target another splash link.
+        $redirectTypes = self::normalizeRedirectTypes($args['redirect_type'] ?? null);
+        if ($redirectTypes) {
+            if (count($redirectTypes) === 1) {
+                $where[] = 'redirect_type = %s';
+            } else {
+                $placeholders = implode(',', array_fill(0, count($redirectTypes), '%s'));
+                $where[]      = "redirect_type IN ({$placeholders})";
+            }
+            foreach ($redirectTypes as $type) {
+                $params[] = $type;
+            }
+        }
+
+        $notRedirectTypes = self::normalizeRedirectTypes($args['redirect_type__not_in'] ?? null);
+        if ($notRedirectTypes) {
+            $placeholders = implode(',', array_fill(0, count($notRedirectTypes), '%s'));
+            $where[]      = "redirect_type NOT IN ({$placeholders})";
+            foreach ($notRedirectTypes as $type) {
+                $params[] = $type;
+            }
         }
 
         if (!empty($args['source'])) {
@@ -216,6 +314,48 @@ class Links
     /**
      * Search, filter, sort, and paginate links for the admin list-table.
      *
+     * The ORDER BY always ends with an `id` tiebreak in the requested
+     * direction (unless the caller already sorts by `id`, which is unique on
+     * its own). Without it, rows sharing a sort value — very
+     * common under the default `created_at DESC` after a bulk/CSV import that
+     * lands many links inside the same second — have an unspecified relative
+     * order, and MySQL is free to return them differently for each LIMIT /
+     * OFFSET page. That makes a row show up twice while another is skipped
+     * entirely. `id` is the primary key, so it's unique, indexed and stable.
+     *
+     * ## Projection mode
+     *
+     * By default every row comes back fully hydrated, and in normal /
+     * extended tracking each one also carries a correlated click-count
+     * subquery. That's right for the links list, which shows click counts,
+     * but wasteful for a link picker that only needs a few columns on every
+     * debounced keystroke. Two args opt out, while still running
+     * `buildSearchClauses()` so the `prli_links_search_clauses` /
+     * `prli_links_query_clauses` filters (and therefore Pro's category/tag
+     * search) keep working:
+     *
+     *   'fields'      => ['id', 'name', 'slug', 'url']  Restrict the SELECT to
+     *                    these columns. Rows come back with exactly these
+     *                    keys, cast the same way `hydrate()` casts them, and
+     *                    skip hydration's derived fields (`pretty_url`, the
+     *                    live click count). Unknown names are dropped; an
+     *                    empty result falls back to the full row.
+     *   'with_clicks' => false  Drop the click-count subquery (and, in count
+     *                    mode, the two `prli_link_metas` JOINs). Implied by
+     *                    `fields` unless it asks for `clicks` / `uniques`.
+     *                    Rows are still hydrated, but `clicks` / `uniques`
+     *                    fall back to the denormalized columns.
+     *
+     * Asking for `clicks` (or, in count mode, `uniques`) in `fields` keeps the
+     * counter query, since those values come from a subquery / JOIN rather
+     * than a column — only the PHP-side hydration is skipped in that case.
+     *
+     * `fields` names real `prli_links` columns only. Hydration's derived
+     * `pretty_url` can't be requested, so a projected caller that needs it
+     * builds it from `slug` (see {@see \PrettyLinks\Helpers\LinkUrl::build()}).
+     *
+     * Hydrated rows are a published contract (see hydrate()).
+     *
      * @param  array<string, mixed> $args Search/filter/sort/pagination args.
      * @return array{items: array<int, array<string, mixed>>, total: int, pages: int}
      */
@@ -223,6 +363,18 @@ class Links
     {
         global $wpdb;
         $table = $wpdb->prefix . 'prli_links';
+
+        $countMode = self::isCountMode();
+        $fields    = self::normalizeFields($args['fields'] ?? null);
+        // `fields` implies "no click subquery" unless it actually asks for a
+        // counter; an explicit with_clicks always wins. `uniques` only needs
+        // the counter query in count mode, where it comes from the metas
+        // JOIN — in normal/extended it's a plain prli_links column.
+        $wantsCounters = in_array('clicks', $fields, true)
+            || ($countMode && in_array('uniques', $fields, true));
+        $withClicks    = array_key_exists('with_clicks', $args)
+            ? (bool) $args['with_clicks']
+            : ($fields === [] || $wantsCounters);
 
         $orderby = self::safeOrderBy((string) ($args['orderby'] ?? 'created_at'));
         $order   = strtolower((string) ($args['order'] ?? 'desc')) === 'asc' ? 'ASC' : 'DESC';
@@ -237,7 +389,25 @@ class Links
         $totalSql = "SELECT COUNT(*) FROM {$table} {$whereSql}";
         $total    = (int) $wpdb->get_var($params ? $wpdb->prepare($totalSql, ...$params) : $totalSql);
 
-        if (self::isCountMode()) {
+        if (!$withClicks) {
+            // Projection / no-counter mode: one plain table read, no
+            // correlated subquery and no meta JOINs. `orderby=clicks` and
+            // `orderby=uniques` fall back to the denormalized columns on
+            // prli_links, which is what a picker wants anyway.
+            $select   = $fields === []
+                ? "{$table}.*"
+                : implode(', ', array_map(
+                    static function (string $field) use ($table): string {
+                        return "{$table}.{$field}";
+                    },
+                    $fields
+                ));
+            $tiebreak = $orderby === 'id' ? '' : ", {$table}.id {$order}";
+            $listSql  = "SELECT {$select}
+                             FROM {$table}
+                            {$whereSql}
+                            ORDER BY {$orderby} {$order}{$tiebreak} LIMIT %d OFFSET %d";
+        } elseif ($countMode) {
             // In count mode clicks and uniques live in prli_link_metas. Two
             // LEFT JOINs (lmc = clicks, lmu = uniques) pull them in so the
             // list table shows correct values and ORDER BY clicks works in SQL.
@@ -256,13 +426,41 @@ class Links
             } else {
                 $orderExpr = "li.{$orderby}";
             }
-            $safeWhere = $whereSql !== '' ? str_replace('id IN (', 'li.id IN (', $whereSql) : '';
-            $listSql   = "SELECT li.*, {$clicksExpr} AS clicks, {$uniquesExpr} AS uniques
+            // Qualify bare `id IN (` / `id NOT IN (` conditions — ours and any
+            // an extension appended through `prli_links_query_clauses` — as
+            // `li.id`, or they'd be ambiguous against lmc.id / lmu.id. The
+            // lookbehind keeps the rewrite off identifiers that merely end in
+            // "id" (`link_id IN (…)`) and off ones already qualified
+            // (`li.id IN (…)`). Search terms are never at risk here: they bind
+            // as %s params and never reach this string.
+            $safeWhere = $whereSql !== ''
+                ? (string) preg_replace(
+                    '/(?<![A-Za-z0-9_.])id (NOT )?IN \(/',
+                    'li.id $1IN (',
+                    $whereSql
+                )
+                : '';
+            $tiebreak  = $orderby === 'id' ? '' : ", li.id {$order}";
+            // Counters always come from the JOIN aliases here, so project the
+            // plain columns and let clicks/uniques be added as expressions.
+            $plain     = $fields === []
+                ? ['li.*']
+                : array_map(
+                    static function (string $field): string {
+                        return "li.{$field}";
+                    },
+                    array_values(array_diff($fields, ['clicks', 'uniques']))
+                );
+            $select    = implode(', ', array_merge(
+                $plain,
+                ["{$clicksExpr} AS clicks", "{$uniquesExpr} AS uniques"]
+            ));
+            $listSql   = "SELECT {$select}
                              FROM {$table} li
                              LEFT JOIN {$metas} lmc ON lmc.link_id = li.id AND lmc.meta_key = 'static-clicks'
                              LEFT JOIN {$metas} lmu ON lmu.link_id = li.id AND lmu.meta_key = 'static-uniques'
                             {$safeWhere}
-                            ORDER BY {$orderExpr} {$order} LIMIT %d OFFSET %d";
+                            ORDER BY {$orderExpr} {$order}{$tiebreak} LIMIT %d OFFSET %d";
         } else {
             // Normal / extended tracking: derive the clicks count from
             // `prli_clicks` instead of the denormalized `prli_links.clicks`
@@ -274,10 +472,22 @@ class Links
             $clicks     = $wpdb->prefix . 'prli_clicks';
             $clicksExpr = "(SELECT COUNT(*) FROM {$clicks} cl WHERE cl.link_id = {$table}.id)";
             $orderExpr  = $orderby === 'clicks' ? $clicksExpr : $orderby;
-            $listSql    = "SELECT {$table}.*, {$clicksExpr} AS actual_clicks
+            $tiebreak   = $orderby === 'id' ? '' : ", {$table}.id {$order}";
+            // `clicks` is the one field the subquery supplies; everything
+            // else (uniques included) is a real column and can be projected.
+            $plain      = $fields === []
+                ? ["{$table}.*"]
+                : array_map(
+                    static function (string $field) use ($table): string {
+                        return "{$table}.{$field}";
+                    },
+                    array_values(array_diff($fields, ['clicks']))
+                );
+            $select     = implode(', ', array_merge($plain, ["{$clicksExpr} AS actual_clicks"]));
+            $listSql    = "SELECT {$select}
                              FROM {$table}
                             {$whereSql}
-                            ORDER BY {$orderExpr} {$order} LIMIT %d OFFSET %d";
+                            ORDER BY {$orderExpr} {$order}{$tiebreak} LIMIT %d OFFSET %d";
         }
 
         $rows = $wpdb->get_results(
@@ -285,8 +495,17 @@ class Links
             ARRAY_A
         ) ?: [];
 
+        $items = $fields === []
+            ? array_map([self::class, 'hydrate'], $rows)
+            : array_map(
+                static function (array $row) use ($fields): array {
+                    return self::project($row, $fields);
+                },
+                $rows
+            );
+
         return [
-            'items' => array_map([self::class, 'hydrate'], $rows),
+            'items' => $items,
             'total' => $total,
             'pages' => (int) ceil($total / max(1, $perPage)),
         ];
@@ -294,6 +513,8 @@ class Links
 
     /**
      * Find a single link by its id.
+     *
+     * Returns the hydrated link shape, a published contract (see hydrate()).
      *
      * @param  integer $id Link id.
      * @return array<string, mixed>|null
@@ -316,6 +537,8 @@ class Links
     /**
      * Find a single link by its slug.
      *
+     * Returns the hydrated link shape, a published contract (see hydrate()).
+     *
      * @param  string $slug Link slug.
      * @return array<string, mixed>|null
      */
@@ -336,6 +559,8 @@ class Links
 
     /**
      * Find the oldest non-deleted link pointing at the given target URL.
+     *
+     * Returns the hydrated link shape, a published contract (see hydrate()).
      *
      * @param  string $url Target URL.
      * @return array<string, mixed>|null
@@ -376,7 +601,124 @@ class Links
     }
 
     /**
+     * The link save seam. Every writer that saves a link from a payload
+     * goes through here, so fields owned by extensions persist the same
+     * way whatever surface the save came from.
+     * `create()` and `update()` are only the `prli_links` column write
+     * this wraps.
+     *
+     * Ordering contract. Each step runs at most once per call, in order:
+     *
+     *  1. `$original` is a copy of `$payload` as the writer passed it.
+     *  2. The PrettyPay™ `stripe_*` keys are pulled off the working payload
+     *     (`Stripe\LinkMeta::extract()`).
+     *  3. Filter `prli_link_payload_pre_save` ($data, $context, $linkId):
+     *     extensions remove the keys they own, or rewrite core ones (e.g.
+     *     fold their own field into `url`). Nothing has been written yet and
+     *     the save may still fail, so listeners must not persist anything here.
+     *  4. Filter `prli_validate_link` ($errors, $data, $context, $linkId):
+     *     a non-empty error list aborts the save. Nothing is written and
+     *     `prli_link_after_save` does not fire.
+     *  5. The column write: `create()` or `update()`, which fire
+     *     `prli-create-link` / `prli_update_link` with the column-only row.
+     *     A repo error (`url_invalid`, `slug_in_use`, …) or a missing link
+     *     on update ends the save here, again without `prli_link_after_save`.
+     *  6. The extracted PrettyPay™ meta is stored.
+     *  7. Action `prli_link_after_save` ($linkId, $original, $context):
+     *     extensions persist their fields, read from `$original`, the
+     *     untouched payload. It fires once per successful save.
+     *
+     * `$context` is 'update' when `$id` is set, 'create' otherwise; `$linkId`
+     * in steps 3–4 is 0 on create. A listener must not save the same link
+     * through `save()` again from inside steps 3–7.
+     *
+     * Not routed here: `duplicate()` (it clones stored rows and metas, then
+     * fires `prli_link_duplicated`), `bulk()` flag and term toggles,
+     * `restore()`, and the deletes.
+     *
+     * @param  array<string, mixed> $payload Link payload: `prli_links` columns plus any extension-owned fields.
+     * @param  integer              $id      Link id to update, or 0 to create.
+     * @return array<string, mixed>|null The saved row; `['error' => code]` on failure
+     *                                   (`validation_failed` adds `messages`); null when
+     *                                   `$id` names no link.
+     */
+    public function save(array $payload, int $id = 0): ?array
+    {
+        $context    = $id > 0 ? 'update' : 'create';
+        $original   = $payload;
+        $stripe     = new StripeLinkMeta(new LinkMetas());
+        $stripeMeta = $stripe->extract($payload);
+
+        /**
+         * Filter: prli_link_payload_pre_save
+         *
+         * Plugins remove fields they own from `$data` so the column write
+         * never sees them (it only knows `prli_links` columns). Return the
+         * trimmed array. See save() for the ordering contract.
+         *
+         * @param array<string, mixed> $data    Payload after Lite strips Stripe meta.
+         * @param string               $context 'create' | 'update'
+         * @param int                  $linkId  0 on create, link id on update.
+         */
+        $data = (array) apply_filters('prli_link_payload_pre_save', $payload, $context, $id);
+
+        /**
+         * Filter: prli_validate_link
+         *
+         * Third-party validation. Push error-message strings into the
+         * array; a non-empty return aborts the save. Back-compatible with
+         * v3's one-arg `$errors` listeners — PHP ignores the extra args.
+         *
+         * @param array<int, string>   $errors  Start empty, add messages.
+         * @param array<string, mixed> $data    Payload about to be saved.
+         * @param string               $context 'create' | 'update'.
+         * @param int                  $linkId  0 on create, link id on update.
+         */
+        $errors   = (array) apply_filters('prli_validate_link', [], $data, $context, $id);
+        $messages = array_values(array_filter(array_map(
+            static fn ($e) => is_string($e) ? trim($e) : '',
+            $errors
+        )));
+        if ($messages !== []) {
+            return [
+                'error'    => 'validation_failed',
+                'messages' => $messages,
+            ];
+        }
+
+        $link = $id > 0 ? $this->update($id, $data) : $this->create($data);
+        if ($link === null || isset($link['error']) || !isset($link['id'])) {
+            return $link;
+        }
+
+        $linkId = (int) $link['id'];
+        $stripe->persist($linkId, $stripeMeta);
+
+        /**
+         * Action: prli_link_after_save
+         *
+         * Fires after the link row is written. Plugins read their own
+         * fields from `$original` (the unmodified payload) and persist
+         * them (categories, tags, keywords, splitTest, etc.). See save()
+         * for the ordering contract.
+         *
+         * @param int                  $linkId
+         * @param array<string, mixed> $original Full unmodified payload.
+         * @param string               $context  'create' | 'update'
+         */
+        do_action('prli_link_after_save', $linkId, $original, $context);
+
+        return $link;
+    }
+
+    /**
      * Create a new link, generating/validating the slug and resolving the name.
+     *
+     * This is the column write only: extension-owned fields in `$data` are
+     * ignored and the save seam's hooks (`prli_link_payload_pre_save`,
+     * `prli_validate_link`, `prli_link_after_save`) don't run; the legacy
+     * `prli-create-link` and `prli_event_recorded` actions still fire. Use
+     * save() to save a payload.
      *
      * @param  array<string, mixed> $data Link field values.
      * @return array<string, mixed>
@@ -416,6 +758,9 @@ class Links
             return ['error' => 'invalid_slug'];
         }
         $slug = self::sanitizeSlug($slugInput);
+        if ($slug === null) {
+            return ['error' => 'invalid_slug'];
+        }
         if ($slug === '') {
             // Generator bakes the per-source prefix into the returned slug
             // so the stored value IS the final URL path — no runtime prefix
@@ -430,11 +775,7 @@ class Links
             if (ReservedSlugs::isReserved($slug, $source)) {
                 return ['error' => 'slug_reserved'];
             }
-            if (
-                $wpdb->get_var(
-                    $wpdb->prepare("SELECT id FROM {$table} WHERE slug = %s LIMIT 1", $slug)
-                )
-            ) {
+            if (self::slugTaken($slug)) {
                 return ['error' => 'slug_in_use'];
             }
         }
@@ -508,6 +849,12 @@ class Links
     /**
      * Update an existing link with the allowed subset of supplied fields.
      *
+     * This is the column write only: extension-owned fields in `$data` are
+     * ignored and the save seam's hooks (`prli_link_payload_pre_save`,
+     * `prli_validate_link`, `prli_link_after_save`) don't run; the legacy
+     * `prli_update_link` and `prli_event_recorded` actions still fire. Use
+     * save() to save a payload.
+     *
      * @param  integer              $id   Link id to update.
      * @param  array<string, mixed> $data Link field values to patch.
      * @return array<string, mixed>|null
@@ -520,19 +867,8 @@ class Links
             return null;
         }
 
-        $allowed = [
-            'slug',
-            'url',
-            'name',
-            'description',
-            'redirect_type',
-            'param_forwarding',
-            'track_me',
-            'nofollow',
-            'sponsored',
-            'new_window',
-            'prettypay_link',
-        ];
+        // `source` records how a link was created, so it is create-only.
+        $allowed = array_diff(self::COLUMN_FIELDS, ['source']);
         $patch   = [];
         foreach ($allowed as $key) {
             if (!array_key_exists($key, $data)) {
@@ -548,6 +884,9 @@ class Links
                     return ['error' => 'invalid_slug'];
                 }
                 $sanitized = self::sanitizeSlug($raw);
+                if ($sanitized === null) {
+                    return ['error' => 'invalid_slug'];
+                }
                 if ($sanitized !== '') {
                     // Re-saving a user/public link forces its prefix back
                     // in — a visitor trying to rename `u/abc` to `evil`
@@ -558,6 +897,23 @@ class Links
                     $sanitized      = self::forceSourcePrefix($sanitized, $existingSource);
                     if (ReservedSlugs::isReserved($sanitized, $existingSource)) {
                         return ['error' => 'slug_reserved'];
+                    }
+                    // Same guard create() applies, but only when the slug is
+                    // actually CHANGING. Without it, renaming one link onto
+                    // another's slug was accepted, leaving two live rows
+                    // answering to it and the loser silently unreachable (#852).
+                    //
+                    // Gating on the change rather than the presence matters:
+                    // every caller sends the whole row back (LinkForm posts
+                    // `{ ...values }`, the CSV importer re-sends the export), so
+                    // a presence check would refuse a plain "edit the target URL
+                    // and save" on any site that ALREADY has two rows sharing a
+                    // slug — the population `Engine::resolve()`'s ordering exists
+                    // for. Both rows would become permanently unsavable through
+                    // every surface, with no way to repair the duplicate.
+                    $currentSlug = (string) ($existing['slug'] ?? '');
+                    if ($sanitized !== $currentSlug && self::slugTaken($sanitized, $id)) {
+                        return ['error' => 'slug_in_use'];
                     }
                     $patch[$key] = $sanitized;
                 }
@@ -644,6 +1000,15 @@ class Links
             ['id' => $id]
         );
         if ($ok) {
+            /**
+             * Action: prli_delete_link
+             *
+             * Soft delete: fires while the link, terms and metas rows all
+             * still exist. See {@see self::hardDelete()} for the hard path.
+             *
+             * @param int               $id      Trashed link id.
+             * @param array{soft: bool} $context `soft` is true here.
+             */
             do_action('prli_delete_link', $id, ['soft' => true]);
             do_action(
                 'prli_event_recorded',
@@ -684,6 +1049,18 @@ class Links
         $wpdb->delete($wpdb->prefix . 'prli_link_metas', ['link_id' => $id]);
         $deleted = (bool) $wpdb->delete($wpdb->prefix . 'prli_links', ['id' => $id]);
         if ($deleted) {
+            /**
+             * Action: prli_delete_link
+             *
+             * Fires AFTER the link row and its `prli_link_terms` and
+             * `prli_link_metas` rows are gone, so listeners cannot read the
+             * link's terms or metas here — key cleanup off `$id` alone.
+             * Soft-delete fires the same action from {@see self::softDelete()}
+             * with every row still in place.
+             *
+             * @param int               $id      Deleted link id.
+             * @param array{soft: bool} $context `soft` is false here.
+             */
             do_action('prli_delete_link', $id, ['soft' => false]);
             do_action(
                 'prli_event_recorded',
@@ -799,6 +1176,14 @@ class Links
             ['id' => $id]
         );
         if ($ok) {
+            /**
+             * Fires after a trashed link is restored (its deleted_at stamp
+             * cleared). Counterpart to `prli_delete_link` with soft => true;
+             * lets caches that drop trashed links pick the link back up.
+             *
+             * @param int $id Restored link id.
+             */
+            do_action('prli_restore_link', $id);
             do_action(
                 'prli_event_recorded',
                 Event::init([
@@ -813,7 +1198,8 @@ class Links
     }
 
     /**
-     * Duplicate a link, generating a unique "-copy" slug and copying its terms.
+     * Duplicate a link, generating a unique "-copy" slug and copying its terms
+     * and metas.
      *
      * @param  integer $id Link id to duplicate.
      * @return array<string, mixed>|null
@@ -848,8 +1234,63 @@ class Links
             $terms = $this->getTerms($id);
             $this->setTerms((int) $new['id'], 'category', $terms['categories']);
             $this->setTerms((int) $new['id'], 'tag', $terms['tags']);
+            $this->copyMetas($id, (int) $new['id']);
+
+            /**
+             * Action: prli_link_duplicated
+             *
+             * Fires after a link is duplicated and its terms and metas are
+             * copied. Use it to copy link state kept in other tables.
+             *
+             * @param int $newId  New link id.
+             * @param int $fromId Source link id.
+             */
+            do_action('prli_link_duplicated', (int) $new['id'], $id);
         }
         return $new;
+    }
+
+    /**
+     * Copy a link's `prli_link_metas` rows onto another link, minus per-link
+     * runtime state. Every row is copied in id order, so multi-value keys
+     * (several rows under one meta_key, e.g. URL replacements) keep all of
+     * their rows and their order.
+     *
+     * @param  integer $fromId Source link id.
+     * @param  integer $toId   Destination link id.
+     * @return void
+     */
+    private function copyMetas(int $fromId, int $toId): void
+    {
+        /**
+         * Filter: prli_link_duplicate_skip_meta_keys
+         *
+         * Meta keys left behind when a link is duplicated. Use it for
+         * per-link runtime state (counters, check results) that must not
+         * carry over to the copy.
+         *
+         * @param string[] $keys   Meta keys to skip.
+         * @param int      $fromId Source link id.
+         */
+        $skip = array_values(array_map('strval', (array) apply_filters(
+            'prli_link_duplicate_skip_meta_keys',
+            ['static-clicks', 'static-uniques'],
+            $fromId
+        )));
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'prli_link_metas';
+        $sql   = "INSERT INTO {$table} (meta_key, meta_value, meta_order, link_id, created_at)
+                  SELECT meta_key, meta_value, meta_order, %d, %s
+                    FROM {$table}
+                   WHERE link_id = %d";
+        $args  = [$toId, current_time('mysql', true), $fromId];
+        if ($skip) {
+            $sql .= ' AND meta_key NOT IN (' . implode(', ', array_fill(0, count($skip), '%s')) . ')';
+            $args = array_merge($args, $skip);
+        }
+        $sql .= ' ORDER BY id ASC';
+        $wpdb->query($wpdb->prepare($sql, $args));
     }
 
     /**
@@ -1036,35 +1477,47 @@ class Links
     /**
      * Normalize a raw DB row into the public link array shape.
      *
+     * This shape is a published contract, returned by find(), findBySlug(),
+     * findByUrl() and search() (hydrated rows, i.e. without `fields`
+     * projection). External consumers read these keys directly and send
+     * them out in fixed wire formats, so renaming, moving or retyping one
+     * doesn't error: it silently sends empty values. Keep these keys and
+     * types stable:
+     *
+     * - `pretty_url` (string) full short URL, built from the stored slug
+     * - `clicks` (int) count mode: the `prli_link_metas` counter; otherwise
+     *   the live `prli_clicks` count from search(), else `prli_links.clicks`
+     * - `uniques` (int)
+     * - `param_forwarding` (bool) normalized from '' / '0' / 'off'
+     * - `deleted_at` (string|null) null while the link is live
+     *
+     * The LinksTest::testHydratedRowKeepsItsPublishedShape* tests pin these.
+     *
      * @param  array<string, mixed> $row Raw prli_links row.
      * @return array<string, mixed>
      */
     private static function hydrate(array $row): array
     {
-        $out = [
-            'id'               => (int) $row['id'],
-            'slug'             => (string) $row['slug'],
-            'url'              => (string) $row['url'],
-            'name'             => (string) ($row['name'] ?? ''),
-            'description'      => (string) ($row['description'] ?? ''),
-            'redirect_type'    => (string) ($row['redirect_type'] ?? '302'),
-            'param_forwarding' => !in_array($row['param_forwarding'] ?? '', ['', '0', 'off'], true),
-            'track_me'         => (bool) ($row['track_me'] ?? 0),
-            'nofollow'         => (bool) ($row['nofollow'] ?? 0),
-            'sponsored'        => (bool) ($row['sponsored'] ?? 0),
-            'new_window'       => (bool) ($row['new_window'] ?? 0),
-            'prettypay_link'   => (bool) ($row['prettypay_link'] ?? 0),
-            // `actual_clicks` is the live COUNT from prli_clicks when the
-            // row came from `search()` in normal/extended mode; falls back
-            // to the cached `prli_links.clicks` column for single-row
-            // lookups or when count mode is active.
-            'clicks'           => (int) ($row['actual_clicks'] ?? $row['clicks'] ?? 0),
-            'source'           => (string) ($row['source'] ?? 'admin'),
-            'created_at'       => (string) ($row['created_at'] ?? ''),
-            'updated_at'       => (string) ($row['updated_at'] ?? ''),
-            'deleted_at'       => $row['deleted_at'] ? (string) $row['deleted_at'] : null,
-            'pretty_url'       => self::prettyUrl((string) $row['slug'], (string) ($row['source'] ?? 'admin')),
-        ];
+        $out = self::project($row, [
+            'id',
+            'slug',
+            'url',
+            'name',
+            'description',
+            'redirect_type',
+            'param_forwarding',
+            'track_me',
+            'nofollow',
+            'sponsored',
+            'new_window',
+            'prettypay_link',
+            'clicks',
+            'source',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ]);
+        $out['pretty_url'] = self::prettyUrl((string) $row['slug'], (string) ($row['source'] ?? 'admin'));
         // In count mode uniques come from the static-uniques meta (populated
         // by the search/find queries); in normal/extended they come from the
         // fast-read counter on prli_links.
@@ -1101,17 +1554,71 @@ class Links
     }
 
     /**
+     * Whether another row already holds this slug.
+     *
+     * Trashed rows count as taken, matching what `create()` has always done.
+     * Freeing a trashed link's slug would mean restoring it could land a second
+     * live row on the same slug — the exact collision this guards against.
+     *
+     * Deliberately not backed by a `UNIQUE` index, and therefore not atomic:
+     * two concurrent writers can both pass this check and both write. The
+     * constraint is not added because `prli_links` has never had one, so any
+     * site already carrying duplicates (from an import or a direct write) would
+     * fail the migration outright — see #852, and #833 for the index work.
+     * `Engine::resolve()` orders by id so those sites stay deterministic
+     * meanwhile. A later attempt at the index is a deliberate change, not a
+     * missing piece of this one.
+     *
+     * @param  string  $slug     Sanitized slug to check.
+     * @param  integer $exceptId Row to ignore — the one being updated.
+     * @return boolean
+     */
+    private static function slugTaken(string $slug, int $exceptId = 0): bool
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'prli_links';
+
+        // `id <> 0` is always true, so one query serves both callers.
+        return $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM {$table} WHERE slug = %s AND id <> %d LIMIT 1",
+                $slug,
+                $exceptId
+            )
+        ) !== null;
+    }
+
+    /**
      * True when the site is configured for Simple (count-only) tracking.
      * Reads the option via WP's object cache — effectively free to call
      * multiple times per request.
+     *
+     * Public because Simple mode moves the click counters from the
+     * `prli_links` columns into `prli_link_metas`, so anything reading a
+     * count has to know which store is live.
      */
-    private static function isCountMode(): bool
+    public static function isCountMode(): bool
+    {
+        return self::trackingMode() === 'count';
+    }
+
+    /**
+     * The configured tracking mode: 'normal', 'extended', or 'count'.
+     * Reads the option via WP's object cache.
+     *
+     * String-casts a present non-null value; a missing or null value reads as
+     * 'normal'. `Options\Store::get()` (used by `ClickWriter` and
+     * `Redirect\Engine`) keeps a stored null as null instead — both agree
+     * for the `=== 'count'` / `=== 'extended'` checks callers make.
+     *
+     * @return string
+     */
+    public static function trackingMode(): string
     {
         $opts = get_option('prli_options');
-        $mode = is_array($opts) && isset($opts['extended_tracking'])
+        return is_array($opts) && isset($opts['extended_tracking'])
             ? (string) $opts['extended_tracking']
             : 'normal';
-        return $mode === 'count';
     }
 
     /**
@@ -1128,6 +1635,132 @@ class Links
         // `base_slug_prefix` option without breaking existing URLs.
         unset($source);
         return \PrettyLinks\Helpers\LinkUrl::build($slug);
+    }
+
+    /**
+     * Normalize a redirect-type filter arg into a list of column values.
+     *
+     * Accepts a single string or an array, and drops the links-list
+     * dropdown's "no filter" sentinels ('' and 'all') along with duplicates.
+     *
+     * @param  mixed $value Raw `redirect_type` / `redirect_type__not_in` arg.
+     * @return string[]
+     */
+    private static function normalizeRedirectTypes($value): array
+    {
+        if ($value === null) {
+            return [];
+        }
+        $values = is_array($value) ? $value : [$value];
+        $values = array_map(
+            static function ($type): string {
+                return trim((string) $type);
+            },
+            $values
+        );
+        return array_values(array_unique(array_filter(
+            $values,
+            static function (string $type): bool {
+                // '' and 'all' are the links-list dropdown's "no filter"
+                // sentinels, so they never become a WHERE condition.
+                return $type !== '' && $type !== 'all';
+            }
+        )));
+    }
+
+    /**
+     * Normalize `search()`'s `fields` arg into a safe column list.
+     *
+     * Anything not in {@see self::PROJECTABLE_FIELDS} is dropped, so the
+     * result is always safe to interpolate into the SELECT. An empty result
+     * means "no projection" and the caller falls back to the full row.
+     *
+     * @param  mixed $value Raw `fields` arg.
+     * @return string[]
+     */
+    private static function normalizeFields($value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+        // Anything not stringable is dropped rather than cast: a nested array
+        // would raise "Array to string conversion" and an object without
+        // __toString() would throw, so one malformed entry from a caller (or
+        // from `prli_links_index_args`) would abort the search.
+        $fields = array_map(
+            static function ($field): string {
+                return is_scalar($field) ? trim((string) $field) : '';
+            },
+            $value
+        );
+        return array_values(array_unique(array_filter(
+            $fields,
+            static function (string $field): bool {
+                return in_array($field, self::PROJECTABLE_FIELDS, true);
+            }
+        )));
+    }
+
+    /**
+     * Cast a single raw DB column the way the API exposes it.
+     *
+     * Shared by `hydrate()` and projection mode so a projected row's `id` is
+     * an int and its `nofollow` a bool, exactly as on a hydrated one.
+     *
+     * @param  string               $column Column name.
+     * @param  array<string, mixed> $row    Raw prli_links row.
+     * @return mixed
+     */
+    private static function castColumn(string $column, array $row)
+    {
+        switch ($column) {
+            case 'id':
+                return (int) ($row['id'] ?? 0);
+            case 'group_id':
+                // Nullable in the schema: keep NULL distinguishable from
+                // group 0 so a picker can tell "ungrouped" from a real id.
+                return isset($row['group_id']) ? (int) $row['group_id'] : null;
+            case 'clicks':
+                // `actual_clicks` is the live COUNT from prli_clicks when the
+                // row came from `search()` in normal/extended mode; falls back
+                // to the cached `prli_links.clicks` column for single-row
+                // lookups, count mode, or projection mode.
+                return (int) ($row['actual_clicks'] ?? $row['clicks'] ?? 0);
+            case 'uniques':
+                return (int) ($row['uniques'] ?? 0);
+            case 'param_forwarding':
+                return !in_array($row['param_forwarding'] ?? '', ['', '0', 'off'], true);
+            case 'nofollow':
+            case 'sponsored':
+            case 'track_me':
+            case 'new_window':
+            case 'prettypay_link':
+                return (bool) ($row[$column] ?? 0);
+            case 'redirect_type':
+                return (string) ($row['redirect_type'] ?? '302');
+            case 'source':
+                return (string) ($row['source'] ?? 'admin');
+            case 'deleted_at':
+                return $row['deleted_at'] ? (string) $row['deleted_at'] : null;
+            default:
+                return (string) ($row[$column] ?? '');
+        }
+    }
+
+    /**
+     * Cast the requested columns of a raw row, preserving field order.
+     *
+     * @param  array<string, mixed> $row    Raw prli_links row.
+     * @param  string[]             $fields Column names to keep.
+     * @return array<string, mixed>
+     */
+    private static function project(array $row, array $fields): array
+    {
+        $out = [];
+        foreach ($fields as $field) {
+            $out[$field] = self::castColumn($field, $row);
+        }
+        return $out;
     }
 
     /**
@@ -1159,34 +1792,16 @@ class Links
     /**
      * Sanitize a raw slug into the engine-safe alphabet.
      *
+     * Delegates to {@see Engine::canonicalizeSlug()} so Links save and QR
+     * preview share one pipeline (NFC on write, whitespace, charset strip).
+     *
      * @param  string $slug Raw user-supplied slug.
-     * @return string
+     * @return string|null
      */
-    private static function sanitizeSlug(string $slug): string
+    private static function sanitizeSlug(string $slug): ?string
     {
-        $slug = trim($slug);
-        if ($slug === '') {
-            return '';
-        }
-        // Normalise runs of whitespace, then strip anything outside the engine
-        // alphabet. The allowed set (Engine::SLUG_CHAR_CLASS) is the RFC 3986
-        // path-character set v3 accepted — including `.`, `=`, `~` and `+` — so
-        // slugs like `hp-x32.exe=latest` survive the save and still resolve.
-        // `/` is allowed so users can type multi-segment slugs like `go/abc`;
-        // the prefix feature bakes such slashes into stored slugs at creation.
-        //
-        // Whitespace normally collapses to a single dash. When the v3-parity
-        // `allow_slug_spaces` toggle is on (#751 — surfaced only for sites that
-        // already have space-containing slugs), it collapses to a single space
-        // instead, so those sites can keep editing/creating slugs with spaces
-        // exactly as v3 did. The space is in SLUG_CHAR_CLASS either way, so the
-        // resolver matches it regardless of this setting.
-        $whitespaceTo = (new OptionsStore())->get('allow_slug_spaces') ? ' ' : '-';
-        $slug         = (string) preg_replace('/\s+/', $whitespaceTo, $slug);
-        $slug         = (string) preg_replace('#[^' . Engine::SLUG_CHAR_CLASS . ']#', '', $slug);
-        $slug         = (string) preg_replace('#/+#', '/', $slug);
-        $slug         = (string) preg_replace('/-+/', '-', $slug);
-        return trim($slug, '-/ ');
+        $allowSpaces = (bool) (new OptionsStore())->get('allow_slug_spaces');
+        return Engine::canonicalizeSlug($slug, $allowSpaces);
     }
 
     /**

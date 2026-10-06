@@ -14,7 +14,6 @@ use PrettyLinks\Admin\Page;
 use PrettyLinks\Admin\PluginRow;
 use PrettyLinks\Admin\Upsell\ProUpsell;
 use PrettyLinks\Admin\TopBar;
-use PrettyLinks\Addons\AddonsService;
 use PrettyLinks\Admin\Pages\AddNew as AddNewPage;
 use PrettyLinks\Admin\Pages\Addons as AddonsPage;
 use PrettyLinks\Admin\Upsell\CustomReportsLocked as CustomReportsLockedPage;
@@ -39,6 +38,9 @@ use PrettyLinks\GroundLevel\Database\DatabaseServiceProvider;
 use PrettyLinks\GroundLevel\Events\EventsServiceProvider;
 use PrettyLinks\GroundLevel\InProductNotifications\IPNServiceProvider;
 use PrettyLinks\GroundLevel\Mothership\AbstractPluginConnection;
+use PrettyLinks\GroundLevel\Mothership\Manager\AddonsManager;
+use PrettyLinks\GroundLevel\Mothership\MothershipServiceProvider;
+use PrettyLinks\Addons\AddonInstaller;
 use PrettyLinks\GroundLevel\Package\Bootstrap as BaseBootstrap;
 use PrettyLinks\GroundLevel\Resque\ResqueServiceProvider;
 use PrettyLinks\GroundLevel\Support\Models\Hook;
@@ -47,7 +49,6 @@ use PrettyLinks\Install\Activator;
 use PrettyLinks\Install\Deactivator;
 use PrettyLinks\Licensing\AuthClient;
 use PrettyLinks\Licensing\EditionMismatch;
-use PrettyLinks\Licensing\LicenseClient;
 use PrettyLinks\Licensing\LicenseManager;
 use PrettyLinks\Licensing\MothershipConnector;
 use PrettyLinks\Onboarding\FirstRunRedirect;
@@ -57,6 +58,8 @@ use PrettyLinks\Options\Store as OptionsStore;
 use PrettyLinks\Redirect\ClickDataWiper;
 use PrettyLinks\Redirect\Engine as RedirectEngine;
 use PrettyLinks\Redirect\GeoBackfillJob;
+use PrettyLinks\Redirect\HostBackfillJob;
+use PrettyLinks\Rest\CacheControl as RestCacheControl;
 use PrettyLinks\Rest\Router as RestRouter;
 use PrettyLinks\Shortcodes\Loader as ShortcodesLoader;
 use PrettyLinks\Stripe\CheckoutRedirect as StripeCheckoutRedirect;
@@ -64,6 +67,10 @@ use PrettyLinks\Stripe\ConnectAjax as StripeConnectAjax;
 use PrettyLinks\Stripe\CustomerPortal as StripeCustomerPortal;
 use PrettyLinks\Stripe\InvoiceRenderer as StripeInvoiceRenderer;
 use PrettyLinks\Updates\InPluginMessage;
+use PrettyLinks\Updates\AddonCatalog;
+use PrettyLinks\Updates\AddonInformation;
+use PrettyLinks\Updates\AutoUpdatePolicy;
+use PrettyLinks\Updates\PluginInformation;
 
 /**
  * Plugin bootstrap.
@@ -71,7 +78,9 @@ use PrettyLinks\Updates\InPluginMessage;
 class Bootstrap extends BaseBootstrap
 {
     /**
-     * Initializes container bindings and plugin services.
+     * Register container parameters, providers, services, and the
+     * Mothership-to-`prli_*` event bridges that wire up licensing and
+     * add-on management. Runs once during plugin bootstrap.
      *
      * @return void
      */
@@ -108,10 +117,12 @@ class Bootstrap extends BaseBootstrap
             ResqueServiceProvider::PARAM_PREFIX       => 'prlidt_resque',
         ]);
 
-        // Mothership plugin connection. IPN depends on Mothership; the
-        // provider resolves AbstractPluginConnection out of the container.
-        // Our connector reads/writes the v3.x license option keys so there's
-        // one source of truth shared with Licensing\LicenseManager.
+        // Mothership plugin connection. The connector is the single source of
+        // truth for how Pretty Links stores credentials, which product to check
+        // for updates, and update behavior. ground-level-mothership owns license
+        // activation, plugin/add-on updates, and add-on management off the back
+        // of it (see Licensing\LicenseManager + the REST controllers, which
+        // delegate to the GL services).
         $container->singleton(
             AbstractPluginConnection::class,
             static function (): AbstractPluginConnection {
@@ -119,7 +130,258 @@ class Bootstrap extends BaseBootstrap
             }
         );
 
-        // IPN registers MothershipServiceProvider via its dependencies() chain.
+        // Register Mothership explicitly (IPN also depends on it; the container
+        // dedupes provider registration). Defaults the API base URL to the new
+        // licenses server; a PRLI_MOTHERSHIP_API_BASE_URL constant overrides it
+        // for staging (read by Mothership\Util::getApiBaseUrl()).
+        $container->provider(MothershipServiceProvider::class);
+
+        // Lite is the WordPress.org build, and GL's license manager hangs a
+        // paid-license nag off the Plugins screen: "Please activate your
+        // license to download this update. Visit your account dashboard",
+        // printed by appendLicenseUpdateMessage() for any update row with an
+        // empty package. v5 had neither the hook nor the method, so this is
+        // new chrome, and upselling a licence from a free wp.org plugin's
+        // update row is exactly the kind of thing Plugin Check and reviewers
+        // object to. Pro keeps it — there the message is accurate and useful.
+        // Deferred to admin_init because MothershipServiceProvider::boot()
+        // registers GL's hooks after this line runs — and admin_init is still
+        // well before the Plugins screen renders its update rows.
+        add_action('admin_init', [$container->get(LicenseManager::class), 'removeLiteUpdateNag'], 1);
+        add_action('admin_init', [$container->get(LicenseManager::class), 'maybeSyncReleaseChannel'], 1);
+        // `init`, not `admin_init`: the latter never fires under cron or WP-CLI,
+        // which is exactly where a staging box silently talks to production
+        // licensing with nobody watching an admin screen.
+        add_action('init', [$container->get(LicenseManager::class), 'warnOnRetiredHostConstant'], 1);
+
+        // GL answers plugins_api for our slug whether or not its version check
+        // succeeded, and core stops at the first non-false answer — so a failed
+        // lookup renders an empty "View details" modal. Registered from Lite
+        // because that plugins_api hook is not gated by the Update URI header.
+        (new PluginInformation())->register();
+
+        // GL's LegacyUpdateService gives every add-on update row a slug, so
+        // WordPress renders a "View details" link — and sends it to wp.org,
+        // where our add-ons don't exist. develop had AddonUpdateChecker
+        // answering plugins_api for those slugs; nothing replaced it.
+        $addonInformation = new AddonInformation();
+        $addonInformation->register();
+
+        // GL's auto-update policy enum has no "defer to the site" value, so
+        // whichever value the connector returns, activating a licence takes the
+        // Plugins-screen "Enable auto-updates" toggle out of the user's hands.
+        // This hands it back for every slug GL answers for.
+        $autoUpdates = new AutoUpdatePolicy($container->get(AbstractPluginConnection::class));
+        $autoUpdates->claim('pretty-link');
+        $autoUpdates->register();
+
+        // An installed edition that doesn't match the licence must not be
+        // updated from the licensed product's package — v3 blanked the URL and
+        // EditionMismatch's docblock still promised it, but the two classes
+        // that used to do it went with the migration. The licensed edition has
+        // its own route: the mismatch notice's `install_plugins`-gated CTA.
+        add_filter(
+            'site_transient_update_plugins',
+            [EditionMismatch::class, 'blankMismatchedPackages'],
+            20
+        );
+
+        // Surface the parent plugin's edition-mismatch warning on each add-on's
+        // own plugin-update row, as develop did from AddonUpdateChecker. Auto
+        // updates can't work while the installed edition doesn't match the
+        // licence, and this row is the user's breadcrumb to fixing it — the
+        // main plugin's row alone is easy to miss in a long plugin list.
+        // Deferred to admin_init so the catalog transient is warm and the work
+        // stays off the front end; the Plugins screen renders well after.
+        add_action('admin_init', [EditionMismatch::class, 'registerAddonRows'], 5);
+
+        // GL fires this so add-ons can register themselves for update checks,
+        // and nothing in the repo listens. Meanwhile LegacyUpdateService skips
+        // exactly the add-ons that declare their own `Update URI`
+        // (hasUpdateUri()), on the assumption they are handled here. So an
+        // add-on shipping that header got updates from neither path.
+        //
+        // Registration is deliberately limited to add-ons that are installed
+        // AND whose `Update URI` header resolves to their own plugin directory
+        // — the only case where core actually calls
+        // `update_plugins_{hostname}` for them (see wp_update_plugins(): the
+        // dynamic segment is the *host* of the header, and for a bare token
+        // like `pretty-link-splash-pages` that host is the token itself).
+        // Registering anything else would be worse than useless: GL's
+        // UpdateService::plugin() also adds `plugins_api` and
+        // `auto_update_plugin` filters, and its plugins_api handler ignores the
+        // incoming result and calls the licensing server before checking
+        // success — so arming it for a product that needs no update filter puts
+        // a blocking network request on the "View details" modal and lets a
+        // failed lookup overwrite the cache-answered payload from
+        // AddonInformation. (For the add-ons that DO need it, that second
+        // problem is handled below; the blocking request is inherent.)
+        //
+        // The bare-token form is the only header shape this path supports, and
+        // that is now written down (docs/ADDONS.md). GL keys its registry on
+        // the header's host, so two add-ons sharing a URL-form host —
+        // `https://prettylinks.com/…` — would collapse to one registration and
+        // one product id. Add-ons on that shape stay on the legacy transient
+        // path instead, which a strauss fixup stops hasUpdateUri() from
+        // skipping; see bin/strauss-fixups.php.
+        add_action('pretty-link_register_addons', static function ($registrar) use (
+            $addonInformation,
+            $autoUpdates
+        ): void {
+            if (!is_object($registrar) || !method_exists($registrar, 'plugin')) {
+                return;
+            }
+
+            // GL dispatches this from `init` on every request. Nothing reads
+            // `update_plugins_*` or `plugins_api` on the front end, and the
+            // header check below stats and reads a file per catalog entry, so
+            // keep that work off the redirect path.
+            if (!is_admin() && !wp_doing_cron() && !(defined('WP_CLI') && WP_CLI)) {
+                return;
+            }
+
+            foreach (AddonCatalog::cached() as $product) {
+                $mainFile = (string) ($product->main_file ?? '');
+                $slug     = (string) ($product->slug ?? '');
+
+                if ($mainFile === '' || $slug === '') {
+                    continue;
+                }
+
+                $directory = dirname($mainFile);
+                if ($directory === '.' || $directory === '' || $directory === DIRECTORY_SEPARATOR) {
+                    continue;
+                }
+
+                $file = WP_PLUGIN_DIR . '/' . $mainFile;
+                if (!is_readable($file)) {
+                    continue;
+                }
+
+                $headers   = get_file_data($file, ['UpdateURI' => 'Update URI'], 'plugin');
+                $updateUri = isset($headers['UpdateURI']) ? (string) $headers['UpdateURI'] : '';
+                if ($updateUri === '') {
+                    continue;
+                }
+
+                if (wp_parse_url(sanitize_url($updateUri), PHP_URL_HOST) !== $directory) {
+                    continue;
+                }
+
+                $registrar->plugin($directory, $slug);
+
+                // Registering arms GL's own plugins_api handler for this slug,
+                // and it runs second: it ignores the incoming result and, when
+                // its version check fails, returns a bare `['slug' => …]`
+                // stub — replacing the payload AddonInformation just answered
+                // from cache with the blank modal PluginInformation exists to
+                // prevent for the host plugin. GL runs that stub through a
+                // per-slug filter on the way out, which is the seam.
+                $addonInformation->guard($directory);
+                $autoUpdates->claim($directory);
+            }
+        });
+
+        // Bridge ground-level-mothership's `pretty-link_*` license lifecycle
+        // events to the historical `prli_*` actions that Pretty Links add-ons
+        // and internal listeners hook. Edition transitions on activate/
+        // deactivate are fired separately by Licensing\LicenseManager.
+        //
+        // GL passes ($activation, $licenseKey, $domain) — and ($response,
+        // $licenseKey, $domain, $freed) on deactivate. Only the first argument
+        // crosses this boundary: 3.x and develop both passed the payload and
+        // add-ons read it, but forwarding the key would hand the full license
+        // key to every plugin on the site for the price of a one-line
+        // add_action.
+        // The payload is normalized to an array: 3.x and develop both passed
+        // arrays, and GL's Api\Response implements Arrayable only — no
+        // ArrayAccess — so handing it over raw makes `$activation['status']` a
+        // fatal in any listener written against the documented shape.
+        add_action('pretty-link_license_activated', static function ($activation = null): void {
+            $payload = LicenseManager::actionPayload($activation);
+            // Fired first so listeners can drop cached update data before
+            // anything rebuilds it, which is the ordering they had on develop.
+            do_action('prli_license_activated_before_queue_update', $payload);
+            do_action('prli_license_activated', $payload);
+        }, 10, 1);
+        add_action('pretty-link_license_deactivated', static function ($response = null): void {
+            $payload = LicenseManager::actionPayload($response);
+            do_action('prli_license_deactivated_before_queue_update', $payload);
+            do_action('prli_license_deactivated', $payload);
+        }, 10, 1);
+
+        // Expiry/invalidation come from GL's status cron. Bridge them to the
+        // historical `prli_license_*` actions, forwarding GL's $activation
+        // payload so listeners can read the revoked product. Pro's UpdateChecker
+        // hooks these directly to clear WP's update cache — GL's onLicenseRevoked
+        // doesn't, and edition() can't detect the change on a Pro build (it falls
+        // back to PRLI_EDITION once the activation transient is gone).
+        foreach (
+            [
+                'pretty-link_active_license_expired'     => 'prli_license_expired',
+                'pretty-link_active_license_invalidated' => 'prli_license_invalidated',
+            ] as $glAction => $prliAction
+        ) {
+            add_action($glAction, static function ($activation = null) use ($prliAction): void {
+                do_action($prliAction, LicenseManager::actionPayload($activation));
+            }, 10, 1);
+        }
+
+        // Onboarding queue drain: install a queued add-on by slug. The wizard
+        // queues Pro add-ons checked during setup and drains them at the Finish
+        // step (Wizard::drainQueue) once a license is active — this listener
+        // performs the actual install via the shared AddonInstaller. Without it
+        // queued add-ons would stay queued forever.
+        add_filter('prli_onboarding_drain_addon', static function ($installed, $slug) use ($container) {
+            if (null !== $installed) {
+                return $installed;
+            }
+            // The wizard itself only gates on `manage_options` (Page::capability()),
+            // but this listener installs and activates plugins — exactly what the
+            // REST twin requires `install_plugins` + `activate_plugins` for.
+            // Those two are not decoration: DISALLOW_FILE_MODS and multisite's
+            // "super admins only" rule are both enforced solely inside
+            // map_meta_cap(), so gating on `manage_options` alone silently
+            // bypasses both. Report a hard failure so the slug stays queued and
+            // the Finish step tells the user to install it manually.
+            if (!current_user_can('install_plugins') || !current_user_can('activate_plugins')) {
+                return false;
+            }
+            $manager = $container->get(AddonsManager::class);
+            $addon   = $manager->getAddon((string) $slug);
+
+            // The cache can predate this license's entitlements — the drain runs
+            // right after activation. A stale cache does not return null for a
+            // newly entitled add-on, though: it returns the row it already had,
+            // typed `upgrade-addon`. Checking only for null meant the refetch
+            // never fired in the one case it exists for, and the closure went
+            // straight to reporting a hard failure — for the cache's remaining
+            // hour, immediately after the customer upgraded. So refetch on
+            // either shape, and only then decide.
+            if (null === $addon || ($addon->type ?? '') === 'upgrade-addon') {
+                $addon = $manager->getAddon((string) $slug, false);
+            }
+
+            if (null !== $addon && ($addon->type ?? '') === 'upgrade-addon') {
+                // The current license doesn't entitle this add-on (it came back
+                // as an upsell, not a downloadable product) — mirror the REST
+                // install path's guard and stop retrying a download we can't do.
+                return false;
+            }
+            $url = isset($addon->version->url) ? (string) $addon->version->url : '';
+            if ('' === $url) {
+                // Unresolved (cache/transient miss, or no downloadable version
+                // yet) — return null to leave it queued for a later retry rather
+                // than marking it a hard failure.
+                return null;
+            }
+            $result = (new AddonInstaller())->installFromUrl($url, (string) ($addon->main_file ?? ''));
+            // Onboarding wants the add-on installed AND active; a successful
+            // download that fails to activate is surfaced as a failure so the
+            // user is told to finish it manually, not silently dropped.
+            return !empty($result['success']) && !empty($result['activated']);
+        }, 10, 2);
+
         $container->provider(IPNServiceProvider::class);
 
         // GroundLevel Events + Resque. Both depend on DatabaseServiceProvider
@@ -149,19 +411,11 @@ class Bootstrap extends BaseBootstrap
             RestRouter::class      => static function (Container $c): RestRouter {
                 return new RestRouter($c);
             },
-            LicenseClient::class   => static function (): LicenseClient {
-                return new LicenseClient(
-                    defined('PRLI_EDITION') ? (string) constant('PRLI_EDITION') : 'pretty-link-lite'
-                );
-            },
-            LicenseManager::class  => static function (Container $c): LicenseManager {
-                return new LicenseManager($c->get(LicenseClient::class));
+            LicenseManager::class  => static function (): LicenseManager {
+                return new LicenseManager();
             },
             AuthClient::class      => static function (): AuthClient {
                 return new AuthClient();
-            },
-            AddonsService::class   => static function (Container $c): AddonsService {
-                return new AddonsService($c->get(LicenseClient::class));
             },
             InPluginMessage::class => static function (): InPluginMessage {
                 return new InPluginMessage(self::version());
@@ -173,12 +427,6 @@ class Bootstrap extends BaseBootstrap
                 return new GutenbergEditor($c->get('BASE_URL'), $c->get('BASE_PATH'));
             },
         ]);
-
-        Page::setContainer($container);
-        AdminAssets::setContainer($container);
-        Notices::setContainer($container);
-        TopBar::setContainer($container);
-        ProUpsell::setContainer($container);
     }
 
     /**
@@ -201,9 +449,9 @@ class Bootstrap extends BaseBootstrap
     }
 
     /**
-     * Builds the list of WordPress hooks the plugin registers.
+     * Build the list of WordPress action/filter hooks the plugin registers.
      *
-     * @return array<int, mixed> List of hook definitions.
+     * @return Hook[] The hooks to attach during bootstrap.
      */
     protected function configureHooks(): array
     {
@@ -212,11 +460,12 @@ class Bootstrap extends BaseBootstrap
         $pluginBasename = plugin_basename(PRLI_FILE);
 
         return [
-            // Disable any pre-4.0 add-on build before its deferred hooks fire.
-            // PHP_INT_MIN runs ahead of every other plugins_loaded callback —
-            // not just the add-ons' default-priority-10 work, but any that
-            // register at 0 or a negative priority too. The notice renderer
-            // hooks in_admin_header priority 2 so it survives
+            // Deactivate pre-4.0 add-on builds before any of their callbacks
+            // run. `enforce` must stay at PHP_INT_MIN: the legacy add-ons bind
+            // to removed v3 internals from their own `plugins_loaded`
+            // callbacks, so anything later than the first callback of the
+            // request is too late to stop the fatal. The notice renderer hooks
+            // in_admin_header priority 2 so it survives
             // Notices::suppressThirdParty() (priority 1) on Pretty Links
             // screens and shows site-wide.
             new Hook(Hook::TYPE_ACTION, 'plugins_loaded', [AddonCompatibilityGuard::class, 'enforce'], PHP_INT_MIN),
@@ -232,7 +481,12 @@ class Bootstrap extends BaseBootstrap
             // processed immediately. Hook name is ResqueServiceProvider's
             // PARAM_JOBS_ACTION default, which we don't override.
             new Hook(Hook::TYPE_ACTION, 'resque_run_jobs', [GeoBackfillJob::class, 'maybeQueueDrain'], 5),
+            new Hook(Hook::TYPE_ACTION, 'resque_run_jobs', [HostBackfillJob::class, 'maybeQueueDrain'], 5),
             new Hook(Hook::TYPE_ACTION, 'rest_api_init', [$container->get(RestRouter::class), 'register']),
+            // Hosts and caching plugins that cache `/wp-json/` will serve the
+            // React admin stale or empty payloads. Opt our namespace out of
+            // every cache we can reach from PHP.
+            new Hook(Hook::TYPE_FILTER, 'rest_pre_dispatch', [RestCacheControl::class, 'preventCaching'], 10, 3),
             // Merge per-source JS translation JSON (Loco / WordPress.org) onto
             // our built bundles — see ScriptTranslations for the why.
             new Hook(Hook::TYPE_FILTER, 'pre_load_script_translations', [ScriptTranslations::class, 'merge'], 10, 4),
@@ -316,7 +570,17 @@ class Bootstrap extends BaseBootstrap
             new Hook(Hook::TYPE_ACTION, 'prli_notice_dismissed', [OnboardingWizard::class, 'onNoticeDismissed']),
             new Hook(Hook::TYPE_ACTION, 'init', [OnboardingWizard::class, 'registerShareASaleFilter']),
             new Hook(Hook::TYPE_ACTION, 'admin_init', [WhatsNew::class, 'maybeRegister']),
+            new Hook(Hook::TYPE_ACTION, 'admin_init', [$container->get(LicenseManager::class), 'migrateLegacyLicenseInfo'], 5),
             new Hook(Hook::TYPE_ACTION, 'admin_init', [$container->get(LicenseManager::class), 'maybeCheck']),
+            // Refill GL's `pretty-link_activation` transient when its 24h cache
+            // has lapsed. (Not `prli_license_info` — nothing writes that key any
+            // more; it is read once by migrateLegacyLicenseInfo() and otherwise
+            // left alone.) The twice-daily GL cron normally keeps it fresh, so
+            // this covers the sites where cron doesn't run: without it a Lite
+            // install holding a Pro key silently reverts to reporting itself
+            // free — taking the "install Pro" notice and the installer with it.
+            // Throttled internally.
+            new Hook(Hook::TYPE_ACTION, 'admin_init', [$container->get(LicenseManager::class), 'maybeRefreshLicenseInfo']),
             new Hook(Hook::TYPE_ACTION, 'admin_init', [$container->get(LicenseManager::class), 'activateFromDefine']),
             // Edition-mismatch warning flows through the React notice strip
             // via `prli_notices_active`. The in_plugin_update_message- hook is
@@ -324,7 +588,7 @@ class Bootstrap extends BaseBootstrap
             // even though the updater itself lives in Pro. UpdateChecker
             // refresh hooks live in Pro Bootstrap alongside the updater.
             new Hook(Hook::TYPE_FILTER, 'prli_notices_active', [EditionMismatch::class, 'injectAdminNotice'], 10, 2),
-            new Hook(Hook::TYPE_ACTION, 'in_plugin_update_message-pretty-link/pretty-link.php', [EditionMismatch::class, 'pluginUpdateRowMessage'], 10, 2),
+            new Hook(Hook::TYPE_ACTION, 'in_plugin_update_message-' . plugin_basename(PRLI_FILE), [EditionMismatch::class, 'pluginUpdateRowMessage'], 10, 2),
             new Hook(Hook::TYPE_ACTION, 'prli_auto_trim_clicks', [$container->get(Cleaner::class), 'runAutoTrim']),
             new Hook(Hook::TYPE_ACTION, 'wp_dashboard_setup', [AdminDashboard::class, 'register']),
             new Hook(Hook::TYPE_FILTER, 'plugin_action_links_' . $pluginBasename, [PluginRow::class, 'actionLinks']),
@@ -333,7 +597,9 @@ class Bootstrap extends BaseBootstrap
     }
 
     /**
-     * Runs deferred bootstrap work once the plugin is fully loaded.
+     * Run once the plugin has finished loading: install/upgrade the database
+     * schema, schedule cron, register editors and Stripe hooks, and wire the
+     * activation/deactivation handlers.
      *
      * @return void
      */

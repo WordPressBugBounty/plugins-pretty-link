@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Rest\Controllers;
 
-use PrettyLinks\Addons\AddonInstallSkin;
-use PrettyLinks\Addons\AddonsService;
+use PrettyLinks\Addons\AddonInstaller;
+use PrettyLinks\GroundLevel\Mothership\Manager\AddonsManager;
 use PrettyLinks\Licensing\ProState;
-use Plugin_Upgrader;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -77,13 +76,17 @@ class AddonsController extends BaseController
                         'type'     => 'string',
                         'required' => true,
                     ],
+                    'main_file' => [
+                        'type'     => 'string',
+                        'required' => false,
+                    ],
                 ],
             ],
         ]);
     }
 
     /**
-     * Returns the list of available add-ons.
+     * Lists the available add-ons with their installed/active status.
      *
      * @param WP_REST_Request $request The incoming REST request.
      *
@@ -92,44 +95,90 @@ class AddonsController extends BaseController
     public function index(WP_REST_Request $request): WP_REST_Response
     {
         $refresh = (bool) $request->get_param('refresh');
-        $raw     = $this->service()->getAddons($refresh, true);
+        // Cached list by default; a refresh request forces a fresh fetch from
+        // the licenses server (getAddons(false)).
+        $products = $this->addonsManager()->getAddons(!$refresh);
+
+        if ($refresh) {
+            // "Refresh Add-ons" should also force a fresh Plugins/Updates-screen
+            // check, not just refresh this catalog list. Deleting WP's own
+            // transient makes it regenerate on the next admin page load —
+            // re-running LegacyUpdateService's `site_transient_update_plugins`
+            // pass, which is what injects add-on rows, plus the
+            // `update_plugins_{slug}` filter for the minority of add-ons that
+            // ship their own `Update URI` header. Without this the Plugins
+            // screen could keep advertising an update the site already has,
+            // with no admin-facing way to force a recheck short of toggling the
+            // license.
+            delete_site_transient('update_plugins');
+
+            /**
+             * Fires after the add-on catalog has been re-fetched from the
+             * licensing server.
+             *
+             * On develop this fired from AddonsService::refresh(); that class
+             * is gone and nothing replaced the action, so add-ons that cleared
+             * their own caches on it stopped being told. This is the
+             * equivalent moment.
+             *
+             * @param array<int, object> $products The freshly fetched add-ons.
+             */
+            do_action('prli_addons_refreshed', $products);
+        }
 
         if (!function_exists('is_plugin_active')) {
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
 
         $addons = [];
-        foreach ($raw as $slug => $info) {
-            $info  = (object) $info;
-            $extra = isset($info->extra_info) ? (object) $info->extra_info : null;
-            if ($extra === null) {
+        foreach ($products as $product) {
+            $mainFile = isset($product->main_file) ? (string) $product->main_file : '';
+
+            // Without a main file there is nothing to install, activate or
+            // deactivate: the card would sit on "Download" forever and its
+            // Activate button would POST `plugin: ''`. GL's own products view
+            // filters these out for the same reason.
+            if ($mainFile === '') {
                 continue;
             }
 
-            $directory   = isset($extra->directory) ? (string) $extra->directory : '';
-            $mainFile    = isset($extra->main_file) ? (string) $extra->main_file : '';
-            $installed   = $directory !== '' && is_dir(WP_PLUGIN_DIR . '/' . $directory);
-            $active      = $mainFile !== '' && is_plugin_active($mainFile);
-            $installable = !empty($info->installable);
+            // A main file at the plugins-directory root makes dirname() answer
+            // '.', and is_dir(WP_PLUGIN_DIR . '/.') is always true — which
+            // reported every such add-on as installed-but-inactive and offered
+            // an Activate button for something that was never downloaded.
+            $directory = dirname($mainFile);
+            if ($directory === '.' || $directory === '' || $directory === DIRECTORY_SEPARATOR) {
+                $directory = '';
+            }
 
+            // Add-ons the current license doesn't entitle come back typed
+            // `upgrade-addon` (no downloadable version) and surface as upsells.
+            $isUpgrade = (($product->type ?? '') === 'upgrade-addon');
+            $installed = $directory !== '' && is_dir(WP_PLUGIN_DIR . '/' . $directory);
+            $active    = $installed && is_plugin_active($mainFile);
+
+            // Installed state wins over the upgrade upsell: an add-on kept from a
+            // higher tier (now typed `upgrade-addon` after a downgrade) must still
+            // expose its Activate/Deactivate control. Only surface `upgrade` when
+            // the add-on isn't on disk.
             if ($installed && $active) {
                 $status = 'active';
-            } elseif ($installed && !$active) {
+            } elseif ($installed) {
                 $status = 'inactive';
-            } elseif (!$installed && $installable) {
-                $status = 'download';
-            } else {
+            } elseif ($isUpgrade) {
                 $status = 'upgrade';
+            } else {
+                $status = 'download';
             }
 
             $addons[] = [
-                'slug'        => (string) (is_int($slug) ? ($extra->directory ?? $info->product_name ?? '') : $slug),
-                'name'        => isset($extra->list_title) ? (string) $extra->list_title : (string) ($info->product_name ?? ''),
-                'description' => isset($extra->description) ? wp_kses_post((string) $extra->description) : '',
-                'cover_image' => isset($extra->cover_image) ? (string) $extra->cover_image : '',
+                'slug'        => (string) ($product->slug ?? ''),
+                'name'        => (string) ($product->name ?? ''),
+                'description' => isset($product->description) ? wp_kses_post((string) $product->description) : '',
+                'cover_image' => (string) ($product->image ?? ''),
                 'main_file'   => $mainFile,
                 'directory'   => $directory,
-                'url'         => isset($info->url) ? (string) $info->url : '',
+                'url'         => isset($product->version->url) ? (string) $product->version->url : '',
                 'status'      => $status,
             ];
         }
@@ -149,8 +198,17 @@ class AddonsController extends BaseController
     public function activate(WP_REST_Request $request): WP_REST_Response
     {
         $plugin = sanitize_text_field((string) $request->get_param('plugin'));
-        if ($plugin === '' || !current_user_can('activate_plugins')) {
-            return new WP_REST_Response(['error' => 'forbidden'], 403);
+        if ($plugin === '') {
+            return new WP_REST_Response([
+                'code'    => 'bad_request',
+                'message' => __('No add-on was specified to activate.', 'pretty-link'),
+            ], 400);
+        }
+        if (!current_user_can('activate_plugins')) {
+            return new WP_REST_Response([
+                'code'    => 'forbidden',
+                'message' => __('You do not have permission to activate this add-on.', 'pretty-link'),
+            ], 403);
         }
 
         if (!function_exists('activate_plugins')) {
@@ -160,7 +218,7 @@ class AddonsController extends BaseController
         $result = activate_plugins($plugin);
         if (is_wp_error($result)) {
             return new WP_REST_Response([
-                'error'   => 'activation_failed',
+                'code'    => 'activation_failed',
                 'message' => $result->get_error_message(),
             ], 400);
         }
@@ -181,8 +239,17 @@ class AddonsController extends BaseController
     public function deactivate(WP_REST_Request $request): WP_REST_Response
     {
         $plugin = sanitize_text_field((string) $request->get_param('plugin'));
-        if ($plugin === '' || !current_user_can('deactivate_plugins')) {
-            return new WP_REST_Response(['error' => 'forbidden'], 403);
+        if ($plugin === '') {
+            return new WP_REST_Response([
+                'code'    => 'bad_request',
+                'message' => __('No add-on was specified to deactivate.', 'pretty-link'),
+            ], 400);
+        }
+        if (!current_user_can('deactivate_plugins')) {
+            return new WP_REST_Response([
+                'code'    => 'forbidden',
+                'message' => __('You do not have permission to deactivate this add-on.', 'pretty-link'),
+            ], 403);
         }
 
         if (!function_exists('deactivate_plugins')) {
@@ -198,7 +265,7 @@ class AddonsController extends BaseController
     }
 
     /**
-     * Installs an add-on plugin from a package URL.
+     * Downloads and installs a licensed add-on from its package URL.
      *
      * @param WP_REST_Request $request The incoming REST request.
      *
@@ -208,62 +275,52 @@ class AddonsController extends BaseController
     {
         $packageUrl = esc_url_raw((string) $request->get_param('plugin'));
         if ($packageUrl === '') {
-            return new WP_REST_Response(['error' => 'bad_request'], 400);
+            return new WP_REST_Response([
+                'code'    => 'bad_request',
+                'message' => __('No download URL was provided for this add-on.', 'pretty-link'),
+            ], 400);
         }
         if (!current_user_can('install_plugins') || !current_user_can('activate_plugins')) {
-            return new WP_REST_Response(['error' => 'forbidden'], 403);
+            return new WP_REST_Response([
+                'code'    => 'forbidden',
+                'message' => __('You do not have permission to install plugins on this site.', 'pretty-link'),
+            ], 403);
         }
         // Add-ons are licensed downloads — reject the install unless the
         // current install has an active Pro license. Avoids attempting a
         // download with a stale/expired mothership package URL.
         if (!ProState::isProInstalledAndActivated()) {
-            return new WP_REST_Response(['error' => 'license_required'], 403);
+            return new WP_REST_Response([
+                'code'    => 'license_required',
+                'message' => __('An active Pro license is required to install add-ons.', 'pretty-link'),
+            ], 403);
         }
 
-        if (!function_exists('request_filesystem_credentials')) {
-            require_once ABSPATH . 'wp-admin/includes/file.php';
+        $result = (new AddonInstaller())->installFromUrl($packageUrl, sanitize_text_field((string) $request->get_param('main_file')));
+        if (empty($result['success'])) {
+            $code   = (string) ($result['code'] ?? 'install_failed');
+            $status = in_array($code, ['bad_request', 'invalid_download_url'], true) ? 400 : 500;
+            return new WP_REST_Response([
+                'code'    => $code,
+                'message' => (string) ($result['message'] ?? __('The add-on could not be installed.', 'pretty-link')),
+            ], $status);
         }
-        if (!function_exists('get_plugins')) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
-
-        $url   = esc_url_raw(add_query_arg(['page' => 'pretty-link-addons'], admin_url('admin.php')));
-        $creds = request_filesystem_credentials($url, '', false, false, null);
-        if ($creds === false || !WP_Filesystem($creds)) {
-            return new WP_REST_Response(['error' => 'filesystem_unavailable'], 500);
-        }
-
-        require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-        // Skip translations fetch so the installer doesn't stall on JSON output.
-        remove_action('upgrader_process_complete', ['Language_Pack_Upgrader', 'async_upgrade'], 20);
-
-        $installer = new Plugin_Upgrader(new AddonInstallSkin());
-        $installer->install($packageUrl);
-        wp_cache_flush();
-
-        $basename = $installer->plugin_info();
-        if (!$basename) {
-            return new WP_REST_Response(['error' => 'install_failed'], 500);
-        }
-
-        $activated   = activate_plugin($basename);
-        $didActivate = !is_wp_error($activated);
 
         return new WP_REST_Response([
             'success'   => true,
-            'basename'  => $basename,
-            'activated' => $didActivate,
-            'status'    => $didActivate ? 'active' : 'inactive',
+            'basename'  => (string) ($result['basename'] ?? ''),
+            'activated' => !empty($result['activated']),
+            'status'    => !empty($result['activated']) ? 'active' : 'inactive',
         ]);
     }
 
     /**
-     * Resolves the add-ons service from the container.
+     * Resolves the add-ons manager from the container.
      *
-     * @return AddonsService
+     * @return AddonsManager
      */
-    private function service(): AddonsService
+    private function addonsManager(): AddonsManager
     {
-        return $this->container->get(AddonsService::class);
+        return $this->container->get(AddonsManager::class);
     }
 }

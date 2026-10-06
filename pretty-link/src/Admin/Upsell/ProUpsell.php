@@ -7,8 +7,6 @@ namespace PrettyLinks\Admin\Upsell;
 use PrettyLinks\Admin\Page;
 use PrettyLinks\Licensing\PlanCatalog;
 use PrettyLinks\Licensing\ProState;
-use PrettyLinks\Support\HasStaticContainer;
-use PrettyLinks\Support\StaticContainerAwareness;
 
 /**
  * Centralized Pro upsell module.
@@ -31,10 +29,8 @@ use PrettyLinks\Support\StaticContainerAwareness;
  * This is the second intentional exception to the "Lite has no knowledge of
  * Pro" rule (the first being the WhatsNew landing page).
  */
-class ProUpsell implements StaticContainerAwareness
+class ProUpsell
 {
-    use HasStaticContainer;
-
     public const PRICING_URL = 'https://prettylinks.com/pricing/';
     public const ADDONS_URL  = 'https://prettylinks.com/add-ons/';
 
@@ -101,15 +97,32 @@ class ProUpsell implements StaticContainerAwareness
      */
     public static function upgradeUrl(string $placement, string $feature = ''): string
     {
+        return self::tagSalesUrl(self::PRICING_URL, $placement, $feature);
+    }
+
+    /**
+     * Attach the standard attribution tags to any prettylinks.com sales URL.
+     *
+     * Every money link the plugin emits — pricing, add-on detail pages, the
+     * Add-ons directory — carries the same `utm_source`/`utm_medium` pair so
+     * marketing can isolate in-plugin traffic with one filter, then split it
+     * by placement (`utm_campaign`) and locked feature (`utm_content`).
+     *
+     * @param string $base      Destination URL on prettylinks.com.
+     * @param string $placement Short identifier for where the CTA lives; rides as utm_campaign.
+     * @param string $content   Optional feature id or other detail; rides as utm_content.
+     */
+    public static function tagSalesUrl(string $base, string $placement, string $content = ''): string
+    {
         $params = [
             'utm_source'   => 'prli',
             'utm_medium'   => 'admin',
             'utm_campaign' => $placement !== '' ? $placement : 'upgrade',
         ];
-        if ($feature !== '') {
-            $params['utm_content'] = $feature;
+        if ($content !== '') {
+            $params['utm_content'] = $content;
         }
-        return add_query_arg($params, self::PRICING_URL);
+        return add_query_arg($params, $base);
     }
 
     /**
@@ -131,59 +144,63 @@ class ProUpsell implements StaticContainerAwareness
         return [
             'redirect-cloak'          => [
                 'label'   => __('Cloaked redirect', 'pretty-link'),
-                'summary' => __('Keep the pretty URL in the address bar and show the destination inside it — hides the final affiliate URL from visitors.', 'pretty-link'),
+                'summary' => __('Your domain stays in the address bar instead of the raw affiliate URL, so the link reads as yours. Destinations that refuse framing fall back to a normal redirect.', 'pretty-link'),
             ],
             'redirect-metarefresh'    => [
                 'label'   => __('Meta Refresh redirect', 'pretty-link'),
-                'summary' => __('Wipes the Referer header so merchants can\'t see which page on your site the click came from — protects your traffic sources.', 'pretty-link'),
+                'summary' => __('Merchants stop seeing which of your pages sent the click. Keep your best-converting placements to yourself instead of handing rivals a map of what works.', 'pretty-link'),
             ],
             'redirect-javascript'     => [
                 'label'   => __('JavaScript redirect', 'pretty-link'),
-                'summary' => __('Browser-side redirect that evades server-log tracking and some referral-attribution schemes.', 'pretty-link'),
+                'summary' => __('Hands the visitor off from the browser rather than the server, with an optional per-link delay so your page can do its work before they move on.', 'pretty-link'),
             ],
             'redirect-pixel'          => [
                 'label'   => __('Pixel redirect', 'pretty-link'),
-                'summary' => __('Fires one or more tracking pixels before redirecting — use for remarketing or conversion tags.', 'pretty-link'),
+                'summary' => __('A link with no destination. Embed it in an email or a page and every load is recorded as a click, so opens and views land in the same reports as everything else.', 'pretty-link'),
             ],
             'redirect-prettybar'      => [
                 'label'   => __('Pretty Bar redirect', 'pretty-link'),
-                'summary' => __('Wraps the destination in a branded top bar, bottom bar, or floating pill with your logo and share buttons.', 'pretty-link'),
+                'summary' => __('Stay on screen after the click. Your logo, message and share buttons ride above the destination, turning a click you used to lose into another touch — with a normal redirect as the fallback where framing is refused.', 'pretty-link'),
             ],
             'link-form-keywords'      => [
                 'label'   => __('Keywords & URL replacements', 'pretty-link'),
-                'summary' => __('Auto-linkify words in your content and silently rewrite existing URLs through Pretty Links — hands-off affiliate linking.', 'pretty-link'),
+                'summary' => __('Write naturally now, monetize later. Choose a phrase once and matching mentions become tracked links under your replacement rules — including posts you published years ago.', 'pretty-link'),
             ],
             'link-form-rotation'      => [
                 'label'   => __('Rotation & split testing', 'pretty-link'),
-                'summary' => __('Rotate visitors across multiple destinations and measure which one converts best.', 'pretty-link'),
+                'summary' => __('Stop guessing which offer performs. Split traffic across destinations, watch the clicks land, and keep the one that actually earns.', 'pretty-link'),
             ],
             'link-form-targeting'     => [
                 'label'   => __('Smart targeting', 'pretty-link'),
-                'summary' => __('Send visitors to different destinations based on country, device, browser, or time of day.', 'pretty-link'),
+                'summary' => __('Send a visitor in Berlin somewhere different from one in Boston. Route by country, device, browser or time of day so nobody lands on an offer they cannot buy.', 'pretty-link'),
             ],
             'link-form-expiration'    => [
                 'label'   => __('Expiring links', 'pretty-link'),
-                'summary' => __('Automatically disable a link on a set date or after N clicks — ideal for limited-time promos.', 'pretty-link'),
+                'summary' => __('Promotions that end themselves. Retire a link on a date or after a set number of clicks, so an expired deal never keeps taking traffic.', 'pretty-link'),
             ],
             'link-form-qr'            => [
                 'label'   => __('Per-link QR codes', 'pretty-link'),
-                'summary' => __('Generate PNG or SVG QR codes with optional logo overlay and custom colors.', 'pretty-link'),
+                'summary' => __('Take a link off the screen and into the world. Generate a PNG or SVG code with your logo and colors for packaging, slides or print, and track the scans like any other click.', 'pretty-link'),
             ],
             'options-pretty-bar'      => [
                 'label'   => __('Pretty Bar templates', 'pretty-link'),
-                'summary' => __('Branded interstitial overlays with your logo, colors, and optional share buttons.', 'pretty-link'),
+                'summary' => __('Brand the handoff once. Build the bar with your logo, colors and buttons, and every Pretty Bar link uses it, falling back to a normal redirect where the destination refuses framing.', 'pretty-link'),
+            ],
+            'options-social-buttons'      => [
+                'label'   => __('Social share buttons', 'pretty-link'),
+                'summary' => __('Turn readers into distributors. Where a post has a pretty link, the share bar points at it, so every share people spread lands back in your click reports; posts without one share the plain permalink.', 'pretty-link'),
             ],
             'options-replacements'    => [
                 'label'   => __('Keyword & URL replacement engine', 'pretty-link'),
-                'summary' => __('Site-wide auto-linkification with throttling, case sensitivity, and disclosure controls.', 'pretty-link'),
+                'summary' => __('Monetize an entire archive without opening a single old post. Set the rules once and links appear site-wide, with throttling and disclosure controls to keep it tasteful.', 'pretty-link'),
             ],
             'options-link-health'     => [
                 'label'   => __('Link health monitoring', 'pretty-link'),
-                'summary' => __('Scheduled health checks catch broken destinations before your visitors do.', 'pretty-link'),
+                'summary' => __('A dead destination is a commission you never hear about. Scheduled checks find the broken ones and email you the list before your readers find them for you.', 'pretty-link'),
             ],
             'options-autocreate'      => [
                 'label'   => __('Auto-create links', 'pretty-link'),
-                'summary' => __('Turn URL patterns in your content into pretty links automatically as you publish.', 'pretty-link'),
+                'summary' => __('New posts arrive already earning. Publish, and the pretty links are created for you instead of waiting for someone to remember.', 'pretty-link'),
             ],
             // Add-on features (each is its own paid plugin, separate from
             // Pretty Links Pro itself but bundled with Pro plans). The
@@ -192,55 +209,55 @@ class ProUpsell implements StaticContainerAwareness
             // the generic `/pro/` upgrade path.
             'addon-utms'              => [
                 'label'   => __('UTM Builder', 'pretty-link'),
-                'summary' => __('Build Google Analytics UTM parameters (source, medium, campaign, content, term, ID) right on the link form — no manual URL editing, no broken tags.', 'pretty-link'),
+                'summary' => __('Campaign data you can actually trust. Build source, medium, campaign, content, term and ID tags on the link form itself, so your reports never hinge on someone hand-editing a URL correctly.', 'pretty-link'),
             ],
             'addon-user-links'        => [
                 'label'   => __('User Links — front-end dashboard', 'pretty-link'),
-                'summary' => __('Drop a self-service pretty-link manager onto a front-end page so logged-in users create and manage their own shortlinks without ever touching wp-admin.', 'pretty-link'),
+                'summary' => __('Let your team or members make their own short links on a front-end page. They get self-service, you keep one tracked, branded link namespace and never hand out wp-admin logins.', 'pretty-link'),
             ],
             'addon-splash-pages'      => [
                 'label'   => __('Splash Pages', 'pretty-link'),
-                'summary' => __('Show a branded interstitial page (heading, media, CTAs, optional countdown) before forwarding visitors — perfect for affiliate disclosures, choose-your-own-destination, or video gates.', 'pretty-link'),
+                'summary' => __('Own the moment before the handoff. A branded page with your message, media and calls to action, plus an optional countdown, does your disclosure and your pitch on the way out.', 'pretty-link'),
             ],
             'addon-link-in-bio'       => [
                 'label'   => __('Link in Bio', 'pretty-link'),
-                'summary' => __('Build branded /bio/{slug}/ landing pages — profile, stacked buttons, social-icon row — every click tracked through Pretty Links.', 'pretty-link'),
+                'summary' => __('One link for every social profile, and it is yours rather than a rented page. Profile, stacked buttons and social icons on your own domain, with every tap tracked.', 'pretty-link'),
             ],
             'addon-product-displays'  => [
                 'label'   => __('Product Displays', 'pretty-link'),
-                'summary' => __('Drop styled product cards/grids into any post, page, or Bio page via shortcode or Gutenberg block — every CTA tracked as a pretty link.', 'pretty-link'),
+                'summary' => __('Turn a mention into a storefront. Drop styled product cards or grids into any post, page or Bio page by shortcode or block, with every button tracked as a pretty link.', 'pretty-link'),
             ],
             'addon-developer-tools'   => [
                 'label'   => __('Developer Tools', 'pretty-link'),
-                'summary' => __('Public REST API with bearer-token auth and outbound HMAC-signed webhooks — connect Pretty Links to Make, Zapier, n8n, custom dashboards, and CI pipelines.', 'pretty-link'),
+                'summary' => __('Wire Pretty Links into the rest of your stack. A token-authenticated REST API and signed webhooks connect it to Make, Zapier, n8n, your dashboards or your CI.', 'pretty-link'),
             ],
             'options-alt-domain'      => [
                 'label'   => __('Alternate short domain', 'pretty-link'),
-                'summary' => __('Serve pretty URLs on a second domain you own (e.g. short.yoursite.com) without moving WordPress.', 'pretty-link'),
+                'summary' => __('Ship links on a short domain you already own, like go.yourbrand.com, without moving WordPress or running a second install.', 'pretty-link'),
             ],
             'links-categories'        => [
                 'label'   => __('Link categories', 'pretty-link'),
-                'summary' => __('Organize hundreds or thousands of links with first-class categories. Filter dashboard and reports at a glance.', 'pretty-link'),
+                'summary' => __('Keep a thousand links findable. Group them by campaign, client or partner, then filter the dashboard and reports down to just that set.', 'pretty-link'),
             ],
             'reports-custom'          => [
                 'label'   => __('Custom reports & conversions', 'pretty-link'),
-                'summary' => __('Aggregate clicks across any set of links and track real conversion goals via a one-line pixel on your thank-you page.', 'pretty-link'),
+                'summary' => __('Show conversions, not just traffic. Roll clicks up across any group of links and record real conversions with a one-line pixel on your thank-you page.', 'pretty-link'),
             ],
             'paylinks-fee-bypass'     => [
                 'label'   => __('Zero platform fee on PrettyPay', 'pretty-link'),
-                'summary' => __('Pretty Links Pro removes the 3% platform fee added to every PrettyPay checkout — you keep every dollar after Stripe\'s own fees.', 'pretty-link'),
+                'summary' => __('Keep the whole sale. Pro drops the 3% platform fee from every PrettyPay checkout, so past a few hundred dollars a month the upgrade has already paid for itself.', 'pretty-link'),
             ],
             'tool-bookmarklet'        => [
                 'label'   => __('Bookmarklet', 'pretty-link'),
-                'summary' => __('Drag a button to your bookmarks bar and create a pretty link for any page you\'re browsing with one click.', 'pretty-link'),
+                'summary' => __('Make a link while you are reading the page. One click from your bookmarks bar, no tab switching, no copy and paste back into wp-admin.', 'pretty-link'),
             ],
             'tool-duplicate-keywords' => [
                 'label'   => __('Duplicate keywords', 'pretty-link'),
-                'summary' => __('Find keywords assigned to more than one link and resolve the conflicts so auto-replacements stay unambiguous.', 'pretty-link'),
+                'summary' => __('Find the phrases claimed by more than one link and settle them, so automatic replacements always point where you meant.', 'pretty-link'),
             ],
             'tool-mu-dispatch'        => [
                 'label'   => __('Redirect turbo mode', 'pretty-link'),
-                'summary' => __('Short-circuits redirects before the rest of WordPress loads via a must-use plugin — dramatically faster on high-traffic sites.', 'pretty-link'),
+                'summary' => __('Serve redirects before WordPress even boots. On a busy site that is the difference between a redirect that feels instant and one that waits on a full page load.', 'pretty-link'),
             ],
         ];
     }
@@ -260,7 +277,10 @@ class ProUpsell implements StaticContainerAwareness
             $out[$slug] = [
                 'label'   => $addon['label'],
                 'summary' => $addon['summary'],
-                'url'     => $addon['url'],
+                // PlanCatalog holds the bare marketing URL; attribution is
+                // added here so every upsell-surface link is tagged while
+                // the catalog stays a clean source of truth.
+                'url'     => self::tagSalesUrl($addon['url'], 'addon-detail', $slug),
             ];
         }
         return $out;
@@ -271,7 +291,7 @@ class ProUpsell implements StaticContainerAwareness
      * callers honest (typos blow up visibly rather than silently rendering
      * an empty teaser).
      *
-     * @param  string $id Feature id (key of self::features()).
+     * @param  string $id Pro feature id (a key of self::features()).
      * @return array{label: string, summary: string}|null
      */
     public static function feature(string $id): ?array
@@ -294,7 +314,7 @@ class ProUpsell implements StaticContainerAwareness
         return [
             'catalog'        => self::features(),
             'pricingUrl'     => self::upgradeUrl('admin'),
-            'addonsUrl'      => self::ADDONS_URL,
+            'addonsUrl'      => self::tagSalesUrl(self::ADDONS_URL, 'admin'),
             // In-product Add-ons page. Add-on locked cards route Pro users
             // here (instead of external pricing) — the Add-ons page sources
             // each add-on's status from the mothership, so it shows an
@@ -343,10 +363,10 @@ class ProUpsell implements StaticContainerAwareness
         $parent = Page::SLUG;
         $url    = self::upgradeUrl('menu');
 
-        // Add_submenu_page() doesn't accept a target attribute, but we can
-        // manipulate $submenu directly (same pattern WP uses internally).
-        // Each row is [ title, capability, slug(url), page_title, class ].
-        $submenu[$parent][] = [ // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intentionally rewriting the admin $submenu entry for this menu item.
+        // The add_submenu_page() function doesn't accept a target attribute,
+        // but we can manipulate $submenu directly (same pattern WP uses
+        // internally). Each row is [ title, capability, slug(url), page_title, class ].
+        $submenu[$parent][] = [ // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
             // Translators: Menu item promoting the paid Pro edition.
             esc_html(self::ctaLabel()),
             Page::capability(),
@@ -397,7 +417,7 @@ class ProUpsell implements StaticContainerAwareness
     /**
      * Human-readable label for a plan slug.
      *
-     * @param string $plan Plan slug.
+     * @param string $plan Paid plan slug (e.g. a key from PlanCatalog).
      */
     public static function planLabel(string $plan): string
     {
@@ -409,8 +429,8 @@ class ProUpsell implements StaticContainerAwareness
      * label, and pricing URL that round-trips the user back into the
      * wizard's Resume step on success.
      *
-     * @param  string $plan      Plan slug.
-     * @param  string $returnUrl Optional URL to round-trip the user back to after checkout.
+     * @param  string $plan      Paid plan slug to build the CTA for.
+     * @param  string $returnUrl URL to return to after checkout; appended as `return_url` when non-empty.
      * @return array{plan: string, planLabel: string, heading: string, label: string, url: string}
      */
     public static function planCta(string $plan, string $returnUrl = ''): array
@@ -440,21 +460,16 @@ class ProUpsell implements StaticContainerAwareness
      * supplied so the pricing page can bring the user back to the
      * wizard after checkout.
      *
-     * @param string $plan      Plan slug.
-     * @param string $returnUrl Optional URL appended as `return_url` for post-checkout return.
+     * @param string $plan      Paid plan slug; used as the `utm_content` value (falls back to "pro" when empty).
+     * @param string $returnUrl URL to return to after checkout; rawurlencoded into `return_url` when non-empty.
      */
     public static function planUpgradeUrl(string $plan, string $returnUrl = ''): string
     {
-        $params = [
-            'utm_source'   => 'prli',
-            'utm_medium'   => 'admin',
-            'utm_campaign' => 'onboarding',
-            'utm_content'  => $plan !== '' ? $plan : 'pro',
-        ];
+        $url = self::tagSalesUrl(self::PRICING_URL, 'onboarding', $plan !== '' ? $plan : 'pro');
         if ($returnUrl !== '') {
-            $params['return_url'] = rawurlencode($returnUrl);
+            $url = add_query_arg('return_url', rawurlencode($returnUrl), $url);
         }
-        return add_query_arg($params, self::PRICING_URL);
+        return $url;
     }
 
     /**
@@ -601,47 +616,5 @@ class ProUpsell implements StaticContainerAwareness
             }
         }
         return $queued;
-    }
-
-    /**
-     * Enable a Pro feature by writing the corresponding option key(s).
-     * Returns true when any known toggle flipped. Reads from `prlipro_options`
-     * (the shared Pro-options blob) — Pro's Options\Store owns writes.
-     *
-     * @param string $featureId Feature id (key of self::features()).
-     */
-    public static function enableQueuedFeature(string $featureId): bool
-    {
-        // Lite → option-key mapping. Matches v3's enable_disable_feature.
-        static $map = [
-            'options-pretty-bar'   => ['enable_pretty_bar' => true],
-            'options-replacements' => [
-                'keyword_replacement_is_on' => true,
-                'url_replacement_is_on'     => true,
-            ],
-            'options-link-health'  => ['enable_link_health' => true],
-            'options-autocreate'   => ['autocreate_enable' => true],
-            'link-form-qr'         => ['generate_qr_codes' => true],
-        ];
-
-        if (!isset($map[$featureId])) {
-            return false;
-        }
-
-        $opts = get_option('prlipro_options', []);
-        if (!is_array($opts)) {
-            $opts = [];
-        }
-        $changed = false;
-        foreach ($map[$featureId] as $key => $value) {
-            if (($opts[$key] ?? null) !== $value) {
-                $opts[$key] = $value;
-                $changed    = true;
-            }
-        }
-        if ($changed) {
-            update_option('prlipro_options', $opts);
-        }
-        return $changed;
     }
 }

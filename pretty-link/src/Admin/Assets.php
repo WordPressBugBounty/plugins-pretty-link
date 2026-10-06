@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Admin;
 
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 // phpcs:disable WordPress.Security.NonceVerification.Recommended
-// $_SERVER values (REMOTE_ADDR, HTTP_USER_AGENT, REQUEST_URI, etc.) are read for
-// click tracking / targeting / UI rendering, not form-submission input. State-changing
-// operations in this class protect with wp_verify_nonce / check_admin_referer.
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+// The only superglobal reads in this class are the `prefill_*` query args in
+// pagePrefill(): partner plugins link into the Add New Link screen with them to
+// pre-populate the form. Nothing is submitted or written here — the values are
+// sanitized per field and handed to the React bootstrap — and no nonce is
+// available anyway, since the link is followed from outside wp-admin.
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 // phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
@@ -22,13 +17,18 @@ namespace PrettyLinks\Admin;
 // user values bind through $wpdb->prepare(). No caching: these tables are the source
 // of truth for click/redirect data and must read-through. "meta_key"/"meta_value" here
 // refer to our own prli_link_metas table, not wp_postmeta.
+use PrettyLinks\Admin\Pages\AddNew;
+use PrettyLinks\Admin\Pages\Addons;
+use PrettyLinks\Admin\Pages\Clicks;
+use PrettyLinks\Admin\Pages\Links as LinksPage;
+use PrettyLinks\Admin\Pages\Options;
+use PrettyLinks\Admin\Pages\PayLinks;
 use PrettyLinks\Admin\Upsell\ProUpsell;
 use PrettyLinks\Integrations\CookieYes;
 use PrettyLinks\Licensing\PlanCatalog;
 use PrettyLinks\Licensing\ProState;
 use PrettyLinks\Options\Store as OptionsStore;
-use PrettyLinks\Support\HasStaticContainer;
-use PrettyLinks\Support\StaticContainerAwareness;
+use PrettyLinks\Repositories\Links;
 
 /**
  * Enqueues the React bundle for the current Pretty Links admin page.
@@ -38,27 +38,26 @@ use PrettyLinks\Support\StaticContainerAwareness;
  * @wordpress/scripts into `assets/js/build/<page>.{js,asset.php}` and
  * `assets/css/build/<page>.css`.
  */
-class Assets implements StaticContainerAwareness
+class Assets
 {
-    use HasStaticContainer;
-
     /**
-     * Admin hook-suffix → bundle handle map.
+     * Admin page slug → bundle handle map.
      *
-     * Keys correspond to the `$hook_suffix` WordPress passes to
-     * admin_enqueue_scripts. For top-level menu: `toplevel_page_pretty-link`.
-     * For submenus: `{top_title_slug}_page_{submenu_slug}`.
+     * Keyed by page slug, not hook suffix: a submenu's hook suffix embeds the
+     * translated parent menu title, so it changes with the locale. See
+     * `Page::slugFromHook()`. The parent slug is resolved separately in
+     * resolveBundle() because what it renders is a setting.
      *
      * @var array<string, string>
      */
     private const BUNDLES = [
-        'toplevel_page_pretty-link'               => 'dashboard',
-        'pretty-links_page_pretty-link-links'     => 'links',
-        'pretty-links_page_pretty-link-add-new'   => 'add-new',
-        'pretty-links_page_pretty-link-pay-links' => 'pay-links',
-        'pretty-links_page_pretty-link-clicks'    => 'clicks',
-        'pretty-links_page_pretty-link-options'   => 'options',
-        'pretty-links_page_pretty-link-addons'    => 'addons',
+        Page::DASHBOARD_SLUG => 'dashboard',
+        LinksPage::SLUG      => 'links',
+        AddNew::SLUG         => 'add-new',
+        PayLinks::SLUG       => 'pay-links',
+        Clicks::SLUG         => 'clicks',
+        Options::SLUG        => 'options',
+        Addons::SLUG         => 'addons',
     ];
 
     public const SHARED_HANDLE = 'prli-shared';
@@ -77,8 +76,12 @@ class Assets implements StaticContainerAwareness
      * Idempotent: safe to call from both Lite and Pro enqueue paths;
      * each call after the first short-circuits via wp_script_is(...).
      *
-     * @param string|null $basePath Plugin base filesystem path; resolved from the container when null.
-     * @param string|null $baseUrl  Plugin base URL; resolved from the container when null.
+     * @api
+     *
+     * @param string|null $basePath Filesystem base path to resolve build assets against. Defaults to PRLI_PATH.
+     * @param string|null $baseUrl  URL base prepended to enqueued asset paths. Defaults to PRLI_URL.
+     *
+     * @return void
      */
     public static function enqueueSharedLibrary(?string $basePath = null, ?string $baseUrl = null): void
     {
@@ -86,8 +89,8 @@ class Assets implements StaticContainerAwareness
             return;
         }
 
-        $basePath = $basePath ?? (string) self::getContainer()->get('BASE_PATH');
-        $baseUrl  = $baseUrl  ?? (string) self::getContainer()->get('BASE_URL');
+        $basePath = $basePath ?? (string) PRLI_PATH;
+        $baseUrl  = $baseUrl  ?? (string) PRLI_URL;
 
         $jsRel    = 'assets/js/build/shared.js';
         $cssRel   = 'assets/css/build/shared.css';
@@ -121,14 +124,22 @@ class Assets implements StaticContainerAwareness
     }
 
     /**
-     * Enqueue the chrome styles plus the page bundle for the current admin screen.
+     * Enqueue the admin chrome plus the React bundle (and its dependencies)
+     * for the current admin screen.
      *
-     * @param string $hookSuffix WordPress `$hook_suffix` for the current admin page.
+     * Resolves the page bundle from the WordPress hook suffix, enqueues the
+     * shared library first, then the page bundle's script/style, the media
+     * modal libs, optional flag-icons, and finally localizes the
+     * `prliAdmin` bootstrap payload onto the shared handle.
+     *
+     * @param string $hookSuffix The `$hook_suffix` WordPress passes to admin_enqueue_scripts.
+     *
+     * @return void
      */
     public static function enqueue(string $hookSuffix): void
     {
-        $basePath = self::getContainer()->get('BASE_PATH');
-        $baseUrl  = self::getContainer()->get('BASE_URL');
+        $basePath = PRLI_PATH;
+        $baseUrl  = PRLI_URL;
 
         $chromeRel = 'assets/css/admin-chrome.css';
         if (is_file($basePath . $chromeRel)) {
@@ -226,13 +237,15 @@ class Assets implements StaticContainerAwareness
      * Public so Pro pages that render country flags (e.g. clicks-pro-extras)
      * can request the same stylesheet from their own enqueue path.
      *
-     * @param string|null $basePath Plugin base filesystem path; resolved from the container when null.
-     * @param string|null $baseUrl  Plugin base URL; resolved from the container when null.
+     * @param string|null $basePath Filesystem base path to resolve the stylesheet against. Defaults to PRLI_PATH.
+     * @param string|null $baseUrl  URL base prepended to the enqueued stylesheet path. Defaults to PRLI_URL.
+     *
+     * @return void
      */
     public static function enqueueFlagIcons(?string $basePath = null, ?string $baseUrl = null): void
     {
-        $basePath = $basePath ?? (string) self::getContainer()->get('BASE_PATH');
-        $baseUrl  = $baseUrl ?? (string) self::getContainer()->get('BASE_URL');
+        $basePath = $basePath ?? (string) PRLI_PATH;
+        $baseUrl  = $baseUrl ?? (string) PRLI_URL;
         $rel      = 'assets/flag-icons/css/flag-icons.min.css';
         if (is_file($basePath . $rel)) {
             wp_enqueue_style(
@@ -245,31 +258,48 @@ class Assets implements StaticContainerAwareness
     }
 
     /**
-     * Build the `window.prliAdmin` bootstrap payload. Public so Pro
-     * pages that don't have a Lite bundle (e.g. Split Test Reports) can
-     * reuse the same shape from their own enqueue path — keeps the
-     * frontend `bootstrap.js` reader uniform.
+     * Build the `window.prliAdmin` bootstrap payload. Public so Pro and
+     * add-on pages that don't have a Lite bundle (e.g. Split Test Reports)
+     * can reuse the same shape from their own enqueue path — keeps the
+     * frontend `bootstrap.js` reader uniform, and gives the shared `api`
+     * client its `pretty-links/v1` root and REST nonce.
      *
-     * @param  string $bundle Page bundle name the payload is being built for.
+     * @api
+     *
+     * @param string $bundle The page bundle name (e.g. `dashboard`, `links`, `options`).
+     *
      * @return array<string, mixed>
      */
     public static function bootstrapData(string $bundle): array
     {
-        $user    = wp_get_current_user();
-        $options = get_option('prli_options');
-        $mode    = is_array($options) && isset($options['extended_tracking'])
-            ? (string) $options['extended_tracking']
-            : 'normal';
+        $user = wp_get_current_user();
+        $mode = Links::trackingMode();
         if (!in_array($mode, ['normal', 'extended', 'count'], true)) {
             $mode = 'normal';
         }
-        $baseUrl = self::getContainer()->get('BASE_URL');
+        $baseUrl = PRLI_URL;
         $payload = [
             'page'                     => $bundle,
             'restRoot'                 => esc_url_raw(rest_url('pretty-links/v1/')),
             'restNonce'                => wp_create_nonce('wp_rest'),
             'assetsUrl'                => esc_url_raw($baseUrl . 'assets/'),
             'adminUrl'                 => esc_url_raw(admin_url()),
+            // The add-new/edit screen doubles as both by presence of `&id=`
+            // (see AddNew::SLUG) — JS builds both URL shapes from this slug
+            // instead of hardcoding it, so a page rename can't break silently.
+            'addNewSlug'               => AddNew::SLUG,
+            // Same reasoning as addNewSlug: every admin page slug that JS
+            // builds a URL against is exposed here, not hardcoded, so a
+            // rename can't break any of them silently (#888, follow-up to #866).
+            'linksSlug'                => LinksPage::SLUG,
+            'clicksSlug'               => Clicks::SLUG,
+            'optionsSlug'              => Options::SLUG,
+            'payLinksSlug'             => PayLinks::SLUG,
+            // The top-level plugin menu slug. In the default layout this is
+            // the Dashboard itself; when "Links list first" is on the Links
+            // list takes this slug and the Dashboard moves to the hidden
+            // Page::DASHBOARD_SLUG submenu (registered only in that case).
+            'pageSlug'                 => Page::SLUG,
             'homeUrl'                  => esc_url_raw(home_url('/')),
             // Plain (empty) permalink structure can't route /slug URLs to WP.
             // The admin UI uses this to swap the Add/Edit Link forms for a
@@ -373,13 +403,8 @@ class Assets implements StaticContainerAwareness
          * @param array<string, mixed> $payload
          * @param string               $bundle
          */
-        /**
-         * Filtered bootstrap payload.
-         *
-         * @var array<string, mixed> $payload
-         */
-        $payload = apply_filters('prli_admin_bootstrap', $payload, $bundle);
-        return $payload;
+        $filtered = apply_filters('prli_admin_bootstrap', $payload, $bundle);
+        return is_array($filtered) ? $filtered : $payload;
     }
 
     /**
@@ -420,12 +445,7 @@ class Assets implements StaticContainerAwareness
      */
     private static function redirectTypes(): array
     {
-        /**
-         * Filterable selectable redirect types.
-         *
-         * @var list<array{value: string, label: string}> $types
-         */
-        $types = apply_filters('prli_redirect_types', [
+        $defaults = [
             [
                 'value' => '302',
                 'label' => __('302 Found', 'pretty-link'),
@@ -434,8 +454,9 @@ class Assets implements StaticContainerAwareness
                 'value' => '301',
                 'label' => __('301 Moved Permanently', 'pretty-link'),
             ],
-        ]);
-        return array_values($types);
+        ];
+        $types    = apply_filters('prli_redirect_types', $defaults);
+        return array_values(is_array($types) ? $types : $defaults);
     }
 
     /**
@@ -488,18 +509,14 @@ class Assets implements StaticContainerAwareness
      */
     private static function deprecatedRedirectTypes(): array
     {
-        /**
-         * Filterable deprecated redirect types.
-         *
-         * @var list<array{value: string, label: string}> $types
-         */
-        $types = apply_filters('prli_deprecated_redirect_types', [
+        $defaults = [
             [
                 'value' => '307',
                 'label' => __('307 Temporary Redirect (legacy)', 'pretty-link'),
             ],
-        ]);
-        return array_values($types);
+        ];
+        $types    = apply_filters('prli_deprecated_redirect_types', $defaults);
+        return array_values(is_array($types) ? $types : $defaults);
     }
 
     /**
@@ -511,15 +528,11 @@ class Assets implements StaticContainerAwareness
      */
     private static function legacyRedirectTypeLabels(): array
     {
-        /**
-         * Filterable legacy redirect-type labels.
-         *
-         * @var array<string, string> $labels
-         */
-        $labels = apply_filters('prli_legacy_redirect_type_labels', [
+        $defaults = [
             'prettypay_link_stripe' => __('PrettyPay™ Link (Stripe)', 'pretty-link'),
-        ]);
-        return $labels;
+        ];
+        $labels   = apply_filters('prli_legacy_redirect_type_labels', $defaults);
+        return is_array($labels) ? $labels : $defaults;
     }
 
     /**
@@ -535,10 +548,11 @@ class Assets implements StaticContainerAwareness
     {
         global $wpdb;
         $table = $wpdb->prefix . 'prli_links';
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- {$table} is the prli_links table name built from $wpdb->prefix, and the query takes no parameters at all; this DISTINCT scan of Pretty Links' own table has no WordPress API equivalent and is read uncached so the form always lists the redirect types currently in use.
         $rows = $wpdb->get_col(
             "SELECT DISTINCT redirect_type FROM {$table} WHERE deleted_at IS NULL AND redirect_type <> ''"
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         return is_array($rows)
             ? array_values(array_filter(array_map('strval', $rows)))
             : [];
@@ -571,7 +585,8 @@ class Assets implements StaticContainerAwareness
      * REST on mount (which caused a visible refetch of the list on each
      * page load — see PreferencesController for the write path).
      *
-     * @param  integer $userId Current user ID; returns an empty array when not positive.
+     * @param integer $userId The current user's ID. Returns an empty array when not positive.
+     *
      * @return array<string, mixed>
      */
     private static function preferences(int $userId): array
@@ -607,7 +622,8 @@ class Assets implements StaticContainerAwareness
      * `prefill_slug`. Additional fields can be added via the
      * `prli_admin_prefill` filter.
      *
-     * @param  string $bundle Page bundle name; only `add-new` produces prefill values.
+     * @param string $bundle The page bundle name; prefill is only read for `add-new`.
+     *
      * @return array<string, string>
      */
     private static function pagePrefill(string $bundle): array
@@ -656,23 +672,27 @@ class Assets implements StaticContainerAwareness
     }
 
     /**
-     * Map an admin hook-suffix to its page bundle name.
+     * Resolve a WordPress admin hook suffix to its page bundle name.
      *
-     * @param  string $hookSuffix WordPress `$hook_suffix` for the current admin page.
-     * @return string|null Bundle name, or null when the screen has no bundle.
+     * @param string $hookSuffix The `$hook_suffix` WordPress passes to admin_enqueue_scripts.
+     *
+     * @return string|null The bundle name, or null when the hook isn't a Pretty Links React page.
      */
     private static function resolveBundle(string $hookSuffix): ?string
     {
-        if (isset(self::BUNDLES[$hookSuffix])) {
-            return self::BUNDLES[$hookSuffix];
+        $slug = Page::slugFromHook($hookSuffix);
+
+        // The parent slug renders whichever screen the "links list first"
+        // setting selects (#820), so its bundle has to follow. Without this
+        // the page emits data-page="links" while loading the dashboard
+        // bundle, and mountPage() finds nothing to mount - a blank screen.
+        // In that mode the Dashboard moves to Page::DASHBOARD_SLUG and Links
+        // keeps its own slug registered (hidden) for deep links; both are
+        // plain BUNDLES entries.
+        if ($slug === Page::SLUG) {
+            return Page::linksListIsFirst() ? 'links' : 'dashboard';
         }
 
-        // Fallback: match any hook whose slug begins with `pretty-link`.
-        foreach (self::BUNDLES as $knownHook => $bundle) {
-            if ($hookSuffix === $knownHook) {
-                return $bundle;
-            }
-        }
-        return null;
+        return self::BUNDLES[$slug] ?? null;
     }
 }

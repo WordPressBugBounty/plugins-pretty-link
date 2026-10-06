@@ -94,10 +94,10 @@ class OptionsController extends BaseController
         /**
          * Filtered options response payload.
          *
-         * @var array<string, mixed> $payload
+         * @var mixed $filtered
          */
-        $payload = apply_filters('prli_options_response', $payload);
-        return $payload;
+        $filtered = apply_filters('prli_options_response', $payload);
+        return is_array($filtered) ? $filtered : $payload;
     }
 
     /**
@@ -107,8 +107,6 @@ class OptionsController extends BaseController
      */
     private function store(): Store
     {
-        return $this->container->has(Store::class)
-            ? $this->container->get(Store::class)
-            : new Store();
+        return $this->container->get(Store::class);
     }
 }

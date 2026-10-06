@@ -72,10 +72,20 @@ abstract class AddonMenuLocked
             return null;
         }
 
+        // Badge wording follows what the user can actually act on. On Lite
+        // the entry really is gated behind Pro, so "PRO" is the honest
+        // signal. Once Pro is installed the label is misleading — the user
+        // already bought Pro; what's missing is a separate add-on plugin,
+        // which is exactly what `render()` tells them. Say "ADD-ON" instead
+        // so the sidebar and the page agree.
+        $badge = ProState::isProInstalled()
+            ? esc_html__('ADD-ON', 'pretty-link')
+            : esc_html__('PRO', 'pretty-link');
+
         $menuTitle = sprintf(
             '%s <span class="prli-menu-pro-badge">%s</span>',
             esc_html(static::MENU_LABEL),
-            esc_html__('PRO', 'pretty-link')
+            $badge
         );
 
         return (string) add_submenu_page(
@@ -148,7 +158,7 @@ abstract class AddonMenuLocked
             // Always show the "this is an add-on" line so a Pro user gets
             // the explanation even when the catalog summary is empty.
             $description = sprintf(
-                // translators: %s: add-on name.
+                // Translators: %s: add-on name.
                 __('%s is a Pretty Links add-on.', 'pretty-link'),
                 $heading
             );

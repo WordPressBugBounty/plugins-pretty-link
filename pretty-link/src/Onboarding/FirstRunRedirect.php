@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Onboarding;
 
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-// phpcs:disable WordPress.Security.NonceVerification.Recommended
-// $_SERVER values (REMOTE_ADDR, HTTP_USER_AGENT, REQUEST_URI, etc.) are read for
-// click tracking / targeting / UI rendering, not form-submission input. State-changing
-// operations in this class protect with wp_verify_nonce / check_admin_referer.
 use PrettyLinks\Admin\Pages\Onboarding as OnboardingPage;
 
 /**
@@ -44,6 +38,7 @@ class FirstRunRedirect
             return;
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only comparison of the current admin screen slug to avoid redirecting to the page we are already on; no form input is processed.
         if (isset($_GET['page']) && $_GET['page'] === OnboardingPage::SLUG) {
             return;
         }

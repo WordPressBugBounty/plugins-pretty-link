@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace PrettyLinks\Admin;
 
-use PrettyLinks\Support\HasStaticContainer;
-use PrettyLinks\Support\StaticContainerAwareness;
-
 /**
  * Server-rendered top bar for Pretty Links admin screens.
  *
@@ -20,14 +17,13 @@ use PrettyLinks\Support\StaticContainerAwareness;
  * Fires via `in_admin_header` at priority 20 so it lands just above the
  * first `<h1>` on every Pretty Links admin screen.
  */
-class TopBar implements StaticContainerAwareness
+class TopBar
 {
-    use HasStaticContainer;
-
     public const IPN_RENDER_HOOK = 'prli_ipn_render';
 
     /**
-     * Render the top bar on Pretty Links screens, skipping focused flows.
+     * Render the top bar on Pretty Links admin screens, skipping screens
+     * that draw their own header (onboarding and What's New).
      *
      * @return void
      */
@@ -48,13 +44,14 @@ class TopBar implements StaticContainerAwareness
     }
 
     /**
-     * Emit the brand bar markup: logo, IPN slot, and support link.
+     * Output the top bar markup: brand logo, the IPN render slot, and the
+     * (filterable) support link.
      *
      * @return void
      */
     public static function render(): void
     {
-        $baseUrl   = self::getContainer()->get('BASE_URL');
+        $baseUrl   = PRLI_URL;
         $dashboard = admin_url('admin.php?page=' . Page::SLUG);
         /**
          * Filter: prli_support_url

@@ -39,7 +39,7 @@ class Migrator
      * regardless of version (a failed upgrade keeps the stored version below
      * target, so gating on version would skip it).
      */
-    private const RETRY_BACKOFF_KEY = 'prli_migration_retry_after';
+    public const RETRY_BACKOFF_KEY = 'prli_migration_retry_after';
 
     /**
      * Seconds between retry attempts of a run that left failing steps.
@@ -127,27 +127,88 @@ class Migrator
     }
 
     /**
+     * The pair of steps that together guarantee the core tables are present.
+     *
+     * @var string[]
+     */
+    private const CORE_TABLES_READY = ['install_core_tables', 'verify_core_tables_v2'];
+
+    /**
+     * Steps that only make sense once another step has completed.
+     *
+     * `run()` records a failed step and moves on to the next one, which is
+     * right for independent steps but wrong here: if the core tables aren't
+     * there, everything that reads or alters them runs anyway and floods the
+     * log with "table doesn't exist" while marking six more steps failed —
+     * all of them symptoms of the one real failure. A step whose prerequisite
+     * hasn't completed is skipped for this pass instead, staying pending so it
+     * retries once the prerequisite lands.
+     *
+     * Table-dependent steps require `verify_core_tables_v2` as well as
+     * `install_core_tables`. Verification is what covers the recovery state an
+     * older build could leave behind — `install_core_tables` recorded done
+     * with a core table missing — so gating on the install alone would let the
+     * dependents run in exactly the case verification exists to catch.
+     *
+     * Keys and values are step names from {@see self::steps()}; `MigratorTest`
+     * asserts both stay in sync with it.
+     *
+     * @var array<string, string[]>
+     */
+    private const STEP_REQUIRES = [
+        'verify_core_tables_v2'      => ['install_core_tables'],
+        'backfill_indexes_v2'        => self::CORE_TABLES_READY,
+        'backfill_link_click_counts' => self::CORE_TABLES_READY,
+        'fix_source_column_type'     => self::CORE_TABLES_READY,
+        'fix_clicks_indexes_v2'      => self::CORE_TABLES_READY,
+        'init_slug_space_compat'     => self::CORE_TABLES_READY,
+    ];
+
+    /**
      * Ordered map of migration step names to their callables.
+     *
+     * A new step that reads or writes the core tables must also be listed in
+     * {@see self::STEP_REQUIRES} against {@see self::CORE_TABLES_READY}, or it
+     * falls back to the old run-anyway-and-fail behaviour. `MigratorTest`
+     * enforces this: every step outside a small documented set of independent
+     * ones has to carry a prerequisite entry.
      *
      * @return array<string, callable>
      */
     private function steps(): array
     {
         return [
-            'install_core_tables'        => [$this, 'installCoreTables'],
-            'install_link_terms'         => [$this, 'installLinkTermsTable'],
-            'install_geo_tables'         => [$this, 'installGeoTables'],
+            'install_core_tables'         => [$this, 'installCoreTables'],
+            'install_link_terms'          => [$this, 'installLinkTermsTable'],
+            'install_geo_tables'          => [$this, 'installGeoTables'],
+            // Fresh key so installs that already recorded install_core_tables get
+            // one verifying pass. Those are exactly the sites this PR is about:
+            // the old last_error check could mark that step complete with a table
+            // missing, and because step keys are one-shot it would never re-run —
+            // leaving backfill_link_click_counts failing against a table that
+            // isn't there. dbDelta is idempotent, so re-running costs one pass.
+            // Deliberately ahead of the backfill step below.
+            //
+            // It does NOT bring an existing `ip` index up to the ip(191)
+            // declaration — verified by running it against a pre-patch install
+            // with an unprefixed index: dbDelta left the index alone and reported
+            // no error, which is why fix_clicks_indexes_v2 has to exist as a
+            // separate step. Also worth recording from that run: the sub-part
+            // difference does not make dbDelta emit a duplicate ADD KEY, so
+            // re-running the CREATE here is safe on every existing install.
+            'verify_core_tables_v2'       => [$this, 'installCoreTables'],
             // Step name is versioned: bumping the suffix re-runs the drop
             // pass on installs that completed an earlier version of it.
-            'backfill_indexes_v2'        => [$this, 'backfillIndexes'],
-            'clear_legacy_cron_hooks'    => [$this, 'clearLegacyCronHooks'],
+            'backfill_indexes_v2'         => [$this, 'backfillIndexes'],
+            'clear_legacy_cron_hooks'     => [$this, 'clearLegacyCronHooks'],
             // Backfills clicks/uniques columns from click rows for sites that
             // upgraded from v3 before the columns existed. Idempotent: UPDATE
             // is always safe to re-run. Uses first_click = 1 to match v4's
             // unique-count semantics (#676).
-            'backfill_link_click_counts' => [$this, 'backfillLinkClickCounts'],
-            'fix_source_column_type'     => [$this, 'fixSourceColumnType'],
-            'init_slug_space_compat'     => [$this, 'initSlugSpaceCompat'],
+            'backfill_link_click_counts'  => [$this, 'backfillLinkClickCounts'],
+            'fix_source_column_type'      => [$this, 'fixSourceColumnType'],
+            'fix_clicks_indexes_v2'       => [$this, 'fixClicksIndexes'],
+            'init_slug_space_compat'      => [$this, 'initSlugSpaceCompat'],
         ];
     }
 
@@ -173,10 +234,39 @@ class Migrator
             if (!empty($done[$name])) {
                 continue;
             }
+            // Prerequisite missing (failed earlier in this pass, or left
+            // failed by a previous one). Skip without recording a failure:
+            // the step never ran, so the only real error is the prerequisite's,
+            // and leaving this one pending means it retries next pass.
+            $missing = self::missingPrerequisites($name, $done);
+            if ($missing !== []) {
+                /**
+                 * Fires when a migration step is skipped because a step it
+                 * depends on hasn't completed. Nothing failed here — the step
+                 * simply didn't run — but a support trace needs to say why it
+                 * is still pending.
+                 *
+                 * @param string   $name    Step key that was skipped.
+                 * @param string[] $missing Prerequisite step keys not yet done.
+                 */
+                do_action('prli_migration_step_skipped', $name, $missing);
+                continue;
+            }
             // Record a step done only when it finishes without throwing and
             // without leaving a SQL error. A silently-failed step (wpdb::query
             // returns false but never throws) stays pending and is retried
             // rather than being marked complete forever.
+            //
+            // `last_error` alone is NOT sufficient and never was: wpdb::query()
+            // calls flush(), which clears it on every query, so in a multi-query
+            // step only the final query's error survives. dbDelta issues several
+            // statements plus its own trailing DESCRIBE / SHOW INDEX, so a failed
+            // CREATE was masked by the successful work behind it and the step was
+            // recorded complete forever — exactly what this mechanism exists to
+            // prevent. Steps that run more than one query therefore assert their
+            // own post-conditions (assertTablesExist) or route each statement
+            // through execOrThrow(); the check below is the backstop for
+            // single-query steps.
             $this->db->last_error = '';
             try {
                 $callable();
@@ -227,6 +317,24 @@ class Migrator
         } else {
             set_transient(self::RETRY_BACKOFF_KEY, time(), self::RETRY_BACKOFF);
         }
+    }
+
+    /**
+     * Prerequisites of a step that haven't completed yet.
+     *
+     * @param  string              $name Step key.
+     * @param  array<string, bool> $done Steps completed so far.
+     * @return string[] Missing prerequisite step keys; empty when the step can run.
+     */
+    private static function missingPrerequisites(string $name, array $done): array
+    {
+        $missing = [];
+        foreach (self::STEP_REQUIRES[$name] ?? [] as $required) {
+            if (empty($done[$required])) {
+                $missing[] = $required;
+            }
+        }
+        return $missing;
     }
 
     /**
@@ -307,8 +415,9 @@ class Migrator
             KEY created_at (created_at),
             KEY created_at_vuid (created_at, vuid),
             KEY country (country),
-            KEY ip (ip),
-            KEY vuid (vuid)
+            KEY ip (ip(191)),
+            KEY vuid (vuid),
+            KEY host_created_at (host(1), created_at)
         ) {$charset};");
 
         // Matches v3's prli_link_metas exactly — including meta_order and
@@ -332,6 +441,67 @@ class Migrator
             KEY meta_key (meta_key(191)),
             KEY link_id_meta_key (link_id, meta_key(191))
         ) {$charset};");
+
+        $this->assertTablesExist(['prli_links', 'prli_clicks', 'prli_link_metas']);
+    }
+
+    /**
+     * Throw unless every named table now exists.
+     *
+     * `dbDelta()` reports nothing usable on failure — it returns a list of the
+     * changes it *believes* it made and swallows the outcome — and the
+     * `last_error` check in run() can't see a failed CREATE because dbDelta's
+     * own trailing DESCRIBE / SHOW INDEX queries clear it. Without this a
+     * missing table was recorded as an installed one, permanently.
+     *
+     * @param string[] $tables Unprefixed table names.
+     *
+     * @throws \RuntimeException When a table is missing.
+     */
+    private function assertTablesExist(array $tables): void
+    {
+        $missing = [];
+        foreach ($tables as $table) {
+            $full = $this->db->prefix . $table;
+            $seen = (string) $this->db->get_var(
+                $this->db->prepare('SHOW TABLES LIKE %s', $full)
+            );
+            if ($seen !== $full) {
+                $missing[] = $full;
+            }
+        }
+        if ($missing !== []) {
+            $message = 'dbDelta did not create: ' . implode(', ', $missing);
+            // Table names come from $wpdb->prefix and this class's own literals,
+            // and the message is stored in the migration state, which escapes at
+            // its display boundary — esc_html() here would double-encode it.
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Message is built from $wpdb->prefix plus literal table names and is escaped where the migration state is displayed.
+            throw new \RuntimeException($message);
+        }
+    }
+
+    /**
+     * Run one statement and throw on a DB error.
+     *
+     * Mirrors the Pro migrator's helper of the same name. Needed for any step
+     * issuing more than one query, where checking `last_error` afterwards only
+     * ever sees the last one.
+     *
+     * @param string $sql Statement to run.
+     *
+     * @throws \RuntimeException On a DB error.
+     */
+    private function execOrThrow(string $sql): void
+    {
+        $this->db->last_error = '';
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Schema DDL built from $wpdb->prefix and literal identifiers; no user input, and there is no WordPress API for it.
+        $this->db->query($sql);
+        if ($this->db->last_error !== '') {
+            // Raw DB error: stored in `failures` and escaped at the display
+            // boundary, so don't esc_html() here (would double-encode it).
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Raw DB error is stored in the migration state and escaped where it is displayed; escaping here would double-encode it.
+            throw new \RuntimeException($this->db->last_error);
+        }
     }
 
     /**
@@ -352,6 +522,8 @@ class Migrator
             KEY term_id (term_id),
             KEY taxonomy (taxonomy)
         ) {$charset};");
+
+        $this->assertTablesExist(['prli_link_terms']);
     }
 
     /**
@@ -396,6 +568,8 @@ class Migrator
             PRIMARY KEY  (id),
             UNIQUE KEY ip (ip)
         ) {$charset};");
+
+        $this->assertTablesExist(['prli_geo_cache', 'prli_geo_pending']);
     }
 
     /**
@@ -416,9 +590,9 @@ class Migrator
         // pure insert-time cost.
         // Standalone `vuid` is intentionally kept — required for the ip/vuid
         // correlation subqueries in Repositories\Clicks::search.
-        // Standalone `ip` is kept — v4 declares it and v3 had it (as ip(191));
-        // we leave the existing definition alone to avoid prefix-length churn
-        // on older MySQL.
+        // Standalone `ip` is kept — v4 declares it and v3 had it (as ip(191)).
+        // Its prefix length is normalised back to 191 by the dedicated
+        // fix_clicks_indexes_v2 step, not here.
         $this->dropIndexes($this->db->prefix . 'prli_clicks', [
             'link_id',
             'first_click',
@@ -495,8 +669,7 @@ class Migrator
         // TEMPORARY tables ("Can't reopen table") — which the test suite uses —
         // and are also just slower. LEFT JOIN + COALESCE keeps links with no
         // clicks at 0. first_click = 1 matches v4's unique-count semantics (#676).
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        $this->db->query(
+        $this->execOrThrow(
             "UPDATE {$links} l
              LEFT JOIN (
                  SELECT link_id,
@@ -518,7 +691,6 @@ class Migrator
      */
     private function dropIndexes(string $table, array $indexes): void
     {
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $rows    = (array) $this->db->get_results("SHOW INDEX FROM `{$table}`", ARRAY_A);
         $present = [];
         foreach ($rows as $row) {
@@ -530,12 +702,93 @@ class Migrator
         // information_schema.STATISTICS cache (information_schema_stats_expiry).
         foreach ($indexes as $idx) {
             if (isset($present[$idx])) {
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-                $this->db->query("ALTER TABLE `{$table}` DROP INDEX `{$idx}`");
+                // Use execOrThrow(), not query(): this loop runs several
+                // statements and the caller's last_error check would only ever
+                // see the final one.
+                $this->execOrThrow("ALTER TABLE `{$table}` DROP INDEX `{$idx}`");
             }
         }
     }
 
+
+    /**
+     * Reconcile the two `prli_clicks` indexes that need fixing, in ONE statement.
+     *
+     * `KEY ip` — `ip` is VARCHAR(255). Indexed whole, that is 1020 bytes under
+     * utf8mb4 and exceeds the 767-byte per-column index limit on InnoDB
+     * COMPACT/REDUNDANT row formats (MySQL <= 5.6, MariaDB <= 10.1), so the
+     * CREATE TABLE for the whole table failed on a fresh install there — and,
+     * before the post-condition check added alongside this, was recorded as
+     * complete with `prli_clicks` absent. v3 declared `ip(191)`, which fits; v4
+     * dropped the prefix.
+     *
+     * `KEY host_created_at` — `HostBackfillJob::hasPending()` asks "is any recent
+     * click still missing its reverse-DNS name?" on every jobs tick. With no
+     * index on `host` the answer is instant while rows ARE pending (it stops at
+     * the first) but costs a scan of the whole lookback window to prove that none
+     * are — i.e. the healthy steady state is the expensive one. `host` leads so
+     * the `host = ''` equality can seek; a 1-character prefix is enough to
+     * separate the empty marker from any real name, and keeps the key inside the
+     * 767-byte limit that the `ip` half of this step exists to respect.
+     *
+     * Fixing the declarations alone isn't enough for tables that already exist:
+     * `install_core_tables` is one-shot and never re-runs, and dbDelta leaves an
+     * existing index alone rather than altering its prefix (verified against a
+     * pre-patch install). So both are reconciled here.
+     *
+     * ONE `ALTER TABLE` rather than two, because both land in the same release:
+     * a site upgrading would otherwise build two indexes in two passes over what
+     * is usually its largest table. Combining them costs a single pass plus the
+     * second index's sort — measured at roughly 10 seconds per 500k rows for one
+     * index on a dev install.
+     *
+     * No-op when both indexes are already as declared.
+     *
+     * @return void
+     */
+    private function fixClicksIndexes(): void
+    {
+        $table = $this->db->prefix . 'prli_clicks';
+        // SHOW INDEX reads live table metadata, bypassing MySQL 8's
+        // information_schema.STATISTICS cache.
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Identifier comes from $wpdb->prefix; schema metadata must not be cached.
+        $rows     = (array) $this->db->get_results("SHOW INDEX FROM `{$table}`", ARRAY_A);
+        $ipFound  = false;
+        $ipPrefix = null;
+        $hasHost  = false;
+        foreach ($rows as $row) {
+            $name = (string) ($row['Key_name'] ?? '');
+            if ($name === 'ip' && !$ipFound) {
+                $ipFound  = true;
+                $ipPrefix = $row['Sub_part'] === null ? null : (int) $row['Sub_part'];
+                continue;
+            }
+            if ($name === 'host_created_at') {
+                $hasHost = true;
+            }
+        }
+
+        $clauses = [];
+        // An ABSENT `ip` index is not success: DROP and ADD are separate clauses,
+        // so a run that dropped it and then failed leaves the table with no `ip`
+        // index at all — and treating that as "nothing to do" would record the
+        // step complete forever with the index permanently missing.
+        if (!$ipFound || $ipPrefix !== 191) {
+            if ($ipFound) {
+                $clauses[] = 'DROP INDEX `ip`';
+            }
+            $clauses[] = 'ADD KEY `ip` (`ip`(191))';
+        }
+        if (!$hasHost) {
+            $clauses[] = 'ADD KEY `host_created_at` (`host`(1), `created_at`)';
+        }
+
+        if ($clauses === []) {
+            return;
+        }
+
+        $this->execOrThrow("ALTER TABLE `{$table}` " . implode(', ', $clauses));
+    }
 
     /**
      * Converts any existing ENUM('admin','user','public') definition on
@@ -546,8 +799,7 @@ class Migrator
      */
     private function fixSourceColumnType(): void
     {
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        $this->db->query(
+        $this->execOrThrow(
             "ALTER TABLE {$this->db->prefix}prli_links
              MODIFY COLUMN source VARCHAR(16) NOT NULL DEFAULT 'admin'"
         );
