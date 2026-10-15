@@ -98,10 +98,12 @@ class AddonInstaller
                 // file would otherwise report a successful install of an add-on
                 // that was never fetched and never will be. Say it failed so
                 // the caller can act on it.
+                // Core's requirement errors are HTML (`<p><strong>Error:</strong>`)
+                // and the add-ons UI shows this message as plain text.
                 return [
                     'success' => false,
                     'code'    => 'activation_failed',
-                    'message' => $activated->get_error_message(),
+                    'message' => wp_strip_all_tags(str_replace('</p><p>', ' ', $activated->get_error_message())),
                 ];
             }
 

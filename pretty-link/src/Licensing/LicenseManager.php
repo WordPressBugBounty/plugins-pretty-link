@@ -428,8 +428,8 @@ class LicenseManager
     /**
      * Deactivate the current license. Always clears local state — even when the
      * server refuses or is unreachable — so the site can be re-activated
-     * elsewhere (v3 parity). ground-level-mothership only clears on success or
-     * an expired key, so we force the clear for any other failure.
+     * elsewhere (v3 parity). ground-level-mothership sends the deactivate
+     * request first, then clears local state whatever the server answers.
      *
      * @return array<string, mixed>
      */
@@ -462,18 +462,17 @@ class LicenseManager
         delete_option('prli_license_key');
 
         if ($result->isFailure()) {
-            // Since ground-level-mothership 9.1.2 this is no longer the
-            // "server refused" path. GL now clears local state BEFORE it calls
-            // the API and reports an API rejection as a success carrying an
-            // explanatory message, so the compensation that used to live here
-            // — re-clearing the key, status, transient and add-on cache, and
-            // firing the prli_* actions by hand — is all done by GL and the
-            // bridge in Bootstrap::init() instead.
+            // This is not the "server refused" path. GL reports an API
+            // rejection as a success carrying an explanatory message, and
+            // clears the key, transient and add-on cache after the request
+            // either way; the prli_* actions come from the bridge in
+            // Bootstrap::init().
             //
-            // The only way back here now is the activation-status write itself
-            // failing, and GL returns before tearing anything down in that
-            // case. Nothing to compensate for, and claiming the site was
-            // deactivated would be a lie, so report it as it is.
+            // The only way back here is the activation-status write itself
+            // failing while the license still reads active, and GL returns
+            // before sending or tearing anything down in that case. Nothing to
+            // compensate for, and claiming the site was deactivated would be a
+            // lie, so report it as it is.
             $this->fireEditionChangedIfDifferent($before);
 
             return [

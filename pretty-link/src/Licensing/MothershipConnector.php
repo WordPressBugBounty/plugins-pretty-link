@@ -126,23 +126,11 @@ class MothershipConnector extends AbstractPluginConnection
     /**
      * Stores the license activation status.
      *
-     * Returns true when the stored status already matches, because
-     * `update_option()` answers false for an unchanged value — it cannot tell
-     * "nothing to do" apart from "the write failed". That distinction became
-     * load-bearing in ground-level-mothership 9.1.2, whose deactivateLicense()
-     * now aborts with a failure when this returns false, so deactivating an
-     * already-inactive licence reported "Failed to deactivate the license" and
-     * skipped the rest of the teardown.
-     *
      * @param  boolean $status The new activation status.
-     * @return boolean Whether the stored status is now $status.
+     * @return boolean Whether the option was updated.
      */
     public function setLicenseActivationStatus(bool $status): bool
     {
-        if ($this->getLicenseActivationStatus() === $status) {
-            return true;
-        }
-
         return update_option('prli_activated', $status, false);
     }
 

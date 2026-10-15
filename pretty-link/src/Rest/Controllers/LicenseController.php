@@ -160,6 +160,9 @@ class LicenseController extends BaseController
         // so this is always a success from the site's perspective; the message
         // tells the user if the activation may still be in use remotely.
         $response = $this->manager()->deactivate();
+        // GL's message can carry an account-dashboard link; the UI renders it
+        // as HTML, so allow only safe markup.
+        $response['message'] = wp_kses_post((string) $response['message']);
         return new WP_REST_Response([
             'success' => true,
             'result'  => $response,

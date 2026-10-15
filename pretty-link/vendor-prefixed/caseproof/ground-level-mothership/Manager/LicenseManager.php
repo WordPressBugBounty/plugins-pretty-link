@@ -872,6 +872,7 @@ class LicenseManager
     /**
      * Deactivates the license.
      *
+     * The request authenticates with the stored license key, so it is sent before that key is cleared.
      * Deactivating the license on the server may fail for various reasons, however we still want to clear
      * the local activation data so the user is not blocked from activating a different license on the site.
      *
@@ -881,16 +882,19 @@ class LicenseManager
      */
     public function deactivateLicense(string $licenseKey, string $domain): Result
     {
-        if (!$this->plugin->setLicenseActivationStatus(false)) {
+        $saved = $this->plugin->setLicenseActivationStatus(false);
+        if (!$saved && $this->plugin->getLicenseActivationStatus()) {
             return Result::failure(__('Failed to deactivate the license', 'pretty-link'));
         }
 
-        $this->credentials->setLicenseKey('');
-        $this->addonsManager->clearCache();
-        $this->activationTransient->delete();
-        wp_clean_update_cache();
-
-        $response = $this->licenseActivations->deactivate($licenseKey, $domain);
+        try {
+            $response = $this->licenseActivations->deactivate($licenseKey, $domain);
+        } finally {
+            $this->credentials->setLicenseKey('');
+            $this->addonsManager->clearCache();
+            $this->activationTransient->delete();
+            wp_clean_update_cache();
+        }
 
         $freed = !$response->isError();
         $data  = compact('freed');

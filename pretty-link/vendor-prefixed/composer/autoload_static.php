@@ -4,7 +4,7 @@
 
 namespace PrettyLinks\Composer\Autoload;
 
-class ComposerStaticInit231300d60c81cad67687c4eb7664cfa3
+class ComposerStaticInit5435db87bafeb8d65df080300456c89e
 {
     public static $files = array (
         '6381d01c0284a4425b18527a16135f70' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -439,9 +439,9 @@ class ComposerStaticInit231300d60c81cad67687c4eb7664cfa3
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit231300d60c81cad67687c4eb7664cfa3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit231300d60c81cad67687c4eb7664cfa3::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit231300d60c81cad67687c4eb7664cfa3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5435db87bafeb8d65df080300456c89e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5435db87bafeb8d65df080300456c89e::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5435db87bafeb8d65df080300456c89e::$classMap;
 
         }, null, ClassLoader::class);
     }

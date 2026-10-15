@@ -87,11 +87,17 @@ abstract class AbstractPluginConnection
     /**
      * Sets the license activation status.
      *
+     * Returns true without writing when the stored status already matches $status.
+     *
      * @param  boolean $status The new status of the license activation.
-     * @return boolean Whether the license activation status was updated successfully.
+     * @return boolean Whether the license activation status is now $status.
      */
     public function setLicenseActivationStatus(bool $status): bool
     {
+        if ($this->getLicenseActivationStatus() === $status) {
+            return true;
+        }
+
         return update_option($this->pluginId . '_license_active', $status);
     }
 

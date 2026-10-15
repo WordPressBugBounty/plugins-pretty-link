@@ -224,15 +224,9 @@ class Database implements ConnectionAwareness
             return $this->tableOptions;
         }
 
-        $opts = [];
-        if (! empty($conn->charset)) {
-            $opts[] = "DEFAULT CHARACTER SET {$conn->charset}";
-        }
-        if (! empty($conn->collate)) {
-            $opts[] = "COLLATE {$conn->collate}";
-        }
-
-        $this->tableOptions = implode(' ', $opts);
+        // PL strauss-fixup: table options from wp_posts. DB_COLLATE can be an
+        // invalid collation, which MySQL rejects in every CREATE TABLE.
+        $this->tableOptions = \PrettyLinks\Database\Migrator::charsetCollate($conn);
         return $this->tableOptions;
     }
 

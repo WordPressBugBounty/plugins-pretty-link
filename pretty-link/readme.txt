@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.5
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 4.0.16
+Stable tag: 4.0.17
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,14 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.17 =
+* Fixed a crash on activation caused by an error in the automatic update system.
+* Link Health now flags links whose domain no longer exists.
+* Fixed table creation failing on sites with an invalid database collation setting, and install errors now show the actual database error.
+* License and add-on error messages now display cleanly instead of showing raw HTML.
+* Fixed the admin menu losing its position when the page height changes.
+* Updated bundled libraries.
 
 = 4.0.16 =
 * Licensing, plugin updates, and add-on installs now run through our new licensing service. Your existing license key keeps working — no action needed.

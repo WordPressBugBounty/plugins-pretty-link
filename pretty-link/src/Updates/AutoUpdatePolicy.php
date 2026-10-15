@@ -34,6 +34,14 @@ defined('ABSPATH') || exit;
  *
  * Only slugs registered with GL are restored — the host plugin and any add-on
  * Bootstrap arms — so this never speaks for another plugin's rows.
+ *
+ * Separately, GL's callback is typed `: ?bool` under strict_types but hands
+ * back the incoming `$update` for every plugin that isn't ours. Core doesn't
+ * require a boolean here, so one string ("1") from anywhere earlier in the
+ * chain is an uncaught TypeError and a dead site. {@see self::coerce()} sits
+ * directly in front of GL's callback and turns such values into the boolean
+ * core would have read them as. Remove it once GL ships the fix
+ * (caseproof/ground-level-php#517).
  */
 class AutoUpdatePolicy
 {
@@ -50,6 +58,13 @@ class AutoUpdatePolicy
      * @var integer
      */
     private const PRIORITY_RESTORE = 11;
+
+    /**
+     * GL adds its `auto_update_plugin` callbacks from `init` at this priority.
+     *
+     * @var integer
+     */
+    private const GL_REGISTER_PRIORITY = 5;
 
     /**
      * The plugin connection, which owns the policy value.
@@ -96,7 +111,8 @@ class AutoUpdatePolicy
     }
 
     /**
-     * Registers both halves of the capture/restore pair.
+     * Registers both halves of the capture/restore pair, and the coercion
+     * that keeps GL's callback from fataling.
      *
      * @return void
      */
@@ -104,6 +120,36 @@ class AutoUpdatePolicy
     {
         add_filter('auto_update_plugin', [$this, 'capture'], self::PRIORITY_CAPTURE, 2);
         add_filter('auto_update_plugin', [$this, 'restore'], self::PRIORITY_RESTORE, 2);
+        add_action('init', [$this, 'registerCoercion'], self::GL_REGISTER_PRIORITY - 1);
+    }
+
+    /**
+     * Adds the coercion at GL's priority just before GL adds its own callback.
+     *
+     * Callbacks at one priority run in the order they were added, so this runs
+     * after everything plugins, mu-plugins and the theme hooked at the default
+     * priority while loading, and right before GL's.
+     *
+     * @return void
+     */
+    public function registerCoercion(): void
+    {
+        add_filter('auto_update_plugin', [$this, 'coerce']);
+    }
+
+    /**
+     * Turns a non-boolean decision into the boolean core would read it as.
+     *
+     * @param  mixed $update The incoming auto-update decision.
+     * @return boolean|null The decision, as a boolean or null.
+     */
+    public function coerce($update)
+    {
+        if ($update === null || is_bool($update)) {
+            return $update;
+        }
+
+        return (bool) $update;
     }
 
     /**

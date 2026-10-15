@@ -4,7 +4,7 @@
     'name' => 'caseproof/pretty-link',
     'pretty_version' => 'dev-develop',
     'version' => 'dev-develop',
-    'reference' => 'f0007a68802d42408cf1e71655f59e0c5b002ab9',
+    'reference' => '38a4005e383a221586efb363b297f3e514ac9430',
     'type' => 'wordpress-plugin',
     'install_path' => __DIR__ . '/../',
     'aliases' => 
@@ -16,8 +16,8 @@
   array (
     'caseproof/ground-level-container' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
       'reference' => '7458f9851de5e35a00234bf599180d9a03a2525c',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-container',
@@ -28,9 +28,9 @@
     ),
     'caseproof/ground-level-database' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
-      'reference' => '2df8a04f92a26661b8bfa4a0deec47f137b5e73b',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
+      'reference' => 'ec4c1b2fd3d623282874efa653e925f73db30ae1',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-database',
       'aliases' => 
@@ -40,9 +40,9 @@
     ),
     'caseproof/ground-level-events' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
-      'reference' => '81b3ca92e33f404acfba1a254be02e8900dbfd08',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
+      'reference' => 'c00d9271cad284fc82afeb7e59025b2bce69041d',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-events',
       'aliases' => 
@@ -52,9 +52,9 @@
     ),
     'caseproof/ground-level-in-product-notifications' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
-      'reference' => 'fb2b17d79c42904365d6f417d4750bcec36122d8',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
+      'reference' => '52f3cf9eca037c46d1d48890e0a4aa847089199d',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-in-product-notifications',
       'aliases' => 
@@ -64,9 +64,9 @@
     ),
     'caseproof/ground-level-mothership' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
-      'reference' => '69d74c6770a1951f7560e2d6104e0c56a3f4f3f9',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
+      'reference' => '1b5fd63ea983aafc5270620fc1b03e663f8b0983',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-mothership',
       'aliases' => 
@@ -76,9 +76,9 @@
     ),
     'caseproof/ground-level-package' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
-      'reference' => '363c45e21bfe4b9b833c8e4acf4caca26ffdaa51',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
+      'reference' => '686d0d4a4730332450e9c61cff1405988c071628',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-package',
       'aliases' => 
@@ -88,8 +88,8 @@
     ),
     'caseproof/ground-level-query-builder' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
       'reference' => '9bdb7cc2c704e7a7ca734504b86a09c7251d9275',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-query-builder',
@@ -100,9 +100,9 @@
     ),
     'caseproof/ground-level-resque' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
-      'reference' => 'aa3f1e1b7901e880c9f8d1a8fd3fe128eb4513e6',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
+      'reference' => '1c2e46659ef8edcc93662064a41e171d4424b372',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-resque',
       'aliases' => 
@@ -112,8 +112,8 @@
     ),
     'caseproof/ground-level-support' => 
     array (
-      'pretty_version' => '9.1.2',
-      'version' => '9.1.2.0',
+      'pretty_version' => '9.2.0',
+      'version' => '9.2.0.0',
       'reference' => 'd5d378031bf2bd1c8af89979c734b88a59e161c3',
       'type' => 'library',
       'install_path' => __DIR__ . '/../caseproof/ground-level-support',

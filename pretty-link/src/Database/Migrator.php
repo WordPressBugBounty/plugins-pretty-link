@@ -82,6 +82,34 @@ class Migrator
     }
 
     /**
+     * Table options for CREATE TABLE, derived from the collation WordPress
+     * itself used for wp_posts.post_content (the 3.x / MemberPress approach).
+     *
+     * DB_COLLATE is never trusted for new tables: a bad value (a charset name
+     * such as 'latin1', or a collation of another charset) is rejected by MySQL
+     * and stops every table from being created (#998). Reading the collation of
+     * a table core already created gives a value the server accepts, makes new
+     * tables match the existing wp_* and v3 prli_* tables, and keeps 4.0 at
+     * parity with 3.x. Falls back to wpdb::get_charset_collate() when the
+     * lookup yields nothing usable.
+     *
+     * @param  wpdb $db WordPress database handle.
+     * @return string
+     */
+    public static function charsetCollate(wpdb $db): string
+    {
+        $column    = $db->get_row("SHOW FULL COLUMNS FROM {$db->posts} WHERE field = 'post_content'");
+        $collation = isset($column->Collation) ? (string) $column->Collation : '';
+        $parts     = explode('_', $collation, 2);
+
+        if (count($parts) === 2) {
+            return "DEFAULT CHARACTER SET {$parts[0]} COLLATE {$collation}";
+        }
+
+        return $db->get_charset_collate();
+    }
+
+    /**
      * Run any pending migration steps, guarded by an atomic lock.
      */
     public function maybeRun(): void
@@ -342,12 +370,12 @@ class Migrator
      */
     private function installCoreTables(): void
     {
-        $charset = $this->db->get_charset_collate();
+        $charset = self::charsetCollate($this->db);
 
         // Column types, nullability, and defaults match v3's prli_links exactly
         // so dbDelta is a no-op on upgrade. Columns added by 4.0 are purely
         // additive (new_window/clicks/uniques/deleted_at).
-        dbDelta("CREATE TABLE {$this->db->prefix}prli_links (
+        $sqlLinks = "CREATE TABLE {$this->db->prefix}prli_links (
             id INT(11) NOT NULL AUTO_INCREMENT,
             name VARCHAR(255) DEFAULT NULL,
             description TEXT DEFAULT NULL,
@@ -377,7 +405,8 @@ class Migrator
             KEY updated_at (updated_at),
             KEY deleted_at (deleted_at),
             KEY source (source)
-        ) {$charset};");
+        ) {$charset};";
+        dbDelta($sqlLinks);
 
         // Matches v3's prli_clicks exactly for shared columns. Additive 4.0
         // columns: country, device_type, user_id.
@@ -390,7 +419,7 @@ class Migrator
         // deletion.
         // Standalone link_id/vuid (present in v3) are dropped via
         // backfillIndexes() on upgrade since dbDelta can't remove indexes.
-        dbDelta("CREATE TABLE {$this->db->prefix}prli_clicks (
+        $sqlClicks = "CREATE TABLE {$this->db->prefix}prli_clicks (
             id INT(11) NOT NULL AUTO_INCREMENT,
             ip VARCHAR(255) DEFAULT NULL,
             browser VARCHAR(255) DEFAULT NULL,
@@ -418,7 +447,8 @@ class Migrator
             KEY ip (ip(191)),
             KEY vuid (vuid),
             KEY host_created_at (host(1), created_at)
-        ) {$charset};");
+        ) {$charset};";
+        dbDelta($sqlClicks);
 
         // Matches v3's prli_link_metas exactly — including meta_order and
         // created_at, which 4.0 doesn't read but must preserve so v3 upgrades
@@ -430,7 +460,7 @@ class Migrator
         // column list makes dbDelta emit ADD KEY against the existing v3
         // index, which MySQL rejects as a duplicate. The v3 single-column
         // `link_id` index is dropped post-dbDelta in backfillIndexes().
-        dbDelta("CREATE TABLE {$this->db->prefix}prli_link_metas (
+        $sqlMetas = "CREATE TABLE {$this->db->prefix}prli_link_metas (
             id INT(11) NOT NULL AUTO_INCREMENT,
             meta_key VARCHAR(255) DEFAULT NULL,
             meta_value LONGTEXT DEFAULT NULL,
@@ -440,44 +470,85 @@ class Migrator
             PRIMARY KEY  (id),
             KEY meta_key (meta_key(191)),
             KEY link_id_meta_key (link_id, meta_key(191))
-        ) {$charset};");
+        ) {$charset};";
+        dbDelta($sqlMetas);
 
-        $this->assertTablesExist(['prli_links', 'prli_clicks', 'prli_link_metas']);
+        self::assertTablesExist($this->db, [
+            'prli_links'      => $sqlLinks,
+            'prli_clicks'     => $sqlClicks,
+            'prli_link_metas' => $sqlMetas,
+        ]);
     }
 
     /**
-     * Throw unless every named table now exists.
+     * Make sure every named table exists, retrying a missing one's CREATE.
      *
-     * `dbDelta()` reports nothing usable on failure — it returns a list of the
-     * changes it *believes* it made and swallows the outcome — and the
+     * `dbDelta()` reports nothing usable on failure - it returns a list of the
+     * changes it *believes* it made and swallows the outcome - and the
      * `last_error` check in run() can't see a failed CREATE because dbDelta's
      * own trailing DESCRIBE / SHOW INDEX queries clear it. Without this a
      * missing table was recorded as an installed one, permanently.
      *
-     * @param string[] $tables Unprefixed table names.
+     * A table still missing after dbDelta gets its CREATE re-run through
+     * execOrThrow() so the real MySQL error surfaces. It uses IF NOT EXISTS so
+     * a concurrent migration that created the table meanwhile doesn't fail with
+     * "already exists" and hide the real error. If the retry succeeds the step
+     * carries on (self-heal); it only throws when the table is still missing.
      *
-     * @throws \RuntimeException When a table is missing.
+     * Public and static so other migrators can run the same post-check.
+     *
+     * @param wpdb                 $db     Database handle.
+     * @param array<string,string> $tables Unprefixed table name => the CREATE TABLE
+     *                                     statement already passed to dbDelta().
+     *
+     * @throws \RuntimeException When a table check fails, or a table can't be created.
      */
-    private function assertTablesExist(array $tables): void
+    public static function assertTablesExist(wpdb $db, array $tables): void
     {
-        $missing = [];
-        foreach ($tables as $table) {
-            $full = $this->db->prefix . $table;
-            $seen = (string) $this->db->get_var(
-                $this->db->prepare('SHOW TABLES LIKE %s', $full)
-            );
-            if ($seen !== $full) {
-                $missing[] = $full;
+        foreach ($tables as $table => $createSql) {
+            $full = $db->prefix . $table;
+            if (self::tableExists($db, $full)) {
+                continue;
+            }
+
+            $retrySql = preg_replace('/^CREATE TABLE /', 'CREATE TABLE IF NOT EXISTS ', $createSql, 1);
+            self::execOrThrow($db, $retrySql);
+
+            if (!self::tableExists($db, $full)) {
+                // Table names come from $wpdb->prefix and the migrators' own literals,
+                // and the message is stored in the migration state, which escapes at
+                // its display boundary - esc_html() here would double-encode it.
+                // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Message is built from $wpdb->prefix plus literal table names and is escaped where the migration state is displayed.
+                throw new \RuntimeException('dbDelta did not create: ' . $full);
             }
         }
-        if ($missing !== []) {
-            $message = 'dbDelta did not create: ' . implode(', ', $missing);
-            // Table names come from $wpdb->prefix and this class's own literals,
-            // and the message is stored in the migration state, which escapes at
-            // its display boundary — esc_html() here would double-encode it.
-            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Message is built from $wpdb->prefix plus literal table names and is escaped where the migration state is displayed.
-            throw new \RuntimeException($message);
+    }
+
+    /**
+     * Whether a table exists, throwing if the check query itself fails.
+     *
+     * A failed SHOW TABLES makes get_var() return null, which must not be
+     * mistaken for "table missing".
+     *
+     * @param wpdb   $db   Database handle.
+     * @param string $full Prefixed table name.
+     *
+     * @throws \RuntimeException When the query errors.
+     */
+    private static function tableExists(wpdb $db, string $full): bool
+    {
+        $db->last_error = '';
+
+        $seen = (string) $db->get_var(
+            $db->prepare('SHOW TABLES LIKE %s', $db->esc_like($full))
+        );
+        if ($db->last_error !== '') {
+            // Raw DB error: stored in `failures` and escaped at the display
+            // boundary, so don't esc_html() here (would double-encode it).
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Table name is $wpdb->prefix plus a literal and the DB error is escaped where the migration state is displayed.
+            throw new \RuntimeException('Could not check table ' . $full . ': ' . $db->last_error);
         }
+        return $seen === $full;
     }
 
     /**
@@ -487,20 +558,21 @@ class Migrator
      * issuing more than one query, where checking `last_error` afterwards only
      * ever sees the last one.
      *
+     * @param wpdb   $db  Database handle.
      * @param string $sql Statement to run.
      *
      * @throws \RuntimeException On a DB error.
      */
-    private function execOrThrow(string $sql): void
+    private static function execOrThrow(wpdb $db, string $sql): void
     {
-        $this->db->last_error = '';
+        $db->last_error = '';
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Schema DDL built from $wpdb->prefix and literal identifiers; no user input, and there is no WordPress API for it.
-        $this->db->query($sql);
-        if ($this->db->last_error !== '') {
+        $db->query($sql);
+        if ($db->last_error !== '') {
             // Raw DB error: stored in `failures` and escaped at the display
             // boundary, so don't esc_html() here (would double-encode it).
             // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Raw DB error is stored in the migration state and escaped where it is displayed; escaping here would double-encode it.
-            throw new \RuntimeException($this->db->last_error);
+            throw new \RuntimeException($db->last_error);
         }
     }
 
@@ -512,18 +584,19 @@ class Migrator
      */
     private function installLinkTermsTable(): void
     {
-        $charset = $this->db->get_charset_collate();
+        $charset = self::charsetCollate($this->db);
 
-        dbDelta("CREATE TABLE {$this->db->prefix}prli_link_terms (
+        $sqlTerms = "CREATE TABLE {$this->db->prefix}prli_link_terms (
             link_id BIGINT UNSIGNED NOT NULL,
             term_id BIGINT UNSIGNED NOT NULL,
             taxonomy VARCHAR(32) NOT NULL,
             PRIMARY KEY  (link_id, term_id, taxonomy),
             KEY term_id (term_id),
             KEY taxonomy (taxonomy)
-        ) {$charset};");
+        ) {$charset};";
+        dbDelta($sqlTerms);
 
-        $this->assertTablesExist(['prli_link_terms']);
+        self::assertTablesExist($this->db, ['prli_link_terms' => $sqlTerms]);
     }
 
     /**
@@ -536,7 +609,7 @@ class Migrator
      */
     private function installGeoTables(): void
     {
-        $charset = $this->db->get_charset_collate();
+        $charset = self::charsetCollate($this->db);
 
         // Replaces the two `wp_options` transient rows per cached lookup that
         // v4 used previously — those accumulated into the hundreds of
@@ -546,7 +619,7 @@ class Migrator
         // indefinitely": a network's country assignment is stable for years.
         // Read by the Turbo Mode dispatcher too, with raw SQL, since that runs
         // before WordPress loads.
-        dbDelta("CREATE TABLE {$this->db->prefix}prli_geo_cache (
+        $sqlGeoCache = "CREATE TABLE {$this->db->prefix}prli_geo_cache (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             cache_key VARCHAR(64) NOT NULL,
             country CHAR(2) NOT NULL DEFAULT '',
@@ -555,21 +628,26 @@ class Migrator
             PRIMARY KEY  (id),
             UNIQUE KEY cache_key (cache_key),
             KEY expires_at (expires_at)
-        ) {$charset};");
+        ) {$charset};";
+        dbDelta($sqlGeoCache);
 
         // IPs seen on a redirect that nothing local could geolocate. Drained by
         // GeoBackfillJob on the Resque worker. Unique on `ip` so repeat hits
         // from one visitor collapse to a single row; rows are deleted as they
         // are resolved, so this stays small.
-        dbDelta("CREATE TABLE {$this->db->prefix}prli_geo_pending (
+        $sqlGeoPending = "CREATE TABLE {$this->db->prefix}prli_geo_pending (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             ip VARCHAR(45) NOT NULL,
             created_at DATETIME NOT NULL,
             PRIMARY KEY  (id),
             UNIQUE KEY ip (ip)
-        ) {$charset};");
+        ) {$charset};";
+        dbDelta($sqlGeoPending);
 
-        $this->assertTablesExist(['prli_geo_cache', 'prli_geo_pending']);
+        self::assertTablesExist($this->db, [
+            'prli_geo_cache'   => $sqlGeoCache,
+            'prli_geo_pending' => $sqlGeoPending,
+        ]);
     }
 
     /**
@@ -669,7 +747,8 @@ class Migrator
         // TEMPORARY tables ("Can't reopen table") — which the test suite uses —
         // and are also just slower. LEFT JOIN + COALESCE keeps links with no
         // clicks at 0. first_click = 1 matches v4's unique-count semantics (#676).
-        $this->execOrThrow(
+        self::execOrThrow(
+            $this->db,
             "UPDATE {$links} l
              LEFT JOIN (
                  SELECT link_id,
@@ -705,7 +784,7 @@ class Migrator
                 // Use execOrThrow(), not query(): this loop runs several
                 // statements and the caller's last_error check would only ever
                 // see the final one.
-                $this->execOrThrow("ALTER TABLE `{$table}` DROP INDEX `{$idx}`");
+                self::execOrThrow($this->db, "ALTER TABLE `{$table}` DROP INDEX `{$idx}`");
             }
         }
     }
@@ -787,7 +866,7 @@ class Migrator
             return;
         }
 
-        $this->execOrThrow("ALTER TABLE `{$table}` " . implode(', ', $clauses));
+        self::execOrThrow($this->db, "ALTER TABLE `{$table}` " . implode(', ', $clauses));
     }
 
     /**
@@ -799,7 +878,8 @@ class Migrator
      */
     private function fixSourceColumnType(): void
     {
-        $this->execOrThrow(
+        self::execOrThrow(
+            $this->db,
             "ALTER TABLE {$this->db->prefix}prli_links
              MODIFY COLUMN source VARCHAR(16) NOT NULL DEFAULT 'admin'"
         );
