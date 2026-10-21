@@ -5,7 +5,7 @@ Tags: affiliate links, url shortener, link cloaking, link tracking, link managem
 Requires at least: 6.5
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 4.0.17
+Stable tag: 4.0.18
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,10 @@ Stripe's standard processing fees always apply. PrettyLinks adds no extra fee fo
 4. Settings page
 
 == Changelog ==
+
+= 4.0.18 =
+* The Broken links view now always shows while Link Health is on, with a count of broken links.
+* Link Health columns are now included in the CSV export.
 
 = 4.0.17 =
 * Fixed a crash on activation caused by an error in the automatic update system.

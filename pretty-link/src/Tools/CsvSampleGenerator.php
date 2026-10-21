@@ -27,6 +27,14 @@ class CsvSampleGenerator
          */
         $columns = (array) apply_filters('prli_csv_export_columns', CsvExporter::COLUMNS);
 
+        /**
+         * Filter: prli_csv_sample_columns
+         * Lets extensions drop export-only columns from the sample header.
+         *
+         * @param string[] $columns Column list shared with the export.
+         */
+        $columns = (array) apply_filters('prli_csv_sample_columns', $columns);
+
         // Base rows — one per Lite redirect type, covering every boolean combination.
         $rows = [
             [
